@@ -34,10 +34,10 @@ int search_terminate(void)
         printf("Search is terminated by timer()\n");
         return_num = YES;
     }
-    else if(search_loop_times(CHECK) >= 3) {
+    /*else if(search_loop_times(CHECK) >= 3) {
         printf("Search is terminated by search_loop_times()\n");
         return_num = YES;
-    }
+    }*/
 
     return return_num;
 }

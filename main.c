@@ -38,6 +38,7 @@ int main(int argc, char ** argv)
     int visual_arg; /* Please edit !! for Waki */
     pthread_t visual_thread;
     int * solution_path;
+    int test;
 
     /* comand-line short option check */
     option_checker(argc, argv);

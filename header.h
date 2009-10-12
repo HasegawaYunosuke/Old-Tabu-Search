@@ -8,19 +8,20 @@
 #include <sys/time.h>
 #include <sys/stat.h>
 #include <pthread.h>
+#include <float.h>
 
 /* macro variable */
 #define INIT 0
-#define TSPMAXSIZE 2000
-
 #define ON 1
 #define OFF 0
 #define YES ON
 #define NO OFF
 #define CHECK -1
 #define READONLY -2
+#define DEFAULT 0
 
 /* macro parameter */
+#define TSPMAXSIZE 2000
 #define DEFAULT_PERMITWORSE 50
 #define DEFAULT_SEARCHTIME 10
 
