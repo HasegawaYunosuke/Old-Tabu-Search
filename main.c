@@ -68,6 +68,7 @@ int main(int argc, char ** argv)
 
     /* whole-search loop */
     for(;;) {
+        /* create initial-path by each mode */
         if(modep->euclid_mode == ON) {
             solution_path = initial_euclid_path(main_base_data);
         }
