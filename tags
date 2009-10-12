@@ -4,10 +4,15 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.7	//
+already_visited	initial_path.c	/^int already_visited(int * return_data, int city_num)$/;"	f
+create_euclid_path	initial_path.c	/^int * create_euclid_path(int * return_data, int * euclid_data, int create_mode)$/;"	f
+create_graph_path	initial_path.c	/^double * create_graph_path(double * path, int create_mode)$/;"	f
+create_mode	initial_path.c	/^int create_mode = DEFAULT;$/;"	v
 error_procedure	error.c	/^void error_procedure(char * message)$/;"	f
 finalize	finalize.c	/^void finalize(void)$/;"	f
 help_document	argument.c	/^void help_document(char ** argv)$/;"	f
 initial_euclid_path	initial_path.c	/^int * initial_euclid_path(int * euclid_data)$/;"	f
+initial_graph_path	initial_path.c	/^double * initial_graph_path(double * graph_data)$/;"	f
 initial_parameter	parameter.c	/^void initial_parameter(int tsp_size)$/;"	f
 loop_terminate	terminate.c	/^int loop_terminate(void)$/;"	f
 main	main.c	/^int main(int argc, char ** argv)$/;"	f
