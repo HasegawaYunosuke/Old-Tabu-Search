@@ -21,6 +21,7 @@ option_checker	argument.c	/^void option_checker(int argc, char ** argv)$/;"	f
 parameter	parameter.c	/^struct parameter {$/;"	s	file:
 parameterp	parameter.c	/^struct parameter * parameterp;$/;"	v	typeref:struct:parameter
 permit_worse	parameter.c	/^    double permit_worse;        \/* Parcentage of permitting to choice toward worse *\/$/;"	m	struct:parameter	file:
+random_num	math.c	/^int random_num(int maximum)$/;"	f
 read_data	read_data.c	/^int * read_data(void)$/;"	f
 read_data_set	read_data.c	/^void read_data_set(char * tspfilename)$/;"	f
 readfilename	read_data.c	/^char * readfilename;$/;"	v
