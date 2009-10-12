@@ -1,0 +1,48 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.7	//
+error_procedure	error.c	/^void error_procedure(char * message)$/;"	f
+finalize	finalize.c	/^void finalize(void)$/;"	f
+help_document	argument.c	/^void help_document(char ** argv)$/;"	f
+initial_euclid_path	initial_path.c	/^int * initial_euclid_path(int * euclid_data)$/;"	f
+initial_parameter	parameter.c	/^void initial_parameter(int tsp_size)$/;"	f
+loop_terminate	terminate.c	/^int loop_terminate(void)$/;"	f
+main	main.c	/^int main(int argc, char ** argv)$/;"	f
+main_base_data	main.c	/^int * main_base_data;$/;"	v
+main_base_data	visualize.c	/^int * main_base_data;$/;"	v
+make_distance	math.c	/^double make_distance(int x1, int y1, int x2, int y2)$/;"	f
+make_graph	initialize.c	/^double * make_graph(int * main_base_data)$/;"	f
+mallocer_dp	mallocer.c	/^double * mallocer_dp(int size)$/;"	f
+mallocer_ip	mallocer.c	/^int * mallocer_ip(int size)$/;"	f
+option_checker	argument.c	/^void option_checker(int argc, char ** argv)$/;"	f
+parameter	parameter.c	/^struct parameter {$/;"	s	file:
+parameterp	parameter.c	/^struct parameter * parameterp;$/;"	v	typeref:struct:parameter
+permit_worse	parameter.c	/^    double permit_worse;        \/* Parcentage of permitting to choice toward worse *\/$/;"	m	struct:parameter	file:
+read_data	read_data.c	/^int * read_data(void)$/;"	f
+read_data_set	read_data.c	/^void read_data_set(char * tspfilename)$/;"	f
+readfilename	read_data.c	/^char * readfilename;$/;"	v
+search	search.c	/^void search(void)$/;"	f
+search_loop_times	parameter.c	/^int search_loop_times(int type)$/;"	f
+search_terminate	terminate.c	/^int search_terminate(void)$/;"	f
+search_time	parameter.c	/^    double search_time;$/;"	m	struct:parameter	file:
+search_time	timer.c	/^double search_time = DEFAULT_SEARCHTIME;$/;"	v
+search_times	parameter.c	/^int search_times;$/;"	v
+set_euclid_mode	parameter.c	/^void set_euclid_mode(void)$/;"	f
+set_mode	parameter.c	/^void set_mode(void)$/;"	f
+set_parallel_mode	parameter.c	/^void set_parallel_mode(void)$/;"	f
+set_pole_mode	parameter.c	/^void set_pole_mode(void)$/;"	f
+set_time	timer.c	/^void set_time(int mode, int parametor)$/;"	f
+set_tozaki_mode	parameter.c	/^void set_tozaki_mode(void)$/;"	f
+set_visual_mode	parameter.c	/^void set_visual_mode(void)$/;"	f
+show_mode	parameter.c	/^void show_mode(void)$/;"	f
+show_on_off	parameter.c	/^void show_on_off(int on_off)$/;"	f
+solution_path_for_visual	main.c	/^int * solution_path_for_visual;$/;"	v
+start_time	timer.c	/^double start_time;$/;"	v
+timer	timer.c	/^int timer(int sign)$/;"	f
+tsp_size	parameter.c	/^    int tsp_size;               \/* TSP's Example Size *\/$/;"	m	struct:parameter	file:
+turn_loop_times	parameter.c	/^int turn_loop_times(int type)$/;"	f
+turn_times	parameter.c	/^int turn_times;$/;"	v
+visualizer	visualize.c	/^void visualizer(int * visual_arg)$/;"	f
