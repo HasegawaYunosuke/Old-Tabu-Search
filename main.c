@@ -27,7 +27,6 @@ int * initial_euclid_path(int * euclid);
 int * initial_graph_path(double * graph);
 void search(void);
 void finalize(void);
-/* test */
 
 /* grobal variable (for visual mode thread) */
 int * main_base_data;
