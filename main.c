@@ -25,7 +25,7 @@ int loop_terminate(void);
 int search_terminate(void);
 int * initial_euclid_path(int * euclid);
 int * initial_graph_path(double * graph);
-void search(void);
+int * search(int solution_path);
 void finalize(void);
 
 /* grobal variable (for visual mode thread) */
@@ -80,7 +80,7 @@ int main(int argc, char ** argv)
         /* search-turn loop */
         for(;;) {
             /* search */
-            search();
+            solution_path = search(solution_path);
 
             /* search-turn terminate */
             if(loop_terminate() == YES) {
