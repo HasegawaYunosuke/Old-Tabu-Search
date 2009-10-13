@@ -85,11 +85,13 @@ int * create_euclid_path(int * return_data, int * euclid_data, int create_mode)
                     if(min_distance > distance) {
                         min_index = next_city;
                         min_distance = distance;
+
                     }
                 }
-                /* set the city of nearest at now-city */
-                return_data[return_data_index] = next_city;
             }
+            /* set the city of nearest at now-city */
+            return_data[return_data_index] = min_index;
+            min_distance = DBL_MAX;
         }
     }
     /* Mode another */
