@@ -14,12 +14,16 @@ int loop_terminate(void)
 
     if(turn_loop_times(CHECK) >= 3) {
         turn_loop_times(INIT);
+        /* DEL ST */
         printf("Turn is terminated by turn_loop_times()\n");
+        /* DEL EN */
         return_num = YES;
     }
     else if(timer(CHECK) == OFF) {
         turn_loop_times(INIT);
+        /* DEL ST */
         printf("Turn is terminated by timer()\n");
+        /* DEL EN */
         return_num = YES;
     }
 
@@ -31,7 +35,9 @@ int search_terminate(void)
     int return_num = NO;
 
     if(timer(CHECK) == OFF) {
+        /* DEL ST */
         printf("Search is terminated by timer()\n");
+        /* DEL EN */
         return_num = YES;
     }
     /*else if(search_loop_times(CHECK) >= 3) {

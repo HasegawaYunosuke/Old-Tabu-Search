@@ -10,6 +10,7 @@ create_graph_path	initial_path.c	/^double * create_graph_path(double * path, int
 create_mode	initial_path.c	/^int create_mode = DEFAULT;$/;"	v
 error_procedure	error.c	/^void error_procedure(char * message)$/;"	f
 finalize	finalize.c	/^void finalize(void)$/;"	f
+hasegawa_search	hasegawa.c	/^int * hasegawa_search(int * solution_path)$/;"	f
 help_document	argument.c	/^void help_document(char ** argv)$/;"	f
 initial_euclid_path	initial_path.c	/^int * initial_euclid_path(int * euclid_data)$/;"	f
 initial_graph_path	initial_path.c	/^double * initial_graph_path(double * graph_data)$/;"	f
@@ -30,7 +31,7 @@ random_num	math.c	/^int random_num(int maximum)$/;"	f
 read_data	read_data.c	/^int * read_data(void)$/;"	f
 read_data_set	read_data.c	/^void read_data_set(char * tspfilename)$/;"	f
 readfilename	read_data.c	/^char * readfilename;$/;"	v
-search	search.c	/^void search(void)$/;"	f
+search	search.c	/^int * search(int * solution_path)$/;"	f
 search_loop_times	parameter.c	/^int search_loop_times(int type)$/;"	f
 search_terminate	terminate.c	/^int search_terminate(void)$/;"	f
 search_time	parameter.c	/^    double search_time;$/;"	m	struct:parameter	file:
@@ -48,6 +49,7 @@ show_on_off	parameter.c	/^void show_on_off(int on_off)$/;"	f
 solution_path_for_visual	main.c	/^int * solution_path_for_visual;$/;"	v
 start_time	timer.c	/^double start_time;$/;"	v
 timer	timer.c	/^int timer(int sign)$/;"	f
+tozaki_search	tozaki.c	/^int * tozaki_search(int * solution_path)$/;"	f
 tsp_size	parameter.c	/^    int tsp_size;               \/* TSP's Example Size *\/$/;"	m	struct:parameter	file:
 turn_loop_times	parameter.c	/^int turn_loop_times(int type)$/;"	f
 turn_times	parameter.c	/^int turn_times;$/;"	v

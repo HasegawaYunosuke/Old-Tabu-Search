@@ -80,6 +80,7 @@ int main(int argc, char ** argv)
         /* search-turn loop */
         for(;;) {
             /* search */
+
             solution_path = search(solution_path);
 
             /* search-turn terminate */

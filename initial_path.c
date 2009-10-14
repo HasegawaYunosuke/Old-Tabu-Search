@@ -106,7 +106,11 @@ double * create_graph_path(double * path, int create_mode)
 {
     double * return_data;
 
-    printf("Mr.Tozaki would write here\n");
+    printf("Mr.Tozaki would write here (initial_path.c)\n\n");
+    printf("Graph-Mode is non-available.\n");
+    printf("So, this program would be terminated 'exit(0)'\n");
+
+    exit(0);
 
     return return_data;
 }
