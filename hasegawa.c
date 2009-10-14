@@ -80,6 +80,7 @@ void choice_4indexs(int type, int * return_data, int * solution_path)
     int a,b;
     int max = solution_path[0];
 
+    /* 'type-Default' means just-randomly choice */
     if(type == DEFAULT) {
         a = random_num(max);
 
