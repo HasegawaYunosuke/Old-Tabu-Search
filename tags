@@ -5,16 +5,19 @@
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.7	//
 already_visited	initial_path.c	/^int already_visited(int * return_data, int city_num)$/;"	f
+choice_4indexs	hasegawa.c	/^void choice_4indexs(int type, int * return_data, int * solution_path)$/;"	f
 create_euclid_path	initial_path.c	/^int * create_euclid_path(int * return_data, int * euclid_data, int create_mode)$/;"	f
 create_graph_path	initial_path.c	/^double * create_graph_path(double * path, int create_mode)$/;"	f
 create_mode	initial_path.c	/^int create_mode = DEFAULT;$/;"	v
 error_procedure	error.c	/^void error_procedure(char * message)$/;"	f
+euclid_search	hasegawa.c	/^int * euclid_search(int * solution_path)$/;"	f
 finalize	finalize.c	/^void finalize(void)$/;"	f
 hasegawa_search	hasegawa.c	/^int * hasegawa_search(int * solution_path)$/;"	f
 help_document	argument.c	/^void help_document(char ** argv)$/;"	f
 initial_euclid_path	initial_path.c	/^int * initial_euclid_path(int * euclid_data)$/;"	f
 initial_graph_path	initial_path.c	/^double * initial_graph_path(double * graph_data)$/;"	f
 initial_parameter	parameter.c	/^void initial_parameter(int tsp_size)$/;"	f
+is_2opt_tabu	tabu.c	/^int is_2opt_tabu(int * cities)$/;"	f
 loop_terminate	terminate.c	/^int loop_terminate(void)$/;"	f
 main	main.c	/^int main(int argc, char ** argv)$/;"	f
 main_base_data	main.c	/^int * main_base_data;$/;"	v
@@ -23,10 +26,13 @@ make_distance	math.c	/^double make_distance(int x1, int y1, int x2, int y2)$/;"	
 make_graph	initialize.c	/^double * make_graph(int * main_base_data)$/;"	f
 mallocer_dp	mallocer.c	/^double * mallocer_dp(int size)$/;"	f
 mallocer_ip	mallocer.c	/^int * mallocer_ip(int size)$/;"	f
+mode_select	hasegawa.c	/^int mode_select(int mode, int * solution_path)$/;"	f
+next_index	hasegawa.c	/^int next_index(int target, int maximum)$/;"	f
 option_checker	argument.c	/^void option_checker(int argc, char ** argv)$/;"	f
 parameter	parameter.c	/^struct parameter {$/;"	s	file:
 parameterp	parameter.c	/^struct parameter * parameterp;$/;"	v	typeref:struct:parameter
 permit_worse	parameter.c	/^    double permit_worse;        \/* Parcentage of permitting to choice toward worse *\/$/;"	m	struct:parameter	file:
+prev_index	hasegawa.c	/^int prev_index(int target, int maximum)$/;"	f
 random_num	math.c	/^int random_num(int maximum)$/;"	f
 read_data	read_data.c	/^int * read_data(void)$/;"	f
 read_data_set	read_data.c	/^void read_data_set(char * tspfilename)$/;"	f
@@ -53,4 +59,5 @@ tozaki_search	tozaki.c	/^int * tozaki_search(int * solution_path)$/;"	f
 tsp_size	parameter.c	/^    int tsp_size;               \/* TSP's Example Size *\/$/;"	m	struct:parameter	file:
 turn_loop_times	parameter.c	/^int turn_loop_times(int type)$/;"	f
 turn_times	parameter.c	/^int turn_times;$/;"	v
+two_opt_search	hasegawa.c	/^int * two_opt_search(int * solution_path)$/;"	f
 visualizer	visualize.c	/^void visualizer(int * visual_arg)$/;"	f

@@ -11,6 +11,7 @@ int * euclid_search(int * solution_path);
 int * two_opt_search(int * solution_path);
 void choice_4indexs(int type, int * cities, int * solution_path);
 int mode_select(int mode, int * solution_path);
+void create_2opt_tabulist(int tsp_size);
 int next_index(int target, int maximum);
 int prev_index(int target, int maximum);
 
@@ -19,7 +20,6 @@ void error_procedure(char * message);
 
 int * hasegawa_search(int * solution_path)
 {
-    int i;
     int * return_data;
 
     /* Search Euclid-Data */
@@ -28,9 +28,7 @@ int * hasegawa_search(int * solution_path)
     }
     /* Search Graph-Data (non-available) */
     else if(modep->graph_mode == ON) {
-        printf("hasegawa_search()'s Graph-Mode is now non-available.(in 'hasegawa.c' file)\n");
-        printf("This program is terminated by exit(0);\n");
-        exit(0);
+        error_procedure("hasegawa_search() non-available");
     }
     /* Error */
     else {
@@ -49,6 +47,10 @@ int * euclid_search(int * solution_path)
 
     switch(mode) {
         case DEFAULT:
+            /* create tabu list for 2-opt */
+            create_2opt_tabulist(solution_path[0]);
+
+            /* search by 2-opt procedure */
             return_data = two_opt_search(solution_path);
             break;
     }
@@ -68,9 +70,9 @@ int * two_opt_search(int * solution_path)
     int cities[4];
     int i;
 
-    //do {
+    do {
         choice_4indexs(DEFAULT, cities, solution_path);
-    //} while(is_2opt_tabu(cities));
+    } while(is_2opt_tabu(cities));
 
     return solution_path;
 }
