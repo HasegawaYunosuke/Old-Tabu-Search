@@ -15,9 +15,11 @@ int mode_select(int mode, int * solution_path);
 void create_2opt_tabulist(int tsp_size);
 int next_index(int target, int maximum);
 int prev_index(int target, int maximum);
+int now_index(int target, int maximum);
 int * mallocer_ip(int size);
 double bef_aft_distance(int * cities);
 void exchange_branch(int * solution_path, int * indexs);
+void get_cities_by_indexs(int * cities, int * indexs, int * solution_path);
 double get_distance(int a, int ad, int b, int bd);
 double get_branch_distance(int a, int b);
 double make_distance(int x1, int y1, int x2, int y2);
@@ -80,6 +82,7 @@ int mode_select(int mode, int * solution_path)
 int * two_opt_search(int * solution_path)
 {
     int indexs[4], cities[4];
+    int test;
 
     /* (1) First, this fucn exchange branch by "2-opt" only toward better without using tabu-list */
     do {
@@ -88,8 +91,6 @@ int * two_opt_search(int * solution_path)
         /* convert "indexs" -> "cities" */
         get_cities_by_indexs(cities, indexs, solution_path);
     } while(bef_aft_distance(cities) < 0);
-
-    exchange_branch(solution_path, indexs);
 
     /* if it can't find "decrease-exchange", shift "tabu-search-exchange" */
 
@@ -101,6 +102,8 @@ int * two_opt_search(int * solution_path)
     } while ();*/
 //    is_2opt_tabu(cities);
     /* because of diciding which search toward "permit worse" or "better only", check the distance */
+
+    exchange_branch(solution_path, indexs);
 
     return solution_path;
 }
@@ -200,35 +203,39 @@ int permit_worse(int * cities, int tsp_size)
 
 void exchange_branch(int * solution_path, int * indexs)
 {
-    int i, j;
+    int i, count;
     int tsp_size = solution_path[0];
-    int * copy_array;
+    int * copy;
 
-    copy_array = mallocer_ip(tsp_size + 1);
+    copy = mallocer_ip(tsp_size + 1);
+
     for(i = 0; i <= tsp_size; i++) {
-        copy_array[i] = solution_path[i];
+        copy[i] = solution_path[i];
     }
 
-    for(j = 1; j <= tsp_size; j++) {
-        if(2 < j && j < (tsp_size - 1)) {
-            indexs[2]
-        }
-        else if(j == 1) {
-            solution_path[j] = copy_array[index[0]];
-        }
-        else if(j == 2) {
-            solution_path[j] = copy_array[index[2]];
-        }
-        else if(j == (tsp_size - 1)) {
-            solution_path[j] = copy_array[index[1]];
-        }
-        else if(j == tsp_size) {
-            solution_path[j] = copy_array[index[3]];
-        }
+    for(i = 0; i < (count = get_among(indexs[1], indexs[2], tsp_size)); i++) {
+        solution_path[now_index((indexs[1] + i), tsp_size)] = copy[now_index((indexs[2] - i), tsp_size)];
     }
 
+    free(copy);
+}
 
-    free(copy_array);
+int get_among(int start, int end, int tsp_size)
+{
+    int count = 0;
+    int now = start;
+    int next;
+
+    for(;;) {
+        next = next_index(now, tsp_size);
+        count++;
+        if(next == end) {
+            break;
+        }
+        now = next;
+    }
+
+    return count;
 }
 /* (1 <= return_num <= Max) */
 int next_index(int target, int maximum)
@@ -240,4 +247,19 @@ int next_index(int target, int maximum)
 int prev_index(int target, int maximum)
 {
     return ((target == 1) ? maximum : target -1);
+}
+
+/* (1 <= return_num <= Max) */
+int now_index(int target, int maximum)
+{
+    int return_num;
+
+    if(target > 0) {
+        return_num = (((return_num = target % maximum) == 0) ? maximum : return_num);
+    }
+    else {
+        return_num = (((return_num = target % maximum) == 0) ? maximum : return_num * (-1));
+    }
+
+    return return_num;
 }
