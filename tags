@@ -6,6 +6,7 @@
 !_TAG_PROGRAM_VERSION	5.7	//
 already_visited	initial_path.c	/^int already_visited(int * return_data, int city_num)$/;"	f
 choice_4indexs	hasegawa.c	/^void choice_4indexs(int type, int * return_data, int * solution_path)$/;"	f
+city_point	parameter.c	/^    int city_point;$/;"	m	struct:parameter	file:
 create_2opt_tabulist	tabu.c	/^void create_2opt_tabulist(int tsp_size)$/;"	f
 create_euclid_path	initial_path.c	/^int * create_euclid_path(int * return_data, int * euclid_data, int create_mode)$/;"	f
 create_graph_path	initial_path.c	/^double * create_graph_path(double * path, int create_mode)$/;"	f
@@ -36,7 +37,9 @@ next_index	hasegawa.c	/^int next_index(int target, int maximum)$/;"	f
 option_checker	argument.c	/^void option_checker(int argc, char ** argv)$/;"	f
 parameter	parameter.c	/^struct parameter {$/;"	s	file:
 parameterp	parameter.c	/^struct parameter * parameterp;$/;"	v	typeref:struct:parameter
+permit_worse	hasegawa.c	/^int permit_worse(int * cities, int tsp_size)$/;"	f
 permit_worse	parameter.c	/^    double permit_worse;        \/* Parcentage of permitting to choice toward worse *\/$/;"	m	struct:parameter	file:
+point_of_cities	hasegawa.c	/^int * point_of_cities;$/;"	v
 prev_index	hasegawa.c	/^int prev_index(int target, int maximum)$/;"	f
 random_num	math.c	/^int random_num(int maximum)$/;"	f
 read_data	read_data.c	/^int * read_data(void)$/;"	f
@@ -45,9 +48,10 @@ readfilename	read_data.c	/^char * readfilename;$/;"	v
 search	search.c	/^int * search(int * solution_path)$/;"	f
 search_loop_times	parameter.c	/^int search_loop_times(int type)$/;"	f
 search_terminate	terminate.c	/^int search_terminate(void)$/;"	f
-search_time	parameter.c	/^    double search_time;$/;"	m	struct:parameter	file:
+search_time	parameter.c	/^    double search_time;         \/* whole program running time *\/$/;"	m	struct:parameter	file:
 search_time	timer.c	/^double search_time = DEFAULT_SEARCHTIME;$/;"	v
 search_times	parameter.c	/^int search_times;$/;"	v
+set_city_point	parameter.c	/^void set_city_point(int * point_of_cities)$/;"	f
 set_euclid_mode	parameter.c	/^void set_euclid_mode(void)$/;"	f
 set_mode	parameter.c	/^void set_mode(void)$/;"	f
 set_parallel_mode	parameter.c	/^void set_parallel_mode(void)$/;"	f

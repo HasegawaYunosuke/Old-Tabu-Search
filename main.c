@@ -27,6 +27,8 @@ int * initial_euclid_path(int * euclid);
 int * initial_graph_path(double * graph);
 int * search(int * solution_path);
 void finalize(void);
+int get_x(int city_index);
+int get_y(int city_index);
 
 /* grobal variable (for visual mode thread) */
 int * main_base_data;
@@ -97,4 +99,14 @@ int main(int argc, char ** argv)
     finalize();
 
     return 0;
+}
+
+int get_x(int city_index)
+{
+    return main_base_data[city_index * 2];
+}
+
+int get_y(int city_index)
+{
+    return main_base_data[city_index * 2 + 1];
 }

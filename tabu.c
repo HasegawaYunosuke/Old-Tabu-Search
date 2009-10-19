@@ -64,14 +64,12 @@ void create_2opt_tabulist(int tsp_size)
     int i, j;
 
     /* 'list_size' is tabulist size (only once) */
-    if(list_size) {
+    if(list_size == 1) {
         list_size = tsp_size * tsp_size;
-    }
-
-    /* */
-    for(i = 0; i < 4; i++) {
-        if((tabulist_2opt[i] = mallocer_ip(list_size)) == NULL) {
-            error_procedure("tabulist_2opt's malloc()");
+        for(i = 0; i < 4; i++) {
+            if((tabulist_2opt[i] = mallocer_ip(list_size)) == NULL) {
+                error_procedure("tabulist_2opt's malloc()");
+            }
         }
     }
 }
