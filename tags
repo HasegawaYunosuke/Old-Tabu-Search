@@ -6,18 +6,22 @@
 !_TAG_PROGRAM_VERSION	5.7	//
 already_visited	initial_path.c	/^int already_visited(int * return_data, int city_num)$/;"	f
 choice_4indexs	hasegawa.c	/^void choice_4indexs(int type, int * return_data, int * solution_path)$/;"	f
+create_2opt_tabulist	tabu.c	/^void create_2opt_tabulist(int tsp_size)$/;"	f
 create_euclid_path	initial_path.c	/^int * create_euclid_path(int * return_data, int * euclid_data, int create_mode)$/;"	f
 create_graph_path	initial_path.c	/^double * create_graph_path(double * path, int create_mode)$/;"	f
 create_mode	initial_path.c	/^int create_mode = DEFAULT;$/;"	v
 error_procedure	error.c	/^void error_procedure(char * message)$/;"	f
 euclid_search	hasegawa.c	/^int * euclid_search(int * solution_path)$/;"	f
 finalize	finalize.c	/^void finalize(void)$/;"	f
+find_out_flag	tabu.c	/^int find_out_flag;$/;"	v
+flag_set	tabu.c	/^void flag_set(void)$/;"	f
 hasegawa_search	hasegawa.c	/^int * hasegawa_search(int * solution_path)$/;"	f
 help_document	argument.c	/^void help_document(char ** argv)$/;"	f
 initial_euclid_path	initial_path.c	/^int * initial_euclid_path(int * euclid_data)$/;"	f
 initial_graph_path	initial_path.c	/^double * initial_graph_path(double * graph_data)$/;"	f
 initial_parameter	parameter.c	/^void initial_parameter(int tsp_size)$/;"	f
-is_2opt_tabu	tabu.c	/^int is_2opt_tabu(int * cities)$/;"	f
+is_2opt_tabu	tabu.c	/^int is_2opt_tabu(int * cities1)$/;"	f
+list_size	tabu.c	/^int list_size = 1;$/;"	v
 loop_terminate	terminate.c	/^int loop_terminate(void)$/;"	f
 main	main.c	/^int main(int argc, char ** argv)$/;"	f
 main_base_data	main.c	/^int * main_base_data;$/;"	v
@@ -26,6 +30,7 @@ make_distance	math.c	/^double make_distance(int x1, int y1, int x2, int y2)$/;"	
 make_graph	initialize.c	/^double * make_graph(int * main_base_data)$/;"	f
 mallocer_dp	mallocer.c	/^double * mallocer_dp(int size)$/;"	f
 mallocer_ip	mallocer.c	/^int * mallocer_ip(int size)$/;"	f
+match_mutex	tabu.c	/^pthread_mutex_t match_mutex;$/;"	v
 mode_select	hasegawa.c	/^int mode_select(int mode, int * solution_path)$/;"	f
 next_index	hasegawa.c	/^int next_index(int target, int maximum)$/;"	f
 option_checker	argument.c	/^void option_checker(int argc, char ** argv)$/;"	f
@@ -54,6 +59,8 @@ show_mode	parameter.c	/^void show_mode(void)$/;"	f
 show_on_off	parameter.c	/^void show_on_off(int on_off)$/;"	f
 solution_path_for_visual	main.c	/^int * solution_path_for_visual;$/;"	v
 start_time	timer.c	/^double start_time;$/;"	v
+tabu_matching	tabu.c	/^void tabu_matching(int * cities)$/;"	f
+tabulist_2opt	tabu.c	/^int * tabulist_2opt[4];$/;"	v
 timer	timer.c	/^int timer(int sign)$/;"	f
 tozaki_search	tozaki.c	/^int * tozaki_search(int * solution_path)$/;"	f
 tsp_size	parameter.c	/^    int tsp_size;               \/* TSP's Example Size *\/$/;"	m	struct:parameter	file:

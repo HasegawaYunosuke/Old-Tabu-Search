@@ -16,8 +16,9 @@ int turn_loop_times(int type);
 /* grobal variable */
 struct parameter {
     int tsp_size;               /* TSP's Example Size */
+    int city_point;
     double permit_worse;        /* Parcentage of permitting to choice toward worse */
-    double search_time;
+    double search_time;         /* whole program running time */
 };
 
 struct parameter * parameterp;
@@ -75,6 +76,7 @@ void initial_parameter(int tsp_size)
 
     parameterp->tsp_size = tsp_size;
     parameterp->permit_worse = DEFAULT_PERMITWORSE;
+    parameterp->city_point = DEFAULT_CITYPOINT;
     turn_times = 0;
     search_times = 0;
 }
@@ -90,6 +92,9 @@ int turn_loop_times(int type)
     }
     else if(type == INIT) {
         turn_times = 0;
+    }
+    else if(type == READONLY) {
+        return_num = turn_times;
     }
 
     return return_num;
@@ -109,6 +114,15 @@ int search_loop_times(int type)
     }
 
     return return_num;
+}
+
+void set_city_point(int * point_of_cities)
+{
+    int i;
+
+    for(i = 1; i <= point_of_cities[0]; i++) {
+        point_of_cities[i] = parameterp->city_point;
+    }
 }
 
 void show_mode(void)
