@@ -8,15 +8,25 @@ void set_visual_mode(void);
 void set_parallel_mode(void);
 void set_pole_mode(void);
 void set_tozaki_mode(void);
+void set_tabu_mode(int type);
+void set_now_parcentage(double before, double after);
+void set_2opt_loop(void);
 void show_mode(void);
 void show_on_off(int on_off);
 void initial_parameter(int tsp_size);
 int turn_loop_times(int type);
+int get_tabu_mode(void);
+int get_2opt_loop(void);
+int get_tsp_size(void);
+double get_worse_permit(void);
+double get_now_parcentage(void);
 
 /* grobal variable */
 struct parameter {
     int tsp_size;               /* TSP's Example Size */
     int city_point;
+    int two_opt_loop;           /* Maximum of 2-opt loop */
+    double now_parcentage;      /* Parcentage of now choice () */
     double permit_worse;        /* Parcentage of permitting to choice toward worse */
     double search_time;         /* whole program running time */
 };
@@ -33,8 +43,10 @@ void set_mode(void)
         error_procedure("mode malloc()");
     }
 
+    /* default modes */
     modep->graph_mode = ON;
     modep->hasegawa_mode = ON;
+    modep->tabu_mode = OFF;
 }
 
 void set_euclid_mode(void)
@@ -77,6 +89,7 @@ void initial_parameter(int tsp_size)
     parameterp->tsp_size = tsp_size;
     parameterp->permit_worse = DEFAULT_PERMITWORSE;
     parameterp->city_point = DEFAULT_CITYPOINT;
+    set_2opt_loop();
     turn_times = 0;
     search_times = 0;
 }
@@ -123,6 +136,52 @@ void set_city_point(int * point_of_cities)
     for(i = 1; i <= point_of_cities[0]; i++) {
         point_of_cities[i] = parameterp->city_point;
     }
+}
+
+void set_tabu_mode(int type)
+{
+    if(type == ON) {
+        modep->tabu_mode = ON;
+    }
+    else if(type == OFF) {
+        modep->tabu_mode = OFF;
+    }
+}
+
+int get_tabu_mode(void)
+{
+    return modep->tabu_mode;
+}
+
+double get_worse_permit(void)
+{
+    return parameterp->permit_worse;
+}
+
+int get_2opt_loop(void)
+{
+    return parameterp->two_opt_loop;
+}
+
+void set_2opt_loop(void)
+{
+    parameterp->two_opt_loop = DEFAULT_2OPTLOOP;
+}
+
+void set_now_parcentage(double before, double after)
+{
+    /* permit_worse > 0 */
+    parameterp->now_parcentage = (after - before) / before;
+}
+
+double get_now_parcentage(void)
+{
+    return parameterp->now_parcentage;
+}
+
+int get_tsp_size(void)
+{
+    return parameterp->tsp_size;
 }
 
 void show_mode(void)

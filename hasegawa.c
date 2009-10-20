@@ -10,9 +10,9 @@ int * hasegawa_search(int * solution_path);
 int * euclid_search(int * solution_path);
 int * two_opt_search(int * solution_path);
 void choice_4indexs(int type, int * cities, int * solution_path);
-int permit_worse(int * cities, int tsp_size);
+int permit_worse(double bef_aft_distance);
 int mode_select(int mode, int * solution_path);
-void create_2opt_tabulist(int tsp_size);
+void create_2opt_tabulist(int tsp_size, int mode);
 int next_index(int target, int maximum);
 int prev_index(int target, int maximum);
 int now_index(int target, int maximum);
@@ -20,8 +20,10 @@ int * mallocer_ip(int size);
 double bef_aft_distance(int * cities);
 void exchange_branch(int * solution_path, int * indexs);
 void get_cities_by_indexs(int * cities, int * indexs, int * solution_path);
+double get_worse_permit(void);
 double get_distance(int a, int ad, int b, int bd);
 double get_branch_distance(int a, int b);
+double get_now_parcentage(void);
 double make_distance(int x1, int y1, int x2, int y2);
 int get_x(int city_index);
 int get_y(int city_index);
@@ -61,8 +63,10 @@ int * euclid_search(int * solution_path)
 
     switch(mode) {
         case DEFAULT:
-            /* create tabu list for 2-opt */
-            create_2opt_tabulist(solution_path[0]);
+            /* create tabu list for 2-opt (only first procedure) */
+            if(turn_loop_times(READONLY) == 0 && search_loop_times(READONLY) == 0) {
+                create_2opt_tabulist(solution_path[0], INIT);
+            }
 
             /* search by 2-opt procedure */
             return_data = two_opt_search(solution_path);
@@ -82,26 +86,28 @@ int mode_select(int mode, int * solution_path)
 int * two_opt_search(int * solution_path)
 {
     int indexs[4], cities[4];
-    int test;
+    int loop_times = 0;
+    double test;
 
     /* (1) First, this fucn exchange branch by "2-opt" only toward better without using tabu-list */
-    do {
-        /* choice 4 indexs by randome */
-        choice_4indexs(DEFAULT, indexs, solution_path);
-        /* convert "indexs" -> "cities" */
-        get_cities_by_indexs(cities, indexs, solution_path);
-    } while(bef_aft_distance(cities) < 0);
-
-    /* if it can't find "decrease-exchange", shift "tabu-search-exchange" */
-
-    /* (2) Second, permit exchange toward worse, and use tabu-list */
-    /*do {
+    if(get_tabu_mode() == OFF) {
         do {
-            choice_4indexs(DEFAULT, cities, solution_path);
-        } while(permit_judgement(cities) == NO);
-    } while ();*/
-//    is_2opt_tabu(cities);
-    /* because of diciding which search toward "permit worse" or "better only", check the distance */
+            loop_times++;
+            choice_4indexs(DEFAULT, indexs, solution_path);
+            get_cities_by_indexs(cities, indexs, solution_path);
+
+            if(loop_times > get_2opt_loop()) {
+                set_tabu_mode(ON);
+            }
+        } while((test = bef_aft_distance(cities)) <= 0);
+    }
+    /* (2) Second, permit exchange toward worse, and use tabu-list */
+    else {
+        do {
+            choice_4indexs(DEFAULT, indexs, solution_path);
+            get_cities_by_indexs(cities, indexs, solution_path);
+        } while(permit_worse(bef_aft_distance(cities)) == NO || is_2opt_tabu(cities) == YES);
+    }
 
     exchange_branch(solution_path, indexs);
 
@@ -156,6 +162,8 @@ double bef_aft_distance(int * cities)
     before = get_distance(cities[0],cities[1],cities[2],cities[3]);
     after = get_distance(cities[0],cities[2],cities[1],cities[3]);
 
+    set_now_parcentage(before, after);
+
     return (before - after);
 }
 
@@ -171,30 +179,22 @@ double get_branch_distance(int a, int b)
     return make_distance(get_x(a), get_y(a), get_x(b), get_y(b));
 }
 
-int permit_worse(int * cities, int tsp_size)
+/* permit exchange toward worse if under permit_baseline */
+int permit_worse(double bef_aft_distance)
 {
-    int i;
-    int return_num = YES;
-    int a = cities[0], ad = cities[1];
-    int b = cities[2], bd = cities[3];
+    int return_num = NO;
 
-    /* first procedure */
-    if(turn_loop_times(READONLY) == 0 && search_loop_times(READONLY) == 0) {
-        point_of_cities = mallocer_ip(tsp_size);
-        point_of_cities[0] = tsp_size;
+    /* if exchange is toward better, permit */
+    if(bef_aft_distance > 0) {
+        return_num = YES;
     }
-    /* if now is first turn, set the "city point" */
-    if(turn_loop_times(READONLY) == 0) {
-        set_city_point(point_of_cities);
-    }
-
-    /* decrement 1 point at the "point_of_cities" */
-    for(i = 1; i <= tsp_size; i++) {
-        if(i == a || i == ad || i == b || i == bd) {
-            point_of_cities[i]--;
-        }
-        if(point_of_cities[i] == 0) {
+    else{
+        /* permit_worse discribed > 0 */
+        if(get_worse_permit() < get_now_parcentage()) {
             return_num = NO;
+        }
+        else {
+            return_num = YES;
         }
     }
 

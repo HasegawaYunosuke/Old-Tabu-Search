@@ -4,18 +4,33 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.7	//
+add_2opt_tabulist	tabu.c	/^void add_2opt_tabulist(int * cities)$/;"	f
 already_visited	initial_path.c	/^int already_visited(int * return_data, int city_num)$/;"	f
+bef_aft_distance	hasegawa.c	/^double bef_aft_distance(int * cities)$/;"	f
 choice_4indexs	hasegawa.c	/^void choice_4indexs(int type, int * return_data, int * solution_path)$/;"	f
 city_point	parameter.c	/^    int city_point;$/;"	m	struct:parameter	file:
-create_2opt_tabulist	tabu.c	/^void create_2opt_tabulist(int tsp_size)$/;"	f
+create_2opt_tabulist	tabu.c	/^void create_2opt_tabulist(int tsp_size, int mode)$/;"	f
 create_euclid_path	initial_path.c	/^int * create_euclid_path(int * return_data, int * euclid_data, int create_mode)$/;"	f
 create_graph_path	initial_path.c	/^double * create_graph_path(double * path, int create_mode)$/;"	f
 create_mode	initial_path.c	/^int create_mode = DEFAULT;$/;"	v
 error_procedure	error.c	/^void error_procedure(char * message)$/;"	f
 euclid_search	hasegawa.c	/^int * euclid_search(int * solution_path)$/;"	f
+exchange_branch	hasegawa.c	/^void exchange_branch(int * solution_path, int * indexs)$/;"	f
 finalize	finalize.c	/^void finalize(void)$/;"	f
 find_out_flag	tabu.c	/^int find_out_flag;$/;"	v
 flag_set	tabu.c	/^void flag_set(void)$/;"	f
+get_2opt_loop	parameter.c	/^int get_2opt_loop(void)$/;"	f
+get_among	hasegawa.c	/^int get_among(int start, int end, int tsp_size)$/;"	f
+get_branch_distance	hasegawa.c	/^double get_branch_distance(int a, int b)$/;"	f
+get_cities_by_indexs	hasegawa.c	/^void get_cities_by_indexs(int * cities, int * indexs, int * solution_path)$/;"	f
+get_distance	hasegawa.c	/^double get_distance(int a, int ad, int b, int bd)$/;"	f
+get_list_size	tabu.c	/^int get_list_size(int tsp_size)$/;"	f
+get_now_parcentage	parameter.c	/^double get_now_parcentage(void)$/;"	f
+get_tabu_mode	parameter.c	/^int get_tabu_mode(void)$/;"	f
+get_tsp_size	parameter.c	/^int get_tsp_size(void)$/;"	f
+get_worse_permit	parameter.c	/^double get_worse_permit(void)$/;"	f
+get_x	main.c	/^int get_x(int city_index)$/;"	f
+get_y	main.c	/^int get_y(int city_index)$/;"	f
 hasegawa_search	hasegawa.c	/^int * hasegawa_search(int * solution_path)$/;"	f
 help_document	argument.c	/^void help_document(char ** argv)$/;"	f
 initial_euclid_path	initial_path.c	/^int * initial_euclid_path(int * euclid_data)$/;"	f
@@ -34,10 +49,12 @@ mallocer_ip	mallocer.c	/^int * mallocer_ip(int size)$/;"	f
 match_mutex	tabu.c	/^pthread_mutex_t match_mutex;$/;"	v
 mode_select	hasegawa.c	/^int mode_select(int mode, int * solution_path)$/;"	f
 next_index	hasegawa.c	/^int next_index(int target, int maximum)$/;"	f
+now_index	hasegawa.c	/^int now_index(int target, int maximum)$/;"	f
+now_parcentage	parameter.c	/^    double now_parcentage;      \/* Parcentage of now choice () *\/$/;"	m	struct:parameter	file:
 option_checker	argument.c	/^void option_checker(int argc, char ** argv)$/;"	f
 parameter	parameter.c	/^struct parameter {$/;"	s	file:
 parameterp	parameter.c	/^struct parameter * parameterp;$/;"	v	typeref:struct:parameter
-permit_worse	hasegawa.c	/^int permit_worse(int * cities, int tsp_size)$/;"	f
+permit_worse	hasegawa.c	/^int permit_worse(double bef_aft_distance)$/;"	f
 permit_worse	parameter.c	/^    double permit_worse;        \/* Parcentage of permitting to choice toward worse *\/$/;"	m	struct:parameter	file:
 point_of_cities	hasegawa.c	/^int * point_of_cities;$/;"	v
 prev_index	hasegawa.c	/^int prev_index(int target, int maximum)$/;"	f
@@ -51,11 +68,14 @@ search_terminate	terminate.c	/^int search_terminate(void)$/;"	f
 search_time	parameter.c	/^    double search_time;         \/* whole program running time *\/$/;"	m	struct:parameter	file:
 search_time	timer.c	/^double search_time = DEFAULT_SEARCHTIME;$/;"	v
 search_times	parameter.c	/^int search_times;$/;"	v
+set_2opt_loop	parameter.c	/^void set_2opt_loop(void)$/;"	f
 set_city_point	parameter.c	/^void set_city_point(int * point_of_cities)$/;"	f
 set_euclid_mode	parameter.c	/^void set_euclid_mode(void)$/;"	f
 set_mode	parameter.c	/^void set_mode(void)$/;"	f
+set_now_parcentage	parameter.c	/^void set_now_parcentage(double before, double after)$/;"	f
 set_parallel_mode	parameter.c	/^void set_parallel_mode(void)$/;"	f
 set_pole_mode	parameter.c	/^void set_pole_mode(void)$/;"	f
+set_tabu_mode	parameter.c	/^void set_tabu_mode(int type)$/;"	f
 set_time	timer.c	/^void set_time(int mode, int parametor)$/;"	f
 set_tozaki_mode	parameter.c	/^void set_tozaki_mode(void)$/;"	f
 set_visual_mode	parameter.c	/^void set_visual_mode(void)$/;"	f
@@ -65,10 +85,12 @@ solution_path_for_visual	main.c	/^int * solution_path_for_visual;$/;"	v
 start_time	timer.c	/^double start_time;$/;"	v
 tabu_matching	tabu.c	/^void tabu_matching(int * cities)$/;"	f
 tabulist_2opt	tabu.c	/^int * tabulist_2opt[4];$/;"	v
+tabulist_2opt_index	tabu.c	/^int tabulist_2opt_index;$/;"	v
 timer	timer.c	/^int timer(int sign)$/;"	f
 tozaki_search	tozaki.c	/^int * tozaki_search(int * solution_path)$/;"	f
 tsp_size	parameter.c	/^    int tsp_size;               \/* TSP's Example Size *\/$/;"	m	struct:parameter	file:
 turn_loop_times	parameter.c	/^int turn_loop_times(int type)$/;"	f
 turn_times	parameter.c	/^int turn_times;$/;"	v
+two_opt_loop	parameter.c	/^    int two_opt_loop;           \/* Maximum of 2-opt loop *\/$/;"	m	struct:parameter	file:
 two_opt_search	hasegawa.c	/^int * two_opt_search(int * solution_path)$/;"	f
 visualizer	visualize.c	/^void visualizer(int * visual_arg)$/;"	f
