@@ -4,8 +4,8 @@
 /* functions */
 int * initial_euclid_path(int * euclid_data);
 int * create_euclid_path(int * return_data, int * base_data, int create_mode);
-double * initial_graph_path(double * graph_data);
-double * create_graph_path(double * path, int create_mode);
+int * initial_graph_path(double * graph_data);
+int * create_graph_path(int * path, double * graph_data, int create_mode);
 int random_num(int maximum);
 double make_distance(int x1, int y1, int x2, int y2);
 int already_visited(int * return_data, int city_num);
@@ -35,17 +35,18 @@ int * initial_euclid_path(int * euclid_data)
     return return_data;
 }
 
-double * initial_graph_path(double * graph_data)
+int * initial_graph_path(double * graph_data)
 {
-    double * return_data;
+    int * return_data;
 
     /* first time procedure */
     if(search_loop_times(READONLY) == 0) {
-        return_data = mallocer_dp((int)graph_data[0]);
+        return_data = mallocer_ip((int)graph_data[0]);
+        srand(time(NULL));
     }
 
     /* create the initial path */
-    return_data = create_graph_path(return_data, create_mode);
+    return_data = create_graph_path(return_data, graph_data,  create_mode);
 
     return return_data;
 }
@@ -102,15 +103,43 @@ int * create_euclid_path(int * return_data, int * euclid_data, int create_mode)
     return return_data;
 }
 
-double * create_graph_path(double * path, int create_mode)
+int * create_graph_path(int * return_data, double * graph_data, int create_mode)
 {
-    double * return_data;
+    int i, j;
+    int mini_index;
+    int first_point;
+    int size_tsp = (int)graph_data[0];
+    int now_city, next_city;
+    int choice_tabu[TSPMAXSIZE];
+    double distance = DBL_MAX;
+    double mini_dis = DBL_MAX;
 
-    printf("Mr.Tozaki would write here (initial_path.c)\n\n");
-    printf("Graph-Mode is non-available.\n");
-    printf("So, this program would be terminated 'exit(0)'\n");
+    first_point = random_num(size_tsp);
+    first_point += (first_point == 0) ? size_tsp : 0;
 
-    exit(0);
+    now_city = first_point;
+    choice_tabu[first_point] = first_point;
+    return_data[1] = first_point;
+
+    for(i = 2; i <= size_tsp; i++) {
+        for(j =1; j <= size_tsp; j++) {
+            if(choice_tabu[j] == 0) {
+                next_city = j;
+                distance = graph_data[now_city + size_tsp * next_city];
+                if(mini_dis > distance) {
+                    mini_index = next_city;
+                    mini_dis = distance;
+                }
+            }
+            else {
+                continue;
+            }
+        }
+        return_data[i] = mini_index;
+        choice_tabu[mini_index] = mini_index;
+        mini_dis = DBL_MAX;
+        now_city = next_city;
+    }
 
     return return_data;
 }
