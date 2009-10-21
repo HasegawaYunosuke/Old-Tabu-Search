@@ -12,6 +12,7 @@
 
 /* macro variable */
 #define INIT 0
+#define CLEAR 5
 #define ON 1
 #define OFF 0
 #define YES ON
@@ -26,6 +27,7 @@
 #define DEFAULT_PERMITWORSE 50
 #define DEFAULT_SEARCHTIME 10
 #define DEFAULT_CITYPOINT 5
+#define DEFAULT_2OPTLOOP 10
 
 /* grobal variable */
 struct mode {
@@ -36,6 +38,7 @@ struct mode {
     int hasegawa_mode;
     int pole_mode;
     int tozaki_mode;
+    int tabu_mode;
 };
 
 struct mode * modep;

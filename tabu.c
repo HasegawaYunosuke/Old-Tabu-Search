@@ -4,12 +4,15 @@
 /* functions */
 int is_2opt_tabu(int * cities);
 void tabu_matching(int * cities);
-void create_2opt_tabulist(int tsp_size);
+void add_2opt_tabulist(int * cities);
+void create_2opt_tabulist(int tsp_size, int mode);
+int get_list_size(int tsp_size);
 void flag_set(void);
 int * mallocer_ip(int list_size);
 
 /* grobal variable */
 int * tabulist_2opt[4];
+int tabulist_2opt_index;
 int list_size = 1;
 int find_out_flag;
 pthread_mutex_t match_mutex;
@@ -59,19 +62,46 @@ void tabu_matching(int * cities)
     }
 }
 
-void create_2opt_tabulist(int tsp_size)
+void add_2opt_tabulist(int * cities)
+{
+    int i;
+
+    for(i = 0; i < 4; i++) {
+        tabulist_2opt[i][tabulist_2opt_index] = cities[i];
+    }
+    tabulist_2opt_index++;
+}
+
+void create_2opt_tabulist(int tsp_size, int mode)
 {
     int i, j;
 
     /* 'list_size' is tabulist size (only once) */
-    if(list_size == 1) {
-        list_size = tsp_size * tsp_size;
-        for(i = 0; i < 4; i++) {
-            if((tabulist_2opt[i] = mallocer_ip(list_size)) == NULL) {
-                error_procedure("tabulist_2opt's malloc()");
+    if(mode == INIT) {
+        if(list_size == 1) {
+            list_size = get_list_size(tsp_size);
+            for(i = 0; i < 4; i++) {
+                if((tabulist_2opt[i] = mallocer_ip(list_size)) == NULL) {
+                    error_procedure("tabulist_2opt's malloc()");
+                }
             }
         }
     }
+    else if(mode == CLEAR) {
+        list_size = get_list_size(tsp_size);
+        for(i = 0; i < 4; i++) {
+            for(j = 0; j < list_size; j++) {
+                tabulist_2opt[i][j] = 0;
+            }
+        }
+    }
+
+    tabulist_2opt_index = 0;
+}
+
+int get_list_size(int tsp_size)
+{
+    return (tsp_size * tsp_size);
 }
 
 void flag_set(void)

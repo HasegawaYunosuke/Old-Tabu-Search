@@ -15,7 +15,6 @@ int * search(int * solution_path)
 
     if(modep->hasegawa_mode == ON) {
         return_data = hasegawa_search(solution_path);
-        sleep(1);
     }
     else if(modep->tozaki_mode == ON) {
         return_data = tozaki_search(solution_path);
