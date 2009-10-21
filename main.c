@@ -29,6 +29,7 @@ int * search(int * solution_path);
 void finalize(void);
 int get_x(int city_index);
 int get_y(int city_index);
+/* It's .gitignore test */
 
 /* grobal variable (for visual mode thread) */
 int * main_base_data;
