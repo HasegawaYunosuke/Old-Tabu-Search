@@ -41,8 +41,10 @@ int * initial_graph_path(double * graph_data)
 
     /* first time procedure */
     if(search_loop_times(READONLY) == 0) {
-        return_data = mallocer_ip((int)graph_data[0]);
+        return_data = mallocer_ip((int)graph_data[0] + 10);
         srand(time(NULL));
+        /* set return_data[0] to 'TSP-example-size' */
+        return_data[0] = (int)graph_data[0];
     }
 
     /* create the initial path */
@@ -108,27 +110,26 @@ int * create_graph_path(int * return_data, double * graph_data, int create_mode)
     int i, j;
     int mini_index;
     int first_point;
-    int size_tsp = (int)graph_data[0];
+    int tsp_size = (int)graph_data[0];
     int now_city, next_city;
-    int choice_tabu[TSPMAXSIZE];
+    int is_choiced[TSPMAXSIZE] = {NO};
     double distance = DBL_MAX;
-    double mini_dis = DBL_MAX;
+    double min_distance = DBL_MAX;
 
-    first_point = random_num(size_tsp);
-    first_point += (first_point == 0) ? size_tsp : 0;
+    first_point = random_num(tsp_size);
 
     now_city = first_point;
-    choice_tabu[first_point] = first_point;
+    is_choiced[first_point] = YES;
     return_data[1] = first_point;
 
-    for(i = 2; i <= size_tsp; i++) {
-        for(j =1; j <= size_tsp; j++) {
-            if(choice_tabu[j] == 0) {
+    for(i = 2; i <= tsp_size; i++) {
+        for(j =1; j <= tsp_size; j++) {
+            if(is_choiced[j] == NO) {
                 next_city = j;
-                distance = graph_data[now_city + size_tsp * next_city];
-                if(mini_dis > distance) {
+                distance = graph_data[now_city + tsp_size * next_city];
+                if(min_distance > distance) {
                     mini_index = next_city;
-                    mini_dis = distance;
+                    min_distance = distance;
                 }
             }
             else {
@@ -136,8 +137,8 @@ int * create_graph_path(int * return_data, double * graph_data, int create_mode)
             }
         }
         return_data[i] = mini_index;
-        choice_tabu[mini_index] = mini_index;
-        mini_dis = DBL_MAX;
+        is_choiced[mini_index] = YES;
+        min_distance = DBL_MAX;
         now_city = next_city;
     }
 

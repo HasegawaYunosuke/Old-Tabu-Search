@@ -5,21 +5,29 @@
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.7	//
 already_visited	initial_path.c	/^int already_visited(int * return_data, int city_num)$/;"	f
+bef_aft_distance	hasegawa.c	/^double bef_aft_distance(int * cities)$/;"	f
 choice_4indexs	hasegawa.c	/^void choice_4indexs(int type, int * return_data, int * solution_path)$/;"	f
 city_point	parameter.c	/^    int city_point;$/;"	m	struct:parameter	file:
 create_2opt_tabulist	tabu.c	/^void create_2opt_tabulist(int tsp_size)$/;"	f
 create_euclid_path	initial_path.c	/^int * create_euclid_path(int * return_data, int * euclid_data, int create_mode)$/;"	f
-create_graph_path	initial_path.c	/^double * create_graph_path(double * path, int create_mode)$/;"	f
+create_graph_path	initial_path.c	/^int * create_graph_path(int * return_data, double * graph_data, int create_mode)$/;"	f
 create_mode	initial_path.c	/^int create_mode = DEFAULT;$/;"	v
 error_procedure	error.c	/^void error_procedure(char * message)$/;"	f
 euclid_search	hasegawa.c	/^int * euclid_search(int * solution_path)$/;"	f
+exchange_branch	hasegawa.c	/^void exchange_branch(int * solution_path, int * indexs)$/;"	f
 finalize	finalize.c	/^void finalize(void)$/;"	f
 find_out_flag	tabu.c	/^int find_out_flag;$/;"	v
 flag_set	tabu.c	/^void flag_set(void)$/;"	f
+get_among	hasegawa.c	/^int get_among(int start, int end, int tsp_size)$/;"	f
+get_branch_distance	hasegawa.c	/^double get_branch_distance(int a, int b)$/;"	f
+get_cities_by_indexs	hasegawa.c	/^void get_cities_by_indexs(int * cities, int * indexs, int * solution_path)$/;"	f
+get_distance	hasegawa.c	/^double get_distance(int a, int ad, int b, int bd)$/;"	f
+get_x	main.c	/^int get_x(int city_index)$/;"	f
+get_y	main.c	/^int get_y(int city_index)$/;"	f
 hasegawa_search	hasegawa.c	/^int * hasegawa_search(int * solution_path)$/;"	f
 help_document	argument.c	/^void help_document(char ** argv)$/;"	f
 initial_euclid_path	initial_path.c	/^int * initial_euclid_path(int * euclid_data)$/;"	f
-initial_graph_path	initial_path.c	/^double * initial_graph_path(double * graph_data)$/;"	f
+initial_graph_path	initial_path.c	/^int * initial_graph_path(double * graph_data)$/;"	f
 initial_parameter	parameter.c	/^void initial_parameter(int tsp_size)$/;"	f
 is_2opt_tabu	tabu.c	/^int is_2opt_tabu(int * cities1)$/;"	f
 list_size	tabu.c	/^int list_size = 1;$/;"	v
@@ -34,6 +42,7 @@ mallocer_ip	mallocer.c	/^int * mallocer_ip(int size)$/;"	f
 match_mutex	tabu.c	/^pthread_mutex_t match_mutex;$/;"	v
 mode_select	hasegawa.c	/^int mode_select(int mode, int * solution_path)$/;"	f
 next_index	hasegawa.c	/^int next_index(int target, int maximum)$/;"	f
+now_index	hasegawa.c	/^int now_index(int target, int maximum)$/;"	f
 option_checker	argument.c	/^void option_checker(int argc, char ** argv)$/;"	f
 parameter	parameter.c	/^struct parameter {$/;"	s	file:
 parameterp	parameter.c	/^struct parameter * parameterp;$/;"	v	typeref:struct:parameter
