@@ -1,3 +1,4 @@
+/* git log test */
 /*
     *** READ ME ***
 
