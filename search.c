@@ -21,6 +21,7 @@ int * search(int * solution_path)
         sleep(1);
     }
     else {
+        error_procedure("Un-define-search()-mode is choiced");
         sleep(1);
     }
 

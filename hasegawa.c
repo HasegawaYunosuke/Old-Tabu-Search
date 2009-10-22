@@ -8,6 +8,7 @@
 /* functions */
 int * hasegawa_search(int * solution_path);
 int * euclid_search(int * solution_path);
+int * graph_search(int * solution_path);
 int * two_opt_search(int * solution_path);
 void choice_4indexs(int type, int * cities, int * solution_path);
 int permit_worse(double bef_aft_distance);
@@ -22,7 +23,9 @@ void exchange_branch(int * solution_path, int * indexs);
 void get_cities_by_indexs(int * cities, int * indexs, int * solution_path);
 double get_worse_permit(void);
 double get_distance(int a, int ad, int b, int bd);
+double get_cost(int a, int ad, int b, int bd);
 double get_branch_distance(int a, int b);
+double get_branch_cost(int a, int b);
 double get_now_parcentage(void);
 double make_distance(int x1, int y1, int x2, int y2);
 int get_x(int city_index);
@@ -44,7 +47,8 @@ int * hasegawa_search(int * solution_path)
     }
     /* Search Graph-Data (non-available) */
     else if(modep->graph_mode == ON) {
-        error_procedure("hasegawa_search() non-available");
+        return_data = graph_search(solution_path);
+        error_procedure("hasegawa_search() constructing");
     }
     /* Error */
     else {
@@ -69,6 +73,29 @@ int * euclid_search(int * solution_path)
             }
 
             /* search by 2-opt procedure */
+            return_data = two_opt_search(solution_path);
+            break;
+    }
+
+    return return_data;
+}
+
+int * graph_search(int * solution_path)
+{
+    int * return_data;
+    int mode;
+
+    mode = mode_select(mode, solution_path);
+
+    switch(mode) {
+        case DEFAULT:
+            /* create tabu list for 2-opt (only first procedure) */
+            if(turn_loop_times(READONLY) == 0 && search_loop_times(READONLY) == 0) {
+                create_2opt_tabulist(solution_path[0], INIT);
+            }
+
+            /* search by 2-opt procedure */
+            error_procedure("two_opt_search() graph version is non-available");
             return_data = two_opt_search(solution_path);
             break;
     }
@@ -159,24 +186,42 @@ double bef_aft_distance(int * cities)
 {
     double before, after;
 
-    before = get_distance(cities[0],cities[1],cities[2],cities[3]);
-    after = get_distance(cities[0],cities[2],cities[1],cities[3]);
+    if(modep->euclid_mode == ON) {
+        before = get_distance(cities[0],cities[1],cities[2],cities[3]);
+        after = get_distance(cities[0],cities[2],cities[1],cities[3]);
+    }
+    else if(modep->graph_mode == ON) {
+        before = get_cost(cities[0],cities[1],cities[2],cities[3]);
+        after = get_cost(cities[0],cities[2],cities[1],cities[3]);
+    }
 
     set_now_parcentage(before, after);
 
     return (before - after);
 }
 
-/* input datas (a,ad,b,bd) are the number of index of city */
+/* input datas (a,ad,b,bd) are the number of index of city (Euclide) */
 double get_distance(int a, int ad, int b, int bd)
 {
     return (get_branch_distance(a, ad) + get_branch_distance(b, bd));
+}
+
+/* input datas (a,ad,b,bd) are the number of index of city (Graph) */
+double get_cost(int a, int ad, int b, int bd)
+{
+    return (get_branch_cost(a, ad) + get_branch_cost(b, bd));
 }
 
 /* input datas (a,b) are the number of index of city */
 double get_branch_distance(int a, int b)
 {
     return make_distance(get_x(a), get_y(a), get_x(b), get_y(b));
+}
+
+/* input datas (a,b) are the number of index of city */
+double get_branch_cost(int a, int b)
+{
+    error_procedure("get_branch_cost() is non-available");
 }
 
 /* permit exchange toward worse if under permit_baseline */
