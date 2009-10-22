@@ -11,6 +11,7 @@ void set_tozaki_mode(void);
 void set_tabu_mode(int type);
 void set_now_parcentage(double before, double after);
 void set_2opt_loop(void);
+void set_graph_data(double * graph_data);
 void show_mode(void);
 void show_on_off(int on_off);
 void initial_parameter(int tsp_size);
@@ -20,6 +21,7 @@ int get_2opt_loop(void);
 int get_tsp_size(void);
 double get_worse_permit(void);
 double get_now_parcentage(void);
+double get_graph_cost(int a, int b);
 
 /* grobal variable */
 struct parameter {
@@ -29,6 +31,8 @@ struct parameter {
     double now_parcentage;      /* Parcentage of now choice () */
     double permit_worse;        /* Parcentage of permitting to choice toward worse */
     double search_time;         /* whole program running time */
+    int * main_base_data;
+    double * graph_data;
 };
 
 struct parameter * parameterp;
@@ -174,6 +178,11 @@ void set_now_parcentage(double before, double after)
     parameterp->now_parcentage = (after - before) / before;
 }
 
+void set_graph_data(double * graph_data)
+{
+    parameterp->graph_data = graph_data;
+}
+
 double get_now_parcentage(void)
 {
     return parameterp->now_parcentage;
@@ -182,6 +191,11 @@ double get_now_parcentage(void)
 int get_tsp_size(void)
 {
     return parameterp->tsp_size;
+}
+
+double get_graph_cost(int a, int b)
+{
+    return parameterp->graph_data[a + get_tsp_size() * b];
 }
 
 void show_mode(void)

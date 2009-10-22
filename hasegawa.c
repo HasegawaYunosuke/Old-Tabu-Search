@@ -26,6 +26,7 @@ double get_distance(int a, int ad, int b, int bd);
 double get_cost(int a, int ad, int b, int bd);
 double get_branch_distance(int a, int b);
 double get_branch_cost(int a, int b);
+double get_graph_cost(int a,int b);
 double get_now_parcentage(void);
 double make_distance(int x1, int y1, int x2, int y2);
 int get_x(int city_index);
@@ -48,14 +49,13 @@ int * hasegawa_search(int * solution_path)
     /* Search Graph-Data (non-available) */
     else if(modep->graph_mode == ON) {
         return_data = graph_search(solution_path);
-        error_procedure("hasegawa_search() constructing");
     }
     /* Error */
     else {
         error_procedure("hasegawa_search()");
     }
 
-    return solution_path;
+    return return_data;
 }
 
 int * euclid_search(int * solution_path)
@@ -95,7 +95,6 @@ int * graph_search(int * solution_path)
             }
 
             /* search by 2-opt procedure */
-            error_procedure("two_opt_search() graph version is non-available");
             return_data = two_opt_search(solution_path);
             break;
     }
@@ -221,7 +220,7 @@ double get_branch_distance(int a, int b)
 /* input datas (a,b) are the number of index of city */
 double get_branch_cost(int a, int b)
 {
-    error_procedure("get_branch_cost() is non-available");
+    return get_graph_cost(a,b);
 }
 
 /* permit exchange toward worse if under permit_baseline */

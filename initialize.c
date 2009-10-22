@@ -5,6 +5,7 @@
 double * make_graph(int * main_base_data);
 double * mallocer_dp(int size);
 double make_distance(int x1, int y1, int x2, int y2);
+void set_graph_data(double * graph_data);
 
 double * make_graph(int * main_base_data)
 {
@@ -25,6 +26,8 @@ double * make_graph(int * main_base_data)
             return_data[i + size * j] = len;
         }
     }
+
+    set_graph_data(return_data);
 
     return return_data;
 }

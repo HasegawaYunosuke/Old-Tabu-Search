@@ -48,6 +48,9 @@ int main(int argc, char ** argv)
     /* read TSPLIB's explain data */
     main_base_data = read_data();
 
+    /* set parameter to 0 */
+    initial_parameter(main_base_data[0]);
+
     /* change data type ( Euclid -> Graph ) */
     if(modep->graph_mode == ON) {
         graph_data = make_graph(main_base_data);
@@ -62,9 +65,6 @@ int main(int argc, char ** argv)
                         (void *) &visual_arg);
         pthread_join(visual_thread, NULL);
     }
-
-    /* set parameter to 0 */
-    initial_parameter(main_base_data[0]);
 
     /* timer start */
     timer(ON);
