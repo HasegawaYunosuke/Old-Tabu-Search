@@ -5,6 +5,7 @@
 void search(void);
 int * hasegawa_search(int * solution_path);
 int * tozaki_search(int * solution_path);
+int * pole_search(int * solution_path);
 int * get_solution_path(void);
 void set_solution_path(int * solution_path);
 
@@ -20,6 +21,10 @@ void search(void)
     }
     else if(modep->tozaki_mode == ON) {
         solution_path = tozaki_search(solution_path);
+        sleep(1);
+    }
+    else if(modep->pole_mode == ON) {
+        solution_path = pole_search(solution_path);
         sleep(1);
     }
     else {
