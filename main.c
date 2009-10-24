@@ -22,9 +22,15 @@ int search_terminate(void);
 void initial_path(void);
 void search(void);
 void finalize(void);
+double get_all_cost_by_graph(int * cities);
+int * get_solution_path(void);
+double get_best_cost(void);
 
 int main(int argc, char ** argv)
 {
+    int i;
+    int * sol;
+
     /* all in one initialize */
     initialize(argc, argv);
 
@@ -40,6 +46,18 @@ int main(int argc, char ** argv)
         for(;;) {
             /* search */
             search();
+
+            /* DEL ST */
+            printf("DEL:all_cost == %f,",get_all_cost_by_graph(get_solution_path()));
+            printf("best == %.2f,",get_best_cost());
+            if(modep->tabu_mode == ON) {
+                printf("tabu ON\n");
+            }
+            else {
+                printf("tabu OFF\n");
+            }
+            /* DEL EN */
+
             /* search-turn terminate */
             if(loop_terminate() == YES) {break;}
         }

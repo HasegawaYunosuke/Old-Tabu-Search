@@ -46,9 +46,7 @@ int * initial_euclid_path(int * euclid_data)
     }
 
     /* create the initial path */
-    return_data = create_euclid_path(return_data, euclid_data, create_mode);
-
-    return return_data;
+    return create_euclid_path(return_data, euclid_data, create_mode);
 }
 
 int * initial_graph_path(double * graph_data)

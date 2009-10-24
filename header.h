@@ -21,13 +21,14 @@
 #define READONLY -2
 #define DEFAULT 0
 #define PERMITWORSE 10
+#define SMART2OPT 20
 
 /* macro parameter */
 #define TSPMAXSIZE 2000
-#define DEFAULT_PERMITWORSE 50
+#define DEFAULT_PERMITWORSE 10
 #define DEFAULT_SEARCHTIME 10
 #define DEFAULT_CITYPOINT 5
-#define DEFAULT_2OPTLOOP 10
+#define DEFAULT_2OPTLOOP 100
 
 /* grobal variable */
 struct mode {

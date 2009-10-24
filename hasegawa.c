@@ -29,6 +29,7 @@ double get_branch_cost(int a, int b);
 double get_graph_cost(int a,int b);
 double get_now_parcentage(void);
 double make_distance(int x1, int y1, int x2, int y2);
+void set_solution_path(int * solution_path);
 int get_x(int city_index);
 int get_y(int city_index);
 
@@ -97,6 +98,8 @@ int * graph_search(int * solution_path)
             /* search by 2-opt procedure */
             return_data = two_opt_search(solution_path);
             break;
+        case SMART2OPT:
+            break;
     }
 
     return return_data;
@@ -113,7 +116,6 @@ int * two_opt_search(int * solution_path)
 {
     int indexs[4], cities[4];
     int loop_times = 0;
-    double test;
 
     /* (1) First, this fucn exchange branch by "2-opt" only toward better without using tabu-list */
     if(get_tabu_mode() == OFF) {
@@ -125,7 +127,7 @@ int * two_opt_search(int * solution_path)
             if(loop_times > get_2opt_loop()) {
                 set_tabu_mode(ON);
             }
-        } while((test = bef_aft_distance(cities)) <= 0);
+        } while(bef_aft_distance(cities) <= 0);
     }
     /* (2) Second, permit exchange toward worse, and use tabu-list */
     else {
@@ -257,40 +259,35 @@ void exchange_branch(int * solution_path, int * indexs)
         copy[i] = solution_path[i];
     }
 
-    for(i = 0; i < (count = get_among(indexs[1], indexs[2], tsp_size)); i++) {
-        solution_path[now_index((indexs[1] + i), tsp_size)] = copy[now_index((indexs[2] - i), tsp_size)];
+    for(i = 0; i <= (count = get_among(indexs[1], indexs[2], tsp_size)); i++) {
+        solution_path[now_index((indexs[2] - i), tsp_size)] = copy[now_index((indexs[1] + i), tsp_size)];
     }
 
     free(copy);
+
+    set_solution_path(solution_path);
 }
 
 int get_among(int start, int end, int tsp_size)
 {
-    int count = 0;
-    int now = start;
-    int next;
+    int return_num = end - start;
 
-    for(;;) {
-        next = next_index(now, tsp_size);
-        count++;
-        if(next == end) {
-            break;
-        }
-        now = next;
+    if(return_num < 0) {
+        return_num += tsp_size;
     }
 
-    return count;
+    return return_num;
 }
 /* (1 <= return_num <= Max) */
 int next_index(int target, int maximum)
 {
-    return (target % maximum + 1);
+    return now_index((target % maximum + 1), maximum);
 }
 
 /* (1 <= return_num <= Max) */
 int prev_index(int target, int maximum)
 {
-    return ((target == 1) ? maximum : target -1);
+    return now_index(((target == 1) ? maximum : target -1), maximum);
 }
 
 /* (1 <= return_num <= Max) */
@@ -302,7 +299,13 @@ int now_index(int target, int maximum)
         return_num = (((return_num = target % maximum) == 0) ? maximum : return_num);
     }
     else {
-        return_num = (((return_num = target % maximum) == 0) ? maximum : return_num * (-1));
+        return_num = (((return_num = target * (-1) % maximum) == 0) ? maximum : return_num);
+        if(target % maximum == 0) {
+            return_num = maximum;
+        }
+        else {
+            return_num = target % maximum + maximum;
+        }
     }
 
     return return_num;

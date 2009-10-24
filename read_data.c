@@ -97,7 +97,7 @@ int * read_data(void)
     }
 
     array[0][0] = tsp_size; array[0][1] = tsp_size;
-    main_base_data = mallocer_ip(tsp_size);
+    main_base_data = mallocer_ip(tsp_size * 2 + 2);
     for(i = 0; i <= tsp_size; i++) {
         for(j = 0; j < 2; j++) {
             if(j == 0) {

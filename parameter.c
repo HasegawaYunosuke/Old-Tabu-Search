@@ -26,8 +26,13 @@ int get_y(int city_index);
 double get_worse_permit(void);
 double get_now_parcentage(void);
 double get_graph_cost(int a, int b);
+void set_all_cost(void);
 void set_mode(void);
 void show_mode(void);
+double get_all_cost_by_graph(int * solution_path);
+double get_all_cost_by_euclid(int * solution_path);
+double get_best_cost(void);
+int now_index(int target, int maximum);
 void show_on_off(int on_off);
 
 /* grobal variable */
@@ -38,9 +43,11 @@ struct parameter {
     double now_parcentage;      /* Parcentage of now choice () */
     double permit_worse;        /* Parcentage of permitting to choice toward worse */
     double search_time;         /* whole program running time */
-    int * main_base_data;
-    double * graph_data;
-    int * solution_path;
+    int * main_base_data;       /* TSPLIB's data, discribed by Euclid */
+    double * graph_data;        /* TSPLIB's data, discribed by Graph */
+    int * solution_path;        /* the sequence of city data arrived */
+    double all_cost;            /* solution_path's cost */
+    double best_cost;
 };
 
 struct parameter * parameterp;
@@ -101,6 +108,8 @@ void initial_parameter(int tsp_size)
     parameterp->tsp_size = tsp_size;
     parameterp->permit_worse = DEFAULT_PERMITWORSE;
     parameterp->city_point = DEFAULT_CITYPOINT;
+    parameterp->best_cost = DBL_MAX;
+    parameterp->all_cost = DBL_MAX;
     set_2opt_loop();
     turn_times = 0;
     search_times = 0;
@@ -183,7 +192,7 @@ void set_2opt_loop(void)
 void set_now_parcentage(double before, double after)
 {
     /* permit_worse > 0 */
-    parameterp->now_parcentage = (after - before) / before;
+    parameterp->now_parcentage = (after - before) / before * 100;
 }
 
 void set_graph_data(double * graph_data)
@@ -199,6 +208,8 @@ void set_main_base_data(int * main_base_data)
 void set_solution_path(int * solution_path)
 {
     parameterp->solution_path = solution_path;
+
+    set_all_cost();
 }
 
 double get_now_parcentage(void)
@@ -229,6 +240,57 @@ double * get_graph_data(void)
 int * get_solution_path(void)
 {
     return parameterp->solution_path;
+}
+
+void set_all_cost(void)
+{
+    double all_cost = 0;
+
+    if(modep->graph_mode == ON) {
+        all_cost = get_all_cost_by_graph(get_solution_path());
+    }
+    else if(modep->euclid_mode == ON) {
+        all_cost = get_all_cost_by_euclid(get_solution_path());
+    }
+
+    parameterp->all_cost = all_cost;
+
+    if(all_cost < parameterp->best_cost) {
+        parameterp->best_cost = all_cost;
+    }
+}
+
+double get_best_cost(void)
+{
+    return parameterp->best_cost;
+}
+
+double get_all_cost_by_graph(int * cities)
+{
+    int i, now, next;
+    int tsp_size = cities[0];
+    double all_cost = 0;
+
+    for(i = 1; i <= tsp_size; i++) {
+        now = i;
+        next = now_index(i + 1, tsp_size);
+
+        all_cost += get_graph_cost(cities[now], cities[next]);
+    }
+
+    return all_cost;
+}
+
+double get_all_cost_by_euclid(int * cities)
+{
+    int tsp_size = cities[0];
+    double all_cost = 0;
+
+    /* DEL ST */
+    error_procedure("get_all_cost_by_euclid() is non-avairable");
+    /* DEL EN */
+
+    return all_cost;
 }
 
 int get_x(int city_index)
