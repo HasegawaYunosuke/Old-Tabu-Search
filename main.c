@@ -20,13 +20,11 @@ void initialize(int argc, char ** argv);
 int loop_terminate(void);
 int search_terminate(void);
 int * initial_path(void);
-int * search(int * solution_path);
+void search(void);
 void finalize(void);
 
 int main(int argc, char ** argv)
 {
-    int * solution_path;
-
     /* all in one initialize */
     initialize(argc, argv);
 
@@ -36,12 +34,12 @@ int main(int argc, char ** argv)
     /* whole-search loop */
     for(;;) {
         /* create initial-path by each mode */
-        solution_path = initial_path();
+        initial_path();
 
         /* search-turn loop */
         for(;;) {
             /* search */
-            solution_path = search(solution_path);
+            search();
             /* search-turn terminate */
             if(loop_terminate() == YES) {break;}
         }

@@ -2,22 +2,24 @@
 #include "header.h"
 
 /* functions */
-int * search(int * solution_path);
+void search(void);
 int * hasegawa_search(int * solution_path);
 int * tozaki_search(int * solution_path);
+int * get_solution_path(void);
+void set_solution_path(int * solution_path);
 
 /* grobal variable */
 
 /* search() will share function both Euclid and Graph as possible as we can */
-int * search(int * solution_path)
+void search(void)
 {
-    int * return_data;
+    int * solution_path = get_solution_path();
 
     if(modep->hasegawa_mode == ON) {
-        return_data = hasegawa_search(solution_path);
+        solution_path = hasegawa_search(solution_path);
     }
     else if(modep->tozaki_mode == ON) {
-        return_data = tozaki_search(solution_path);
+        solution_path = tozaki_search(solution_path);
         sleep(1);
     }
     else {
@@ -25,5 +27,5 @@ int * search(int * solution_path)
         sleep(1);
     }
 
-    return return_data;
+    set_solution_path(solution_path);
 }
