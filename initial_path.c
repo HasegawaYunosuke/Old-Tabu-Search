@@ -2,6 +2,7 @@
 #include "header.h"
 
 /* functions */
+void initial_path(void);
 void set_solution_path(int * solution_path);
 int * get_solution_path(void);
 int * get_main_base_data(void);
@@ -17,7 +18,7 @@ int search_loop_times(int type);
 int * mallocer_ip(int size);
 double * mallocer_dp(int size);
 
-int * initial_path(void)
+void initial_path(void)
 {
     /* create initial-path by each mode */
     if(modep->euclid_mode == ON) {
@@ -26,8 +27,6 @@ int * initial_path(void)
     else {
         set_solution_path(initial_graph_path(get_graph_data()));
     }
-
-    return get_solution_path();
 }
 
 /* global variable */

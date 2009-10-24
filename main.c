@@ -19,7 +19,7 @@
 void initialize(int argc, char ** argv);
 int loop_terminate(void);
 int search_terminate(void);
-int * initial_path(void);
+void initial_path(void);
 void search(void);
 void finalize(void);
 
