@@ -2,26 +2,33 @@
 #include "header.h"
 
 /* functions */
-void set_mode(void);
 void set_euclid_mode(void);
 void set_visual_mode(void);
 void set_parallel_mode(void);
 void set_pole_mode(void);
 void set_tozaki_mode(void);
 void set_tabu_mode(int type);
+int get_tabu_mode(void);
 void set_now_parcentage(double before, double after);
 void set_2opt_loop(void);
 void set_graph_data(double * graph_data);
-void show_mode(void);
-void show_on_off(int on_off);
+double * get_graph_data(void);
+void set_main_base_data(int * main_base_data);
+int * get_main_base_data(void);
+void set_solution_path(int * solution_path);
+int * get_solution_path(void);
 void initial_parameter(int tsp_size);
 int turn_loop_times(int type);
-int get_tabu_mode(void);
 int get_2opt_loop(void);
 int get_tsp_size(void);
+int get_x(int city_index);
+int get_y(int city_index);
 double get_worse_permit(void);
 double get_now_parcentage(void);
 double get_graph_cost(int a, int b);
+void set_mode(void);
+void show_mode(void);
+void show_on_off(int on_off);
 
 /* grobal variable */
 struct parameter {
@@ -33,6 +40,7 @@ struct parameter {
     double search_time;         /* whole program running time */
     int * main_base_data;
     double * graph_data;
+    int * solution_path;
 };
 
 struct parameter * parameterp;
@@ -183,6 +191,16 @@ void set_graph_data(double * graph_data)
     parameterp->graph_data = graph_data;
 }
 
+void set_main_base_data(int * main_base_data)
+{
+    parameterp->main_base_data = main_base_data;
+}
+
+void set_solution_path(int * solution_path)
+{
+    parameterp->solution_path = solution_path;
+}
+
 double get_now_parcentage(void)
 {
     return parameterp->now_parcentage;
@@ -196,6 +214,37 @@ int get_tsp_size(void)
 double get_graph_cost(int a, int b)
 {
     return parameterp->graph_data[a + get_tsp_size() * b];
+}
+
+int * get_main_base_data(void)
+{
+    return parameterp->main_base_data;
+}
+
+double * get_graph_data(void)
+{
+    return parameterp->graph_data;
+}
+
+int * get_solution_path(void)
+{
+    return parameterp->solution_path;
+}
+
+int get_x(int city_index)
+{
+    int * main_base_data;
+
+    main_base_data = get_main_base_data();
+    return main_base_data[city_index * 2];
+}
+
+int get_y(int city_index)
+{
+    int * main_base_data;
+
+    main_base_data = get_main_base_data();
+    return main_base_data[city_index * 2 + 1];
 }
 
 void show_mode(void)

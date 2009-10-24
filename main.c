@@ -16,55 +16,19 @@
 #include "header.h"
 
 /* functions */
-void option_checker(int argc, char ** argv);
-int * read_data(void);
-double * make_graph(int * main_base_data);
-void visualizer(int * visual_arg);
-void initial_parameter(int tsp_size);
+void initialize(int argc, char ** argv);
 int loop_terminate(void);
 int search_terminate(void);
-int * initial_euclid_path(int * euclid);
-int * initial_graph_path(double * graph);
+int * initial_path(void);
 int * search(int * solution_path);
 void finalize(void);
-int get_x(int city_index);
-int get_y(int city_index);
-
-/* grobal variable (for visual mode thread) */
-int * main_base_data;
-int * solution_path_for_visual;
 
 int main(int argc, char ** argv)
 {
-    double * graph_data;
-    int visual_arg; /* Please edit !! for Waki */
-    pthread_t visual_thread;
     int * solution_path;
-    int test;
 
-    /* comand-line short option check */
-    option_checker(argc, argv);
-
-    /* read TSPLIB's explain data */
-    main_base_data = read_data();
-
-    /* set parameter to 0 */
-    initial_parameter(main_base_data[0]);
-
-    /* change data type ( Euclid -> Graph ) */
-    if(modep->graph_mode == ON) {
-        graph_data = make_graph(main_base_data);
-    }
-
-    /* create thread for visual-mode */
-    if(modep->visual_mode == ON) {
-        pthread_mutex_init(&mutex, NULL);
-        pthread_create(&visual_thread,
-                        NULL,
-                        (void *) visualizer,
-                        (void *) &visual_arg);
-        pthread_join(visual_thread, NULL);
-    }
+    /* all in one initialize */
+    initialize(argc, argv);
 
     /* timer start */
     timer(ON);
@@ -72,40 +36,21 @@ int main(int argc, char ** argv)
     /* whole-search loop */
     for(;;) {
         /* create initial-path by each mode */
-        if(modep->euclid_mode == ON) {
-            solution_path = initial_euclid_path(main_base_data);
-        }
-        else {
-            solution_path = initial_graph_path(graph_data);
-        }
+        solution_path = initial_path();
 
         /* search-turn loop */
         for(;;) {
             /* search */
             solution_path = search(solution_path);
-
             /* search-turn terminate */
-            if(loop_terminate() == YES) {
-                break;
-            }
+            if(loop_terminate() == YES) {break;}
         }
         /* whole-search-terminate */
-        if(search_terminate() == YES) {
-            break;
-        }
+        if(search_terminate() == YES) {break;}
     }
+
     /* finalize procedure */
     finalize();
 
     return 0;
-}
-
-int get_x(int city_index)
-{
-    return main_base_data[city_index * 2];
-}
-
-int get_y(int city_index)
-{
-    return main_base_data[city_index * 2 + 1];
 }

@@ -2,6 +2,10 @@
 #include "header.h"
 
 /* functions */
+void set_solution_path(int * solution_path);
+int * get_solution_path(void);
+int * get_main_base_data(void);
+double * get_graph_data(void);
 int * initial_euclid_path(int * euclid_data);
 int * create_euclid_path(int * return_data, int * base_data, int create_mode);
 int * initial_graph_path(double * graph_data);
@@ -12,6 +16,19 @@ int already_visited(int * return_data, int city_num);
 int search_loop_times(int type);
 int * mallocer_ip(int size);
 double * mallocer_dp(int size);
+
+int * initial_path(void)
+{
+    /* create initial-path by each mode */
+    if(modep->euclid_mode == ON) {
+        set_solution_path(initial_euclid_path(get_main_base_data()));
+    }
+    else {
+        set_solution_path(initial_graph_path(get_graph_data()));
+    }
+
+    return get_solution_path();
+}
 
 /* global variable */
 int create_mode = DEFAULT;
