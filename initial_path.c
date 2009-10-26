@@ -137,6 +137,8 @@ int * create_graph_path(int * return_data, double * graph_data, int create_mode)
     return_data[1] = first_point;
 
     for(i = 2; i <= tsp_size; i++) {
+        
+    
         for(j =1; j <= tsp_size; j++) {
             if(is_choiced[j] == NO) {
                 next_city = j;
@@ -153,7 +155,8 @@ int * create_graph_path(int * return_data, double * graph_data, int create_mode)
         return_data[i] = mini_index;
         is_choiced[mini_index] = YES;
         min_distance = DBL_MAX;
-        now_city = next_city;
+        now_city = mini_index;
+         
     }
 
     return return_data;
