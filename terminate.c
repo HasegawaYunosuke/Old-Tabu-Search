@@ -8,7 +8,8 @@ int turn_loop_times(int type);
 int search_loop_times(int type);
 int get_tsp_size(void);
 int timer(int type);
-
+void create_2opt_tabulist(int tsp_size, int mode);
+int get_tsp_size(void);
 
 int loop_terminate(void)
 {
@@ -23,6 +24,10 @@ int loop_terminate(void)
 
         return_num = YES;
         set_tabu_mode(OFF);
+
+        if(modep->hasegawa_mode == ON) {
+            create_2opt_tabulist(get_tsp_size(), CLEAR);
+        }
     }
     if(timer(CHECK) == OFF) {
         turn_loop_times(INIT);
