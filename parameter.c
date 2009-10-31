@@ -20,6 +20,7 @@ void set_solution_path(int * solution_path);
 int * get_solution_path(void);
 void initial_parameter(int tsp_size);
 int turn_loop_times(int type);
+int search_loop_times(int type);
 int get_2opt_loop(void);
 int get_tsp_size(void);
 int get_x(int city_index);
@@ -28,6 +29,8 @@ double get_worse_permit(void);
 double get_now_parcentage(void);
 double get_graph_cost(int a, int b);
 void set_all_cost(void);
+void create_historys(void);
+void add_history(void);
 void set_mode(void);
 void show_mode(void);
 double get_all_cost_by_graph(int * solution_path);
@@ -121,6 +124,9 @@ void initial_parameter(int tsp_size)
     set_2opt_loop();
     turn_times = 0;
     search_times = 0;
+
+    create_historys();
+
 }
 
 int turn_loop_times(int type)
@@ -216,8 +222,8 @@ void set_main_base_data(int * main_base_data)
 void set_solution_path(int * solution_path)
 {
     parameterp->solution_path = solution_path;
-
     set_all_cost();
+    //add_history();
 }
 
 double get_now_parcentage(void)
