@@ -9,7 +9,7 @@
 int * hasegawa_search(int * solution_path);
 int * euclid_search(int * solution_path);
 int * graph_search(int * solution_path);
-int * two_opt_search(int * solution_path);
+int * two_opt_tabu(int * solution_path);
 int * two_opt_only(int * solution_path);
 void choice_4indexs(int type, int * cities, int * solution_path);
 int permit_worse(double bef_aft_distance);
@@ -76,7 +76,7 @@ int * euclid_search(int * solution_path)
             }
 
             /* search by 2-opt procedure */
-            return_data = two_opt_search(solution_path);
+            return_data = two_opt_tabu(solution_path);
             break;
     }
 
@@ -99,9 +99,8 @@ int * graph_search(int * solution_path)
             if(turn_loop_times(READONLY) == 0 && search_loop_times(READONLY) == 0) {
                 create_2opt_tabulist(solution_path[0], INIT);
             }
-
             /* search by 2-opt procedure */
-            return_data = two_opt_search(solution_path);
+            return_data = two_opt_tabu(solution_path);
             break;
     }
 
@@ -120,7 +119,7 @@ int mode_select(int mode, int * solution_path)
     return mode;
 }
 
-int * two_opt_search(int * solution_path)
+int * two_opt_tabu(int * solution_path)
 {
     int indexs[4], cities[4];
     int loop_times = 0;
