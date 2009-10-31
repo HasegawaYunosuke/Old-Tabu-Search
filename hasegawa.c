@@ -10,6 +10,7 @@ int * hasegawa_search(int * solution_path);
 int * euclid_search(int * solution_path);
 int * graph_search(int * solution_path);
 int * two_opt_search(int * solution_path);
+int * two_opt_only(int * solution_path);
 void choice_4indexs(int type, int * cities, int * solution_path);
 int permit_worse(double bef_aft_distance);
 int mode_select(int mode, int * solution_path);
@@ -28,6 +29,7 @@ double get_branch_distance(int a, int b);
 double get_branch_cost(int a, int b);
 double get_graph_cost(int a,int b);
 double get_now_parcentage(void);
+void get_min_exchange_indexs(int * solution_path, int * indexs);
 double make_distance(int x1, int y1, int x2, int y2);
 void set_solution_path(int * solution_path);
 int get_x(int city_index);
@@ -90,6 +92,9 @@ int * graph_search(int * solution_path)
 
     switch(mode) {
         case DEFAULT:
+            return_data = two_opt_only(solution_path);
+            break;
+        case TABU2OPT:
             /* create tabu list for 2-opt (only first procedure) */
             if(turn_loop_times(READONLY) == 0 && search_loop_times(READONLY) == 0) {
                 create_2opt_tabulist(solution_path[0], INIT);
@@ -98,8 +103,6 @@ int * graph_search(int * solution_path)
             /* search by 2-opt procedure */
             return_data = two_opt_search(solution_path);
             break;
-        case SMART2OPT:
-            break;
     }
 
     return return_data;
@@ -107,7 +110,12 @@ int * graph_search(int * solution_path)
 
 int mode_select(int mode, int * solution_path)
 {
-    mode = DEFAULT;
+    if(modep->only2opt_mode == ON) {
+        mode = DEFAULT;
+    }
+    else if(modep->tabu2opt_mode == ON) {
+        mode = TABU2OPT;
+    }
 
     return mode;
 }
@@ -140,6 +148,46 @@ int * two_opt_search(int * solution_path)
     exchange_branch(solution_path, indexs);
 
     return solution_path;
+}
+
+int * two_opt_only(int * solution_path)
+{
+    int indexs[4];
+
+    if(modep->graph_mode = ON) {
+        get_min_exchange_indexs(solution_path, indexs);
+    }
+    else {
+        error_procedure("two_opt_only()'s 2-opt only mode");
+    }
+
+    exchange_branch(solution_path, indexs);
+
+    return solution_path;
+}
+
+void get_min_exchange_indexs(int * solution_path, int * best_indexs)
+{
+    int i, j, k;
+    int tsp_size = solution_path[0];
+    int cities[4];
+    int indexs[4];
+    double distance = DBL_MIN;
+    double maximum = DBL_MIN;
+
+    for(i = 1; i <= tsp_size - 3; i++) {
+        indexs[0] = i; indexs[1] = i + 1;
+        for(j = i + 2; j <= tsp_size - 1; j++) {
+            indexs[2] = j; indexs[3] = j + 1;
+            get_cities_by_indexs(cities, indexs, solution_path);
+            if(maximum < (distance = bef_aft_distance(cities))) {
+                maximum = distance;
+                for(k = 0; k < 4; k++) {
+                    best_indexs[k] = indexs[k];
+                }
+            }
+        }
+    }
 }
 
 void get_cities_by_indexs(int * cities, int * indexs, int * solution_path)

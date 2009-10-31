@@ -22,6 +22,7 @@
 #define DEFAULT 0
 #define PERMITWORSE 10
 #define SMART2OPT 20
+#define TABU2OPT 30
 
 /* macro parameter */
 #define TSPMAXSIZE 2000
@@ -40,6 +41,8 @@ struct mode {
     int pole_mode;
     int tozaki_mode;
     int tabu_mode;
+    int tabu2opt_mode;
+    int only2opt_mode;
 };
 
 struct mode * modep;

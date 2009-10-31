@@ -2,6 +2,7 @@
 #include "header.h"
 
 /* functions */
+void set_tabu2opt_mode(void);
 void set_euclid_mode(void);
 void set_visual_mode(void);
 void set_parallel_mode(void);
@@ -66,6 +67,13 @@ void set_mode(void)
     modep->graph_mode = ON;
     modep->hasegawa_mode = ON;
     modep->tabu_mode = OFF;
+    modep->only2opt_mode = ON;
+}
+
+void set_tabu2opt_mode(void)
+{
+    modep->only2opt_mode = OFF;
+    modep->tabu2opt_mode = ON;
 }
 
 void set_euclid_mode(void)

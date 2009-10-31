@@ -28,8 +28,11 @@ void option_checker(int argc, char ** argv)
     set_mode();
 
     /* check short options */
-    while((opt = getopt(argc, argv, "evplzt:f:h")) != -1) {
+    while((opt = getopt(argc, argv, "bevplzt:f:h")) != -1) {
         switch(opt) {
+            case 'b':
+                set_tabu2opt_mode();
+                break;
             case 'e':
                 set_euclid_mode();
                 break;
@@ -71,9 +74,11 @@ void help_document(char ** argv)
     printf("This program is made by Yunosuke Hasegawa, Yuya Tanaka, Takashi Waki, and Yoshihito Tozaki.\n");
     printf("The role of this program is solving TSP using Tabu-Search.\n");
     printf("Written by C language, and Java. Java only use in case of \"graphical-mode\".\n\n");
-    printf("Usage: %s [-e] [-p] [-l] [-z] [-h] [-v] [-t search_time[s]] [-f tspfile]\n",argv[0]);
+    printf("Usage: %s [-b] [-e] [-p] [-l] [-z] [-h] [-v] [-t search_time[s]] [-f tspfile]\n",argv[0]);
 
     printf("\nOption Detail --->\n\n");
+    printf("%s -b\n",argv[0]);
+    printf("\tChoice Search Strategy \"Tabu-Search\" instead of \"2-opt Only\"\n");
     printf("%s -e\n",argv[0]);
     printf("\tChoice \"Euclid Mode\". If you don't set this option, \"Graph Mode\" is chosen.\n");
     printf("%s -p\n",argv[0]);
