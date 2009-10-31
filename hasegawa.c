@@ -34,12 +34,8 @@ double make_distance(int x1, int y1, int x2, int y2);
 void set_solution_path(int * solution_path);
 int get_x(int city_index);
 int get_y(int city_index);
-
 int is_2opt_tabu(int * cities);
 void error_procedure(char * message);
-
-/* grobal variable */
-int * point_of_cities;
 
 int * hasegawa_search(int * solution_path)
 {
@@ -126,7 +122,7 @@ int * two_opt_tabu(int * solution_path)
 
     /* (1) First, this fucn exchange branch by "2-opt" only toward better without using tabu-list */
     if(get_tabu_mode() == OFF) {
-        do {
+        /*do {
             loop_times++;
             choice_4indexs(DEFAULT, indexs, solution_path);
             get_cities_by_indexs(cities, indexs, solution_path);
@@ -135,6 +131,8 @@ int * two_opt_tabu(int * solution_path)
                 set_tabu_mode(ON);
             }
         } while(bef_aft_distance(cities) <= 0);
+        */
+        solution_path = two_opt_only(solution_path);
     }
     /* (2) Second, permit exchange toward worse, and use tabu-list */
     else {
@@ -142,9 +140,9 @@ int * two_opt_tabu(int * solution_path)
             choice_4indexs(DEFAULT, indexs, solution_path);
             get_cities_by_indexs(cities, indexs, solution_path);
         } while(permit_worse(bef_aft_distance(cities)) == NO || is_2opt_tabu(cities) == YES);
-    }
 
-    exchange_branch(solution_path, indexs);
+        exchange_branch(solution_path, indexs);
+    }
 
     return solution_path;
 }

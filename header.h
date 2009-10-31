@@ -30,6 +30,7 @@
 #define DEFAULT_SEARCHTIME 10
 #define DEFAULT_CITYPOINT 5
 #define DEFAULT_2OPTLOOP 100
+#define DEFAULT_HISTORYSIZE 20
 
 /* grobal variable */
 struct mode {
