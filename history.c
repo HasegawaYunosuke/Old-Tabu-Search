@@ -22,41 +22,68 @@ double get_all_cost_by_graph(int * cities);
 int turn_loop_times(int type);
 int search_loop_times(int type);
 void show_history(void);
+void initialize_history(void);
+void data_initialize(int index);
+void newest_data(int index);
+void middle_data(int index);
+void oldest_data(int index);
 
 /* grobal variable */
 struct history * historyp;
 
 void create_historys(void)
 {
+    historyp = (struct history *)malloc(sizeof(struct history) * get_history_size());
+    initialize_history();
+}
+
+void initialize_history(void)
+{
     int i;
-    int history_size;
+    int size = get_history_size();
 
-    history_size = get_history_size();
-
-    historyp = (struct history *)malloc(sizeof(struct history) * history_size);
-
-    for(i = 0; i < history_size; i++) {
-        historyp[i].search_times = 0;
-        historyp[i].loop_times = 0;
-        historyp[i].distance = 0;
+    for(i = 0; i < size; i++) {
+        data_initialize(i);
         if(i == 0) {
-            historyp[i].prev == NULL;
-            historyp[i].top = YES;
-            historyp[i].bottom = NO;
+            newest_data(i);
         }
-        else if(i == history_size - 1) {
-            historyp[i].next == NULL;
-            historyp[i].prev = &historyp[i - 1];
-            historyp[i].top = NO;
-            historyp[i].bottom = YES;
+        else if(i == size - 1) {
+            oldest_data(i);
         }
         else {
-            historyp[i - 1].next = &historyp[i];
-            historyp[i].prev = &historyp[i - 1];
-            historyp[i].top = NO;
-            historyp[i].bottom = NO;
+            middle_data(i);
         }
     }
+}
+
+void data_initialize(int index)
+{
+    historyp[index].search_times = 0;
+    historyp[index].loop_times = 0;
+    historyp[index].distance = 0;
+}
+
+void newest_data(int index)
+{
+    historyp[index].prev = NULL;
+    historyp[index].top = YES;
+    historyp[index].bottom = NO;
+}
+
+void middle_data(int index)
+{
+    historyp[index - 1].next = &historyp[index];
+    historyp[index].prev = &historyp[index - 1];
+    historyp[index].top = NO;
+    historyp[index].bottom = NO;
+}
+
+void oldest_data(int index)
+{
+    historyp[index].next = NULL;
+    historyp[index].prev = &historyp[index - 1];
+    historyp[index].top = NO;
+    historyp[index].bottom = YES;
 }
 
 int get_history_size(void)
@@ -97,9 +124,9 @@ void add_history(void)
             break;
         }
     }
-    /* DEL ST */
+    /* DEL ST 
     show_history();
-    /* DEL EN */
+     DEL EN */
 }
 
 void show_history(void)
@@ -122,6 +149,4 @@ void show_history(void)
             i,(now.next)->distance,(now.next)->loop_times,(now.next)->search_times);
         now = *now.next;
     }
-
-//    sleep(1);
 }
