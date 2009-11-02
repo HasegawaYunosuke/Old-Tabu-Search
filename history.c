@@ -2,6 +2,7 @@
 #include "header.h"
 
 struct history {
+    int index;
     int top;
     int bottom;
     int search_times;
@@ -27,6 +28,12 @@ void data_initialize(int index);
 void newest_data(int index);
 void middle_data(int index);
 void oldest_data(int index);
+int get_newest(void);
+int get_oldest(void);
+int get_next(int target);
+int get_prev(int target);
+void insert_newest(int newest, int oldest);
+void set_newest_data(int index);
 
 /* grobal variable */
 struct history * historyp;
@@ -49,6 +56,7 @@ void initialize_history(void)
         }
         else if(i == size - 1) {
             oldest_data(i);
+            historyp[i].prev = &historyp[i-1];
         }
         else {
             middle_data(i);
@@ -61,6 +69,7 @@ void data_initialize(int index)
     historyp[index].search_times = 0;
     historyp[index].loop_times = 0;
     historyp[index].distance = 0;
+    historyp[index].index = index;
 }
 
 void newest_data(int index)
@@ -81,7 +90,6 @@ void middle_data(int index)
 void oldest_data(int index)
 {
     historyp[index].next = NULL;
-    historyp[index].prev = &historyp[index - 1];
     historyp[index].top = NO;
     historyp[index].bottom = YES;
 }
@@ -93,60 +101,88 @@ int get_history_size(void)
 
 void add_history(void)
 {
-    int bottom, top;
-    int flag = OFF;
-    int history_size = get_history_size();
+    int oldest, newest;
 
-    for(bottom = 0; bottom < history_size; bottom++) {
-        if(historyp[bottom].bottom == YES) {
-            for(top = 0; top < history_size; top++) {
-                if(historyp[top].top == YES) {
-                    historyp[bottom].next = &historyp[top];
-                    historyp[top].prev = &historyp[bottom];
-                    historyp[bottom].top = YES;
-                    historyp[bottom].bottom = NO;
-                    historyp[top].top = NO;
-                    (historyp[bottom].prev)->bottom = YES;
-                    (historyp[bottom].prev)->next = NULL;
-                    historyp[bottom].prev = NULL;
+    newest = get_newest();
+    oldest = get_oldest();
+    insert_newest(newest, oldest);
 
-                    if(modep->graph_mode == ON) {
-                        historyp[bottom].distance = get_all_cost_by_graph(get_solution_path());
-                    }
-                    historyp[bottom].loop_times = turn_loop_times(READONLY);
-                    historyp[bottom].search_times = search_loop_times(READONLY);
-                    flag = ON;
-                    break;
-                }
-            }
-        }
-        if(flag == ON) {
-            break;
+    /* DEL ST */
+    //show_history();
+    /* DEL EN */
+}
+void insert_newest(int newest, int oldest)
+{
+    historyp[oldest].next = &historyp[newest];
+    historyp[newest].prev = &historyp[oldest];
+    historyp[newest].top = NO;
+
+    oldest_data(get_prev(oldest));
+    newest_data(oldest);
+    set_newest_data(oldest);
+}
+
+void set_newest_data(int index)
+{
+    if(modep->graph_mode == ON) {
+        historyp[index].distance = get_all_cost_by_graph(get_solution_path());
+    }
+    historyp[index].loop_times = turn_loop_times(READONLY);
+    historyp[index].search_times = search_loop_times(READONLY);
+}
+
+int get_newest(void)
+{
+    int i;
+
+    for(i = 0; i < get_history_size(); i++) {
+        if(historyp[i].top == YES) {
+            return i;
         }
     }
-    /* DEL ST 
-    show_history();
-     DEL EN */
+}
+
+int get_oldest(void)
+{
+    int i;
+
+    for(i = 0; i < get_history_size(); i++) {
+        if(historyp[i].bottom == YES) {
+            return i;
+        }
+    }
+}
+
+int get_next(int target)
+{
+    if(historyp[target].next == NULL) {
+        return 0;
+    }
+    else {
+        return (historyp[target].next)->index;
+    }
+}
+
+int get_prev(int target)
+{
+    if(historyp[target].prev == NULL) {
+        return 0;
+    }
+    else {
+        return (historyp[target].prev)->index;
+    }
 }
 
 void show_history(void)
 {
-    int i;
-    struct history now;
+    int i, index = get_newest();
 
-    printf("DEL:history.c:HISTORYS\n");
-    for(i = 0; i < get_history_size(); i++) {
-        if(historyp[i].top == YES) {
-            printf("DEL:(No. 1, distance, loop, search) == (%.1f,%d,%d)\n"
-                ,historyp[i].distance,historyp[i].loop_times,historyp[i].search_times);
-            now = historyp[i];
-            break;
-        }
-    }
-
-    for(i = 2; i <= get_history_size(); i++) {
-        printf("DEL:(No.%2d, distance, loop, search) == (%.1f,%d,%d)\n",
-            i,(now.next)->distance,(now.next)->loop_times,(now.next)->search_times);
-        now = *now.next;
+    for(i = 1; i < get_history_size(); i++) {
+        printf("No.%2d:(dis, loop, search) == (%.1f,%d,%d)\n",
+            i,
+            historyp[index].distance,
+            historyp[index].loop_times,
+            historyp[index].search_times);
+        index = get_next(index);
     }
 }
