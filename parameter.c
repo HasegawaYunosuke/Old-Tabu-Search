@@ -52,11 +52,11 @@ struct parameter {
     int * solution_path;        /* the sequence of city data arrived */
     double all_cost;            /* solution_path's cost */
     double best_cost;
+    int turn_times;
+    int search_times;
 };
 
 struct parameter * parameterp;
-int turn_times;
-int search_times;
 
 /* set all modes to OFF */
 void set_mode(void)
@@ -121,9 +121,9 @@ void initial_parameter(int tsp_size)
     parameterp->city_point = DEFAULT_CITYPOINT;
     parameterp->best_cost = DBL_MAX;
     parameterp->all_cost = DBL_MAX;
+    parameterp->turn_times = 0;
+    parameterp->search_times = 0;
     set_2opt_loop();
-    turn_times = 0;
-    search_times = 0;
 
     create_historys();
 
@@ -134,15 +134,15 @@ int turn_loop_times(int type)
     int return_num;
 
     if(type == CHECK) {
-        turn_times++;
+        parameterp->turn_times++;
 
-        return_num = turn_times;
+        return_num = parameterp->turn_times;
     }
     else if(type == INIT) {
-        turn_times = 0;
+        parameterp->turn_times = 0;
     }
     else if(type == READONLY) {
-        return_num = turn_times;
+        return_num = parameterp->turn_times;
     }
 
     return return_num;
@@ -153,12 +153,12 @@ int search_loop_times(int type)
     int return_num;
 
     if(type == CHECK) {
-        search_times++;
+        parameterp->search_times++;
 
-        return_num = search_times;
+        return_num = parameterp->search_times;
     }
     else if(type == READONLY) {
-        return_num = search_times;
+        return_num = parameterp->search_times;
     }
 
     return return_num;
@@ -223,7 +223,7 @@ void set_solution_path(int * solution_path)
 {
     parameterp->solution_path = solution_path;
     set_all_cost();
-    //add_history();
+    add_history();
 }
 
 double get_now_parcentage(void)

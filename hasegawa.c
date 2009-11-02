@@ -31,7 +31,6 @@ double get_graph_cost(int a,int b);
 double get_now_parcentage(void);
 void get_min_exchange_indexs(int * solution_path, int * indexs);
 double make_distance(int x1, int y1, int x2, int y2);
-void set_solution_path(int * solution_path);
 int get_x(int city_index);
 int get_y(int city_index);
 int is_2opt_tabu(int * cities);
@@ -308,8 +307,6 @@ void exchange_branch(int * solution_path, int * indexs)
     }
 
     free(copy);
-
-    set_solution_path(solution_path);
 }
 
 int get_among(int start, int end, int tsp_size)

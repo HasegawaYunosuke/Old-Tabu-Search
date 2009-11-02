@@ -110,9 +110,8 @@ void show_history(void)
     printf("DEL:history.c:HISTORYS\n");
     for(i = 0; i < get_history_size(); i++) {
         if(historyp[i].top == YES) {
-            //printf("DEL:(No. 1, distance, loop, search) == (%.1f,%d,%d)\n"
-            //    ,historyp[i].distance,historyp[i].loop_times,historyp[i].search_times);
-            printf("DEL:dis == %f\n",historyp[0].distance);
+            printf("DEL:(No. 1, distance, loop, search) == (%.1f,%d,%d)\n"
+                ,historyp[i].distance,historyp[i].loop_times,historyp[i].search_times);
             now = historyp[i];
             break;
         }
@@ -121,10 +120,8 @@ void show_history(void)
     for(i = 2; i <= get_history_size(); i++) {
         printf("DEL:(No.%2d, distance, loop, search) == (%.1f,%d,%d)\n",
             i,(now.next)->distance,(now.next)->loop_times,(now.next)->search_times);
-    }
-    for(i = 0; i < get_history_size(); i++) {
-        printf("DELDEL:%d,%f\n",i,historyp[i].distance);
+        now = *now.next;
     }
 
-    sleep(1);
+//    sleep(1);
 }

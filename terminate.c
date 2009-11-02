@@ -24,7 +24,6 @@ int loop_terminate(void)
 
         return_num = YES;
         set_tabu_mode(OFF);
-
         if(modep->hasegawa_mode == ON) {
             create_2opt_tabulist(get_tsp_size(), CLEAR);
         }
@@ -54,10 +53,8 @@ int search_terminate(void)
 
         return_num = YES;
     }
-    /*else if(search_loop_times(CHECK) >= 3) {
-        printf("Search is terminated by search_loop_times()\n");
-        return_num = YES;
-    }*/
+
+    search_loop_times(CHECK);
 
     return return_num;
 }

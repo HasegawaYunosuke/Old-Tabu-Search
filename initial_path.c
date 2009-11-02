@@ -49,10 +49,10 @@ int * initial_euclid_path(int * euclid_data)
     return create_euclid_path(return_data, euclid_data, create_mode);
 }
 
+int * return_data;
+
 int * initial_graph_path(double * graph_data)
 {
-    int * return_data;
-
     /* first time procedure */
     if(search_loop_times(READONLY) == 0) {
         return_data = mallocer_ip((int)graph_data[0] + 10);
