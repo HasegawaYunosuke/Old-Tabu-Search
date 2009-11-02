@@ -23,6 +23,9 @@
 #define PERMITWORSE 10
 #define SMART2OPT 20
 #define TABU2OPT 30
+#define SHORTMODE 40
+#define MIDDLEMODE 50
+#define LONGMODE 60
 
 /* macro parameter */
 #define TSPMAXSIZE 2000
@@ -31,6 +34,7 @@
 #define DEFAULT_CITYPOINT 5
 #define DEFAULT_2OPTLOOP 100
 #define DEFAULT_HISTORYSIZE 20
+#define DEFAULT_SAMEPERCENTAGE 25
 
 /* grobal variable */
 struct mode {

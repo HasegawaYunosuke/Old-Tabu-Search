@@ -35,6 +35,8 @@ int get_prev(int target);
 void insert_newest(int newest, int oldest);
 void set_newest_data(int index);
 int check_fill(void);
+int check_historical_similar(void);
+double * mallocer_dp(int size);
 
 /* grobal variable */
 struct history * historyp;
@@ -157,7 +159,7 @@ int get_oldest(void)
 int get_next(int target)
 {
     if(historyp[target].next == NULL) {
-        return 0;
+        return -1;
     }
     else {
         return (historyp[target].next)->index;
@@ -191,7 +193,37 @@ void show_history(void)
 /* Check history data, whether the data is fill, or not */
 int check_fill(void)
 {
+    /* if the data is filled, return "YES" */
     if(historyp[get_oldest()].distance == 0) {
+        return NO;
+    }
+    else {
+        return YES;
+    }
+}
+
+int check_historical_similar(void)
+{
+    int base, target, same = 0;
+    int size = get_history_size();
+
+    for(base = 1; base <= size; base++) {
+        for(target = 1; target <= size; target++) {
+            if(historyp[base - 1].distance == historyp[target - 1].distance && base != target) {
+                same++;
+            }
+        }
+        if(many_sames(same) == YES) {
+            return YES;
+        }
+    }
+
+    return NO;
+}
+
+int many_sames(int same)
+{
+    if((same / get_history_size() * 100) > DEFAULT_SAMEPERCENTAGE) {
         return YES;
     }
     else {
