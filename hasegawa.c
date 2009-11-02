@@ -35,6 +35,7 @@ int get_x(int city_index);
 int get_y(int city_index);
 int is_2opt_tabu(int * cities);
 void error_procedure(char * message);
+int check_manneri(int type);
 
 int * hasegawa_search(int * solution_path)
 {
@@ -121,7 +122,7 @@ int * two_opt_tabu(int * solution_path)
 
     /* (1) First, this fucn exchange branch by "2-opt" only toward better without using tabu-list */
     if(get_tabu_mode() == OFF) {
-        do {
+        /*do {
             loop_times++;
             choice_4indexs(DEFAULT, indexs, solution_path);
             get_cities_by_indexs(cities, indexs, solution_path);
@@ -129,8 +130,12 @@ int * two_opt_tabu(int * solution_path)
             if(loop_times > get_2opt_loop()) {
                 set_tabu_mode(ON);
             }
-        } while(bef_aft_distance(cities) <= 0);
-        //solution_path = two_opt_only(solution_path);
+        } while(bef_aft_distance(cities) <= 0);*/
+
+        solution_path = two_opt_only(solution_path);
+        if(check_manneri(SHORTMODE) == YES) {
+            set_tabu_mode(ON);
+        }
     }
     /* (2) Second, permit exchange toward worse, and use tabu-list */
     else {
