@@ -34,6 +34,7 @@ int get_next(int target);
 int get_prev(int target);
 void insert_newest(int newest, int oldest);
 void set_newest_data(int index);
+int check_fill(void);
 
 /* grobal variable */
 struct history * historyp;
@@ -184,5 +185,16 @@ void show_history(void)
             historyp[index].loop_times,
             historyp[index].search_times);
         index = get_next(index);
+    }
+}
+
+/* Check history data, whether the data is fill, or not */
+int check_fill(void)
+{
+    if(historyp[get_oldest()].distance == 0) {
+        return YES;
+    }
+    else {
+        return NO;
     }
 }
