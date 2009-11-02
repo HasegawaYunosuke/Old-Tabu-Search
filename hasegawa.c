@@ -66,11 +66,6 @@ int * euclid_search(int * solution_path)
 
     switch(mode) {
         case DEFAULT:
-            /* create tabu list for 2-opt (only first procedure) */
-            if(turn_loop_times(READONLY) == 0 && search_loop_times(READONLY) == 0) {
-                create_2opt_tabulist(solution_path[0], INIT);
-            }
-
             /* search by 2-opt procedure */
             return_data = two_opt_tabu(solution_path);
             break;
@@ -115,14 +110,10 @@ int * two_opt_tabu(int * solution_path)
     int indexs[4], cities[4];
     int loop_times = 0;
 
-    /* create tabu list for 2-opt (only first procedure) */
-    if(turn_loop_times(READONLY) == 0 && search_loop_times(READONLY) == 0) {
-        create_2opt_tabulist(solution_path[0], INIT);
-    }
-
     /* (1) First, this fucn exchange branch by "2-opt" only toward better without using tabu-list */
     if(get_tabu_mode() == OFF) {
         solution_path = two_opt_only(solution_path);
+
         if(check_manneri(SHORTMODE) == YES) {
             set_tabu_mode(ON);
         }

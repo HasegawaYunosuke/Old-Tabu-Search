@@ -10,6 +10,7 @@ void set_pole_mode(void);
 void set_tozaki_mode(void);
 void set_tabu_mode(int type);
 int get_tabu_mode(void);
+void create_2opt_tabulist(int tsp_size, int mode);
 void set_now_parcentage(double before, double after);
 void set_2opt_loop(void);
 void set_graph_data(double * graph_data);
@@ -126,6 +127,10 @@ void initial_parameter(int tsp_size)
     set_2opt_loop();
 
     create_historys();
+    /* create tabu list for 2-opt (only first procedure) */
+    if(modep->tabu2opt_mode == ON) {
+        create_2opt_tabulist(get_tsp_size(), INIT);
+    }
 
 }
 
