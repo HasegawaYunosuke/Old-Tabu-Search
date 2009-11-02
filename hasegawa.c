@@ -120,12 +120,18 @@ int * two_opt_tabu(int * solution_path)
     }
     /* (2) Second, permit exchange toward worse, and use tabu-list */
     else {
-        do {
-            choice_4indexs(DEFAULT, indexs, solution_path);
-            get_cities_by_indexs(cities, indexs, solution_path);
-        } while(permit_worse(bef_aft_distance(cities)) == NO || is_2opt_tabu(cities) == YES);
-
-        exchange_branch(solution_path, indexs);
+        if(turn_loop_times(READONLY) % 5 == 0) {
+            printf("AAN\n");
+            solution_path = two_opt_only(solution_path);
+            printf("AAN\n");
+        }
+        else {
+            do {
+                choice_4indexs(DEFAULT, indexs, solution_path);
+                get_cities_by_indexs(cities, indexs, solution_path);
+            } while(permit_worse(bef_aft_distance(cities)) == NO || is_2opt_tabu(cities) == YES);
+            exchange_branch(solution_path, indexs);
+        }
     }
 
     return solution_path;
