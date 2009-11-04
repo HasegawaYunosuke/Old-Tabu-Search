@@ -53,9 +53,14 @@ int * return_data;
 
 int * initial_graph_path(double * graph_data)
 {
+    int malloc_size = (int)graph_data[0];
     /* first time procedure */
     if(search_loop_times(READONLY) == 0) {
-        return_data = mallocer_ip((int)graph_data[0] + 10);
+        if((malloc(sizeof(int))) == NULL) {
+            printf("initial_path.c:Why Error?\n");
+        }
+        printf("initial_path.c:Why?\n");
+        return_data = mallocer_ip(malloc_size + 10);
         srand(time(NULL));
         /* set return_data[0] to 'TSP-example-size' */
         return_data[0] = (int)graph_data[0];
@@ -137,8 +142,6 @@ int * create_graph_path(int * return_data, double * graph_data, int create_mode)
     return_data[1] = first_point;
 
     for(i = 2; i <= tsp_size; i++) {
-        
-    
         for(j =1; j <= tsp_size; j++) {
             if(is_choiced[j] == NO) {
                 next_city = j;
@@ -156,7 +159,6 @@ int * create_graph_path(int * return_data, double * graph_data, int create_mode)
         is_choiced[mini_index] = YES;
         min_distance = DBL_MAX;
         now_city = mini_index;
-         
     }
 
     return return_data;

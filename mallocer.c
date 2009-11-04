@@ -10,6 +10,7 @@ int * mallocer_ip(int size)
 {
     int * return_p;
 
+    printf("mallocer.c:size == %d\n",size);
     if((return_p = calloc(size,sizeof(int))) == NULL) {
         error_procedure("mallocer_ip()");
     }

@@ -33,9 +33,6 @@ void initialize(int argc, char ** argv)
     /* change data type ( Euclid -> Graph ) */
     if(modep->graph_mode == ON) {
         graph_data = make_graph(main_base_data);
-
-        /* set graph_data parameter.c */
-        set_graph_data(graph_data);
     }
 
     /* create thread for visual-mode */
@@ -59,7 +56,7 @@ double * make_graph(int * main_base_data)
 
     return_data = mallocer_dp(size * (size + 1));
 
-    return_data[0] = size;
+    return_data[0] = (double)size;
     for(i = 1; i <= size; i++) {
         xi = main_base_data[i * 2];  yi = main_base_data[i * 2 + 1];
         for(j = 1; j <= size ; j++) {
