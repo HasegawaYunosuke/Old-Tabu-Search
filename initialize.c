@@ -54,7 +54,7 @@ double * make_graph(int * main_base_data)
 
     size = main_base_data[0];
 
-    return_data = mallocer_dp(size * (size + 1));
+    return_data = mallocer_dp((size + 1) * (size + 1));
 
     return_data[0] = (double)size;
     for(i = 1; i <= size; i++) {

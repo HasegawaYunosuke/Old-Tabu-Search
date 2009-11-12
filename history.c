@@ -36,7 +36,6 @@ void insert_newest(int newest, int oldest);
 void set_newest_data(int index);
 int check_fill(void);
 int check_historical_similar(void);
-double * mallocer_dp(int size);
 
 /* grobal variable */
 struct history * historyp;

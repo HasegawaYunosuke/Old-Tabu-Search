@@ -37,7 +37,7 @@ int * initial_euclid_path(int * euclid_data)
     int * return_data;
 
     /* first time procedure (mainly, alocate memory) */
-    if(search_loop_times(READONLY) == 0) {
+    if(search_loop_times(READONLY) == 0 && turn_loop_times(READONLY) == 0) {
         /* +10 is for something parameter */
         return_data = mallocer_ip(euclid_data[0] + 10);
         srand(time(NULL));
@@ -55,11 +55,7 @@ int * initial_graph_path(double * graph_data)
 {
     int malloc_size = (int)graph_data[0];
     /* first time procedure */
-    if(search_loop_times(READONLY) == 0) {
-        if((malloc(sizeof(int))) == NULL) {
-            printf("initial_path.c:Why Error?\n");
-        }
-        printf("initial_path.c:Why?\n");
+    if(search_loop_times(READONLY) == 0 && turn_loop_times(READONLY) == 0) {
         return_data = mallocer_ip(malloc_size + 10);
         srand(time(NULL));
         /* set return_data[0] to 'TSP-example-size' */

@@ -121,9 +121,7 @@ int * two_opt_tabu(int * solution_path)
     /* (2) Second, permit exchange toward worse, and use tabu-list */
     else {
         if(turn_loop_times(READONLY) % 5 == 0) {
-            printf("AAN\n");
             solution_path = two_opt_only(solution_path);
-            printf("AAN\n");
         }
         else {
             do {
