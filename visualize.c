@@ -3,6 +3,8 @@
 
 /* functions */
 void visualizer(int * visual_arg);
+int * get_solution_path(void);
+int * get_main_base_data(void);
 
 void visualizer(int * visual_arg)
 {
