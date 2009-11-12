@@ -4,9 +4,6 @@
 /* functions */
 void visualizer(int * visual_arg);
 
-/* grobal variable */
-int * main_base_data;
-
 void visualizer(int * visual_arg)
 {
     int i;
