@@ -3,9 +3,8 @@
 
 /* functions */
 void visualizer(int * visual_arg);
-
-/* grobal variable */
-int * main_base_data;
+int * get_solution_path(void);
+int * get_main_base_data(void);
 
 void visualizer(int * visual_arg)
 {
