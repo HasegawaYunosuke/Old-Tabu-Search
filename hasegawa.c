@@ -36,6 +36,8 @@ int get_y(int city_index);
 int is_2opt_tabu(int * cities);
 void error_procedure(char * message);
 int check_manneri(int type);
+void add_2opt_tabulist(int * cities);
+
 
 int * hasegawa_search(int * solution_path)
 {
@@ -285,6 +287,7 @@ void exchange_branch(int * solution_path, int * indexs)
     int i, count;
     int tsp_size = solution_path[0];
     int * copy;
+    int cities[4];
 
     copy = mallocer_ip(tsp_size + 1);
 
@@ -294,6 +297,11 @@ void exchange_branch(int * solution_path, int * indexs)
 
     for(i = 0; i <= (count = get_among(indexs[1], indexs[2], tsp_size)); i++) {
         solution_path[now_index((indexs[2] - i), tsp_size)] = copy[now_index((indexs[1] + i), tsp_size)];
+    }
+
+    if(get_tabu_mode() == ON) {
+        get_cities_by_indexs(cities, indexs, solution_path);
+        add_2opt_tabulist(cities);
     }
 
     free(copy);
