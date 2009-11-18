@@ -42,7 +42,7 @@ void initialize(int argc, char ** argv)
                         NULL,
                         (void *) visualizer,
                         (void *) &visual_arg);
-        pthread_join(visual_thread, NULL);
+//        pthread_join(visual_thread, NULL);
     }
 }
 
