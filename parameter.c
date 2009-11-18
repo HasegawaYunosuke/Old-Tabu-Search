@@ -34,6 +34,8 @@ void create_historys(void);
 void add_history(void);
 void set_mode(void);
 void show_mode(void);
+void set_solution_data_flag(void);
+int get_solution_data_flag(void);
 double get_all_cost_by_graph(int * solution_path);
 double get_all_cost_by_euclid(int * solution_path);
 double get_best_cost(void);
@@ -55,6 +57,7 @@ struct parameter {
     double best_cost;
     int turn_times;
     int search_times;
+    int solution_data_flag;
 };
 
 struct parameter * parameterp;
@@ -124,6 +127,7 @@ void initial_parameter(int tsp_size)
     parameterp->all_cost = DBL_MAX;
     parameterp->turn_times = 0;
     parameterp->search_times = 0;
+    parameterp->solution_data_flag = OFF;
     set_2opt_loop();
 
     create_historys();
@@ -229,8 +233,18 @@ void set_solution_path(int * solution_path)
     parameterp->solution_path = solution_path;
     set_all_cost();
     add_history();
+    set_solution_data_flag();
 }
 
+void set_solution_data_flag(void)
+{
+    parameterp->solution_data_flag = ON;
+}
+
+int get_solution_data_flag(void)
+{
+    return parameterp->solution_data_flag;
+}
 double get_now_parcentage(void)
 {
     return parameterp->now_parcentage;

@@ -145,7 +145,7 @@ int * two_opt_only(int * solution_path)
         get_min_exchange_indexs(solution_path, indexs);
     }
     else {
-        error_procedure("two_opt_only()'s 2-opt only mode");
+        error_procedure("two_opt_only()");
     }
 
     exchange_branch(solution_path, indexs);
@@ -158,7 +158,7 @@ void get_min_exchange_indexs(int * solution_path, int * best_indexs)
     int i, j, k;
     int tsp_size = solution_path[0];
     int cities[4];
-    int indexs[4];
+    int indexs[4] = {1,2,3,4};
     double distance = DBL_MIN;
     double maximum = DBL_MIN;
 
@@ -182,6 +182,9 @@ void get_cities_by_indexs(int * cities, int * indexs, int * solution_path)
     int i;
 
     for(i = 0; i < 4; i++) {
+        if(indexs[i] > solution_path[0]) {
+            error_procedure("get_cities_by_indexs's");
+        }
         cities[i] = solution_path[indexs[i]];
     }
 }
@@ -289,6 +292,12 @@ void exchange_branch(int * solution_path, int * indexs)
     int * copy;
     int cities[4];
 
+    for(i = 0; i < 4; i++) {
+        if(indexs[i] > tsp_size) {
+            error_procedure("exchange_branch()");
+        }
+    }
+
     copy = mallocer_ip(tsp_size + 1);
 
     for(i = 0; i <= tsp_size; i++) {
@@ -297,6 +306,13 @@ void exchange_branch(int * solution_path, int * indexs)
 
     for(i = 0; i <= (count = get_among(indexs[1], indexs[2], tsp_size)); i++) {
         solution_path[now_index((indexs[2] - i), tsp_size)] = copy[now_index((indexs[1] + i), tsp_size)];
+    }
+
+    if(get_tabu_mode() == ON) {
+        printf("DEL:TABU:count == %d,indexs[1],[2] == (%d,%d)\n",count,indexs[1],indexs[2]);
+    }
+    else {
+        printf("DEL:2opt:count == %d\n",count);
     }
 
     if(get_tabu_mode() == ON) {
