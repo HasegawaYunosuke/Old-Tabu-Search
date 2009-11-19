@@ -27,6 +27,7 @@ int get_tsp_size(void);
 int get_x(int city_index);
 int get_y(int city_index);
 double get_worse_permit(void);
+void change_worse_permit(int type);
 double get_now_parcentage(void);
 double get_graph_cost(int a, int b);
 void set_all_cost(void);
@@ -49,6 +50,7 @@ struct parameter {
     int two_opt_loop;           /* Maximum of 2-opt loop */
     double now_parcentage;      /* Parcentage of now choice () */
     double permit_worse;        /* Parcentage of permitting to choice toward worse */
+    double base_permit_worse;   /* Parcentage of permitting to choice toward worse */
     double search_time;         /* whole program running time */
     int * main_base_data;       /* TSPLIB's data, discribed by Euclid */
     double * graph_data;        /* TSPLIB's data, discribed by Graph */
@@ -122,6 +124,7 @@ void initial_parameter(int tsp_size)
 
     parameterp->tsp_size = tsp_size;
     parameterp->permit_worse = DEFAULT_PERMITWORSE;
+    parameterp->base_permit_worse = DEFAULT_PERMITWORSE;
     parameterp->city_point = DEFAULT_CITYPOINT;
     parameterp->best_cost = DBL_MAX;
     parameterp->all_cost = DBL_MAX;
@@ -200,6 +203,18 @@ int get_tabu_mode(void)
 double get_worse_permit(void)
 {
     return parameterp->permit_worse;
+}
+
+void change_worse_permit(int type)
+{
+    switch(type) {
+        case CLEAR:
+            parameterp->permit_worse = parameterp->base_permit_worse;
+            break;
+        case ADD:
+            parameterp->permit_worse += DEFAULT_ADDPERMITWORSE;
+            break;
+    }
 }
 
 int get_2opt_loop(void)

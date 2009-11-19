@@ -23,6 +23,7 @@ double bef_aft_distance(int * cities);
 void exchange_branch(int * solution_path, int * indexs);
 void get_cities_by_indexs(int * cities, int * indexs, int * solution_path);
 double get_worse_permit(void);
+void change_worse_permit(int type);
 double get_distance(int a, int ad, int b, int bd);
 double get_cost(int a, int ad, int b, int bd);
 double get_branch_distance(int a, int b);
@@ -158,17 +159,18 @@ void get_min_exchange_indexs(int * solution_path, int * best_indexs)
     int i, j, k;
     int tsp_size = solution_path[0];
     int cities[4];
-    int indexs[4] = {1,2,3,4};
-    double distance = DBL_MIN;
-    double maximum = DBL_MIN;
+    int indexs[4];
+    double now_distance = DBL_MAX * (-1);
+    double maximum = DBL_MAX * (-1);
 
-    for(i = 1; i <= tsp_size - 3; i++) {
+    for(i = 1; i < tsp_size - 2; i++) {
         indexs[0] = i; indexs[1] = i + 1;
-        for(j = i + 2; j <= tsp_size - 1; j++) {
+        for(j = i + 2; j < tsp_size; j++) {
             indexs[2] = j; indexs[3] = j + 1;
             get_cities_by_indexs(cities, indexs, solution_path);
-            if(maximum < (distance = bef_aft_distance(cities))) {
-                maximum = distance;
+            now_distance = bef_aft_distance(cities);
+            if(now_distance > maximum) {
+                maximum = now_distance;
                 for(k = 0; k < 4; k++) {
                     best_indexs[k] = indexs[k];
                 }
@@ -282,6 +284,13 @@ int permit_worse(double bef_aft_distance)
         }
     }
 
+    if(return_num == YES) {
+        change_worse_permit(CLEAR);
+    }
+    else {
+        change_worse_permit(ADD);
+    }
+
     return return_num;
 }
 
@@ -294,6 +303,7 @@ void exchange_branch(int * solution_path, int * indexs)
 
     for(i = 0; i < 4; i++) {
         if(indexs[i] > tsp_size) {
+            printf("indexs[%d] == %d\n",i,indexs[i]);
             error_procedure("exchange_branch()");
         }
     }
@@ -306,13 +316,6 @@ void exchange_branch(int * solution_path, int * indexs)
 
     for(i = 0; i <= (count = get_among(indexs[1], indexs[2], tsp_size)); i++) {
         solution_path[now_index((indexs[2] - i), tsp_size)] = copy[now_index((indexs[1] + i), tsp_size)];
-    }
-
-    if(get_tabu_mode() == ON) {
-        printf("DEL:TABU:count == %d,indexs[1],[2] == (%d,%d)\n",count,indexs[1],indexs[2]);
-    }
-    else {
-        printf("DEL:2opt:count == %d\n",count);
     }
 
     if(get_tabu_mode() == ON) {

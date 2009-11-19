@@ -13,6 +13,7 @@
 /* macro variable */
 #define INIT 0
 #define CLEAR 5
+#define ADD 6
 #define ON 1
 #define OFF 0
 #define YES ON
@@ -30,6 +31,7 @@
 /* macro parameter */
 #define TSPMAXSIZE 2000
 #define DEFAULT_PERMITWORSE 15
+#define DEFAULT_ADDPERMITWORSE 1
 #define DEFAULT_SEARCHTIME 10
 #define DEFAULT_CITYPOINT 5
 #define DEFAULT_2OPTLOOP 100
