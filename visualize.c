@@ -12,6 +12,8 @@ void visualizer(int * visual_arg);
 int get_tsp_size(void);
 int * get_solution_path(void);
 int * get_main_base_data(void);
+int get_solution_data_flag(void);
+int turn_loop_times(int type);
 
 int clntSock(void)
 {
@@ -56,11 +58,12 @@ void visualizer(int * visual_arg)
 	int tsp_size1 = (tsp_size+1)*4;
 	int * nt_city_coordinate;		//座標を格納します
 	int * solu_path;
+	int * soiya;
 	int waki = 0;
-	char har_city_coordinate[2048];
-	char city_solution[2000];
+	char har_city_coordinate[10000];
+	char city_solution[10000];
 	int socket;
-	//socket = clntSock();
+	socket = clntSock();
 
 	nt_city_coordinate = get_main_base_data();
 	
@@ -71,35 +74,25 @@ void visualizer(int * visual_arg)
 
 	int k = 0,j = 0;
 
-	for(;;) {
+	/*for(;;) {
 		if(nt_city_coordinate[k] < 10){
-			//printf("k = %d\n",k);
 			har_city_coordinate[j] = nt_city_coordinate[k] + 48;
-			//printf("k = %d\n",k);
-			//sprintf(har_city_coordinate, "%d", nt_city_coordinate);
 			j++;
 			k++;
 		}
 		else if(nt_city_coordinate[k] < 100){
-			//printf("k = %d\n",k);
 			har_city_coordinate[j] = nt_city_coordinate[k] / 10 + 48;
-			//printf("k = %d\n",k);
-			//itoa(nt_city_coordinate[k]/10,har_city_coordinate[j],10);
 			j++;
 			har_city_coordinate[j] = nt_city_coordinate[k] % 10 + 48;
-			//itoa(nt_city_coordinate[k]%10,har_city_coordinate[j],10);
 			j++;
 			k++;
 		}
 		else if(nt_city_coordinate[k] < 1000){
 			har_city_coordinate[j] = nt_city_coordinate[k] / 100 + 48;
-			//itoa(nt_city_coordinate[k]/100,har_city_coordinate[j],10);
 			j++;
 			har_city_coordinate[j] = nt_city_coordinate[k] / 10 % 10 + 48;
-			//itoa(nt_city_coordinate[k]/10%10,har_city_coordinate[j],10);
 			j++;
 			har_city_coordinate[j] = nt_city_coordinate[k] % 10 + 48;
-			//itoa(nt_city_coordinate[k]%10,har_city_coordinate[j],10);
 			j++;
 			k++;
 		}
@@ -112,6 +105,7 @@ void visualizer(int * visual_arg)
 	k = 0;
 	j = 0;
 	int kaigyo = 0;	
+	*/
 
 	/*for(waki=0; waki < (tsp_size + 1) * 11; waki++) {
 		if(har_city_coordinate[waki] == ',') {
@@ -132,68 +126,84 @@ void visualizer(int * visual_arg)
 	
 	printf("Finish?\n");
 
-	//send(socket, har_city_coordinate, strlen(har_city_coordinate),0);
+	send(socket, nt_city_coordinate, (nt_city_coordinate[0]+1)*2*4,0);
 
-    pthread_mutex_lock(&mutex);
+    //pthread_mutex_lock(&mutex);
 
-	sleep(3);
+	for(;;) {
+		if(get_solution_data_flag() == ON) {
+			printf("looooooooooooooooop break\n");
+			break;
+		}
+	}
 
 	solu_path = get_solution_path();
-	if(solu_path == NULL) {
+	/*if(solu_path == NULL) {
 		printf("get_tsp_size == %d\n",get_tsp_size());
 	}
 	else {
 		printf("zakiiiiiiii\n");
 	}
+	*/
 
 
-	for(waki=0;waki<1;waki++){
+	/*for(waki=0;waki<52;waki++){
 		printf("%d\n",solu_path[waki]);
 	}
+	*/
 
-	printf("11111111\n");
+	//printf("11111111\n");
 
 	for(;;){
 		
-		printf("LOOO\n");
+		printf("%dLoops\n",turn_loop_times(READONLY));
 
-		if(solu_path[k] < 10){
-			city_solution[j] = solu_path[k] + 48;
-			j++;
-			k++;
-		}
-		else if(solu_path[k] < 100){
-			city_solution[j] = solu_path[k] / 10 + 48;
-			j++;
-			city_solution[j] = solu_path[k] % 10 + 48;
-			j++;
-			k++;
-		}
-		else if(solu_path[k] < 1000){
-			city_solution[j] = solu_path[k] /100 + 48;
-			j++;
-			city_solution[j] = solu_path[k] / 10 % 10 + 48;
-			j++;
-			city_solution[j] = solu_path[k] % 10 + 48;
-			j++;
-			k++;
-		}
+		/*while(k != tsp_size+1){
+			if(solu_path[k] < 10){
+				city_solution[j] = solu_path[k] + 48;
+				j++;
+				k++;
+			}
+			else if(solu_path[k] < 100){
+				city_solution[j] = solu_path[k] / 10 + 48;
+				j++;
+				city_solution[j] = solu_path[k] % 10 + 48;
+				j++;
+				k++;
+			}
+			else if(solu_path[k] < 1000){
+				city_solution[j] = solu_path[k] /100 + 48;
+				j++;
+				city_solution[j] = solu_path[k] / 10 % 10 + 48;
+				j++;
+				city_solution[j] = solu_path[k] % 10 + 48;
+				j++;
+				k++;
+			}
 		city_solution[j] = ',';
 		j++;
+		}
+		*/
 
-		city_solution[j] = '\0';
 		j = 0;
 		k = 0;
+		send(socket, solu_path, (solu_path[0]+1)*4,0);
 
-		send(socket, city_solution, strlen(city_solution),0);
-		sleep(1);
+		solu_path = NULL;
+		solu_path = get_solution_path();
+
+		for(waki=0;waki<tsp_size+1;waki++){
+			printf("wakiwaki:%d\n",solu_path[waki]);
+		}
+		//sleep(1);	
+		
 	}
 
     /*for(i = 0; i < 100; i++) {
         printf("main_base_data[%d] == %d\n",i,main_base_data[i]);
     }*/
 
-    pthread_mutex_unlock(&mutex);
+//    pthread_mutex_unlock(&mutex);
 //	free((void *)har_city_coordinate);
 
 	cleanSock(socket);
