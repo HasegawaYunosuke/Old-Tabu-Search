@@ -19,77 +19,87 @@ int turn_loop_times(int type);
 
 int clntSock(void)
 {
-	int sock;
-	unsigned short ServPort;
-	unsigned int StiringLen;
+    int sock;
+    int sock_optval = 1;
+    unsigned short ServPort;
+    unsigned int StiringLen;
+    struct sockaddr_in ServAddr;
 
-	sock = socket(PF_INET, SOCK_STREAM, 0);
-	if(sock < 0){
-		printf("error sock failed\n");
-		exit(-1);
-	}
-	else
-		printf("Socket Success\n");
+    if((sock = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
+        fprintf(stderr,"clntSock() Error.\n");
+        exit(1);
+    }
+    setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &sock_optval, sizeof(sock_optval));
 
-	struct sockaddr_in ServAddr;
-	memset(&ServAddr, 0, sizeof(ServAddr));
-	ServAddr.sin_family = AF_INET;
-	ServAddr.sin_addr.s_addr = inet_addr("192.168.11.10");
-	ServAddr.sin_port = htons(10001);
+    if(sock < 0){
+        printf("error sock failed\n");
+        exit(-1);
+    }
+    else {
+        printf("Socket Success\n");
+    }
 
-	if( connect(sock, (struct sockaddr *)&ServAddr, sizeof(ServAddr)) == -1)
-	{
-		printf("error connect failed\n");
-		exit(1);
-	}
-	else
-		printf("Connect Success\n");
+    memset(&ServAddr, 0, sizeof(ServAddr));
+    ServAddr.sin_family = AF_INET;
+    ServAddr.sin_addr.s_addr = inet_addr("192.168.11.10");
+    ServAddr.sin_port = htons(10001);
 
-	return sock;
+    if(connect(sock, (struct sockaddr *)&ServAddr, sizeof(ServAddr)) == -1) {
+        printf("error connect failed\n");
+        exit(1);
+    }
+    else {
+        printf("Connect Success\n");
+    }
+
+    return sock;
 }
 
 void cleanSock(int socket)
 {
-	printf("Socket Close\n");
-	close(socket);
+    printf("Socket Close\n");
+    close(socket);
 }
 
 void visualizer(int * visual_arg)
 {
-	int tsp_size = get_tsp_size();
-	int * nt_city_coordinate;
-	int * solu_path;
-	int socket;
-	int prev_loop = turn_loop_times(READONLY);
-	socket = clntSock();
+    int tsp_size = get_tsp_size();
+    int * nt_city_coordinate;
+    int * solu_path;
+    int socket;
+    int prev_loop = turn_loop_times(READONLY);
 
-	nt_city_coordinate = get_main_base_data();
-	
-	send(socket, nt_city_coordinate, (nt_city_coordinate[0]+1)*2*4,0);
+    socket = clntSock();
 
-	solu_path = get_solution_path();
-	solu_path[tsp_size+1] = (int)get_all_cost_by_graph(get_solution_path());
+    nt_city_coordinate = get_main_base_data();
 
-	for(;;){
-		for(;;) {
-			if(turn_loop_times(READONLY) != prev_loop) {
-				prev_loop = turn_loop_times(READONLY);
-				break;
-			}
-		}
+    send(socket, nt_city_coordinate, (nt_city_coordinate[0]+1)*2*4,0);
 
-		send(socket, solu_path, (solu_path[0]+2)*4,0);
+    while((solu_path = get_solution_path()) == NULL) {
+        printf("FUCK:\n");
+    }
 
-		solu_path = NULL;
-		solu_path = get_solution_path();
-		solu_path[tsp_size+1] = (int)get_all_cost_by_graph(get_solution_path());
-		if(search_is_done(READONLY) == YES) {
-			printf("visualize.c:All Search is Done...\n");
-			solu_path[0] = 0;
-			send(socket, solu_path, (solu_path[0]+2)*4,0);
-			break;
-		}
-	}
+    solu_path[tsp_size+1] = (int)get_all_cost_by_graph(get_solution_path());
 
-	cleanSock(socket);
+    for(;;){
+        for(;;) {
+            if(turn_loop_times(READONLY) != prev_loop) {
+                prev_loop = turn_loop_times(READONLY);
+                break;
+            }
+        }
+
+        send(socket, solu_path, (solu_path[0]+2)*4,0);
+        solu_path = NULL;
+        solu_path = get_solution_path();
+        solu_path[tsp_size+1] = (int)get_all_cost_by_graph(get_solution_path());
+        if(search_is_done(READONLY) == YES) {
+            printf("visualize.c:All Search is Done...\n");
+            solu_path[0] = 0;
+            send(socket, solu_path, (solu_path[0]+2)*4,0);
+            break;
+        }
+    }
+
+    cleanSock(socket);
 }
