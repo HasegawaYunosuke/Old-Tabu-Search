@@ -9,6 +9,7 @@
 
 /* functions */
 void visualizer(int * visual_arg);
+int search_is_done(int type);
 int get_tsp_size(void);
 int * get_solution_path(void);
 int * get_main_base_data(void);
@@ -56,35 +57,20 @@ void cleanSock(int socket)
 void visualizer(int * visual_arg)
 {
 	int tsp_size = get_tsp_size();
-	int tsp_size1 = (tsp_size+1)*4;
-	int * nt_city_coordinate;		//座標を格納します
+	int * nt_city_coordinate;
 	int * solu_path;
-	int * soiya;
-	int waki = 0;
-	char har_city_coordinate[10000];
-	char city_solution[10000];
 	int socket;
-	double lll = 0;
 	int prev_loop = turn_loop_times(READONLY);
 	socket = clntSock();
 
 	nt_city_coordinate = get_main_base_data();
 	
-	int k = 0,j = 0;
-
 	send(socket, nt_city_coordinate, (nt_city_coordinate[0]+1)*2*4,0);
 
 	solu_path = get_solution_path();
 	solu_path[tsp_size+1] = (int)get_all_cost_by_graph(get_solution_path());
-//	printf("fasdfafdadafadfaf\n");
-//	printf("AllCost:%d\n", solu_path[tsp_size+1]);
-//	printf("opppppppppppppppp\n");
 
 	for(;;){
-		
-		j = 0;
-		k = 0;
-
 		for(;;) {
 			if(turn_loop_times(READONLY) != prev_loop) {
 				prev_loop = turn_loop_times(READONLY);
@@ -97,15 +83,13 @@ void visualizer(int * visual_arg)
 		solu_path = NULL;
 		solu_path = get_solution_path();
 		solu_path[tsp_size+1] = (int)get_all_cost_by_graph(get_solution_path());
-//		printf("fasdfafdadafadfaf\n");
-//		printf("AllCost:%d\n", solu_path[tsp_size+1]);
-//		printf("opppppppppppppppp\n");
-
-
+		if(search_is_done(READONLY) == YES) {
+			printf("visualize.c:All Search is Done...\n");
+			solu_path[0] = 0;
+			send(socket, solu_path, (solu_path[0]+2)*4,0);
+			break;
+		}
 	}
-
-//    pthread_mutex_unlock(&mutex);
-//	free((void *)har_city_coordinate);
 
 	cleanSock(socket);
 }
