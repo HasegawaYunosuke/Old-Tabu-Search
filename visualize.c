@@ -12,6 +12,7 @@ void visualizer(int * visual_arg);
 int get_tsp_size(void);
 int * get_solution_path(void);
 int * get_main_base_data(void);
+double get_all_cost_by_graph(int * cities);
 int get_solution_data_flag(void);
 int turn_loop_times(int type);
 
@@ -63,150 +64,48 @@ void visualizer(int * visual_arg)
 	char har_city_coordinate[10000];
 	char city_solution[10000];
 	int socket;
+	double lll = 0;
+	int prev_loop = turn_loop_times(READONLY);
 	socket = clntSock();
 
 	nt_city_coordinate = get_main_base_data();
 	
-	/*if((har_city_coordinate = (char *)malloc((size_t)tsp_size1)) == NULL) {
-			fprintf(stderr,"DAMEDAKORYA\n");
-			exit(1);
-	}*/
-
 	int k = 0,j = 0;
-
-	/*for(;;) {
-		if(nt_city_coordinate[k] < 10){
-			har_city_coordinate[j] = nt_city_coordinate[k] + 48;
-			j++;
-			k++;
-		}
-		else if(nt_city_coordinate[k] < 100){
-			har_city_coordinate[j] = nt_city_coordinate[k] / 10 + 48;
-			j++;
-			har_city_coordinate[j] = nt_city_coordinate[k] % 10 + 48;
-			j++;
-			k++;
-		}
-		else if(nt_city_coordinate[k] < 1000){
-			har_city_coordinate[j] = nt_city_coordinate[k] / 100 + 48;
-			j++;
-			har_city_coordinate[j] = nt_city_coordinate[k] / 10 % 10 + 48;
-			j++;
-			har_city_coordinate[j] = nt_city_coordinate[k] % 10 + 48;
-			j++;
-			k++;
-		}
-		har_city_coordinate[j] = ',';
-		j++;
-		if(k == tsp_size * 2 + 2) {
-				break;
-		}
-	}
-	k = 0;
-	j = 0;
-	int kaigyo = 0;	
-	*/
-
-	/*for(waki=0; waki < (tsp_size + 1) * 11; waki++) {
-		if(har_city_coordinate[waki] == ',') {
-			kaigyo++;
-			if(kaigyo == 1) {
-				printf("%c",har_city_coordinate[waki]);
-			}
-			else if(kaigyo == 2) {
-				printf("%c\n",har_city_coordinate[waki]);
-				kaigyo = 0;
-			}
-		}
-		else {
-		    printf("%c",har_city_coordinate[waki]);
-	    }
-	}
-	*/
-	
-	printf("Finish?\n");
 
 	send(socket, nt_city_coordinate, (nt_city_coordinate[0]+1)*2*4,0);
 
-    //pthread_mutex_lock(&mutex);
-
-	for(;;) {
-		if(get_solution_data_flag() == ON) {
-			printf("looooooooooooooooop break\n");
-			break;
-		}
-	}
-
 	solu_path = get_solution_path();
-	/*if(solu_path == NULL) {
-		printf("get_tsp_size == %d\n",get_tsp_size());
-	}
-	else {
-		printf("zakiiiiiiii\n");
-	}
-	*/
-
-
-	/*for(waki=0;waki<52;waki++){
-		printf("%d\n",solu_path[waki]);
-	}
-	*/
-
-	//printf("11111111\n");
+	solu_path[tsp_size+1] = (int)get_all_cost_by_graph(get_solution_path());
+//	printf("fasdfafdadafadfaf\n");
+//	printf("AllCost:%d\n", solu_path[tsp_size+1]);
+//	printf("opppppppppppppppp\n");
 
 	for(;;){
 		
-		printf("%dLoops\n",turn_loop_times(READONLY));
-
-		/*while(k != tsp_size+1){
-			if(solu_path[k] < 10){
-				city_solution[j] = solu_path[k] + 48;
-				j++;
-				k++;
-			}
-			else if(solu_path[k] < 100){
-				city_solution[j] = solu_path[k] / 10 + 48;
-				j++;
-				city_solution[j] = solu_path[k] % 10 + 48;
-				j++;
-				k++;
-			}
-			else if(solu_path[k] < 1000){
-				city_solution[j] = solu_path[k] /100 + 48;
-				j++;
-				city_solution[j] = solu_path[k] / 10 % 10 + 48;
-				j++;
-				city_solution[j] = solu_path[k] % 10 + 48;
-				j++;
-				k++;
-			}
-		city_solution[j] = ',';
-		j++;
-		}
-		*/
-
 		j = 0;
 		k = 0;
-		send(socket, solu_path, (solu_path[0]+1)*4,0);
+
+		for(;;) {
+			if(turn_loop_times(READONLY) != prev_loop) {
+				prev_loop = turn_loop_times(READONLY);
+				break;
+			}
+		}
+
+		send(socket, solu_path, (solu_path[0]+2)*4,0);
 
 		solu_path = NULL;
 		solu_path = get_solution_path();
+		solu_path[tsp_size+1] = (int)get_all_cost_by_graph(get_solution_path());
+//		printf("fasdfafdadafadfaf\n");
+//		printf("AllCost:%d\n", solu_path[tsp_size+1]);
+//		printf("opppppppppppppppp\n");
 
-		for(waki=0;waki<tsp_size+1;waki++){
-			printf("wakiwaki:%d\n",solu_path[waki]);
-		}
-		//sleep(1);	
-		
+
 	}
-
-    /*for(i = 0; i < 100; i++) {
-        printf("main_base_data[%d] == %d\n",i,main_base_data[i]);
-    }*/
 
 //    pthread_mutex_unlock(&mutex);
 //	free((void *)har_city_coordinate);
 
 	cleanSock(socket);
 }
-
-
