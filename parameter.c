@@ -2,6 +2,7 @@
 #include "header.h"
 
 /* functions */
+int search_is_done(int type);
 void set_tabu2opt_mode(void);
 void set_euclid_mode(void);
 void set_visual_mode(void);
@@ -60,6 +61,7 @@ struct parameter {
     int turn_times;
     int search_times;
     int solution_data_flag;
+    int search_is_done;
 };
 
 struct parameter * parameterp;
@@ -77,6 +79,19 @@ void set_mode(void)
     modep->hasegawa_mode = ON;
     modep->tabu_mode = OFF;
     modep->only2opt_mode = ON;
+}
+
+int search_is_done(int type)
+{
+    switch(type) {
+        case INIT:
+            parameterp->search_is_done = YES;
+            return 1;
+            break;
+        case READONLY:
+            return parameterp->search_is_done;
+            break;
+    }
 }
 
 void set_tabu2opt_mode(void)
@@ -131,6 +146,7 @@ void initial_parameter(int tsp_size)
     parameterp->turn_times = 0;
     parameterp->search_times = 0;
     parameterp->solution_data_flag = OFF;
+    parameterp->search_is_done = NO;
     set_2opt_loop();
 
     create_historys();
