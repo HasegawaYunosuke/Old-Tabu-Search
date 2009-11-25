@@ -106,6 +106,8 @@ void set_pole_mode(void)
     modep->pole_mode = ON;
     modep->tozaki_mode = OFF;
     modep->hasegawa_mode = OFF;
+    modep->only2opt_mode = OFF;
+    modep->tabu2opt_mode == ON;
 }
 
 void set_tozaki_mode(void)
