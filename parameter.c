@@ -32,6 +32,7 @@ double get_worse_permit(void);
 void change_worse_permit(int type);
 double get_now_parcentage(void);
 int check_parcentage(double bef_aft_distance);
+double bef_aft_distance(int * cities);
 double get_graph_cost(int a, int b);
 void set_all_cost(void);
 void create_historys(void);
@@ -207,7 +208,7 @@ int not_found_looping(int * cities, int * indexs, int type)
     int return_num = NO;
 
     switch(type) {
-        case CHECK:
+        case COUNT:
             if(parameterp->not_found_def_aft_dis < bef_aft_distance(cities)) {
                 parameterp->not_found_def_aft_dis = bef_aft_distance(cities);
                 for(i = 0; i < 4; i++) {

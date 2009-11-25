@@ -9,6 +9,7 @@
 #include <sys/stat.h>
 #include <pthread.h>
 #include <float.h>
+#include <limits.h>
 
 /* macro variable */
 #define INIT 0
@@ -20,6 +21,7 @@
 #define NO OFF
 #define CHECK -1
 #define READONLY -2
+#define COUNT -3
 #define DEFAULT 0
 #define PERMITWORSE 10
 #define SMART2OPT 20

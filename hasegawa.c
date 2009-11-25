@@ -132,12 +132,12 @@ int * two_opt_tabu(int * solution_path)
             do {
                 choice_4indexs(DEFAULT, indexs, solution_path);
                 get_cities_by_indexs(cities, indexs, solution_path);
-                /*if(not_found_looping(cities, indexs, CHECK) == YES) {
+                if(not_found_looping(cities, indexs, COUNT) == YES) {
                     not_found_looping(cities, indexs, READONLY);
                     break;
-                }*/
+                }
             } while(permit_worse(bef_aft_distance(cities)) == NO || is_2opt_tabu(cities) == YES);
-            //not_found_looping(cities, indexs, INIT);
+            not_found_looping(cities, indexs, INIT);
             exchange_branch(solution_path, indexs);
         }
     }
