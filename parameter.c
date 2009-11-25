@@ -245,8 +245,20 @@ void set_2opt_loop(void)
 
 void set_now_parcentage(double before, double after)
 {
+    double all_cost = 0;
+
+    if(modep->graph_mode == ON) {
+        all_cost = get_all_cost_by_graph(get_solution_path());
+    }
+    else if(modep->euclid_mode == ON) {
+        all_cost = get_all_cost_by_euclid(get_solution_path());
+    }
+    else {
+        error_procedure("set_now_parcentage()");
+    }
+
     /* permit_worse > 0 */
-    parameterp->now_parcentage = (after - before) / before * 100;
+    parameterp->now_parcentage = (after - before) / all_cost * 100;
 }
 
 void set_graph_data(double * graph_data)

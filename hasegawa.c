@@ -284,12 +284,12 @@ int permit_worse(double bef_aft_distance)
         }
     }
 
-    if(return_num == YES) {
+    /*if(return_num == YES) {
         change_worse_permit(CLEAR);
     }
     else {
         change_worse_permit(ADD);
-    }
+    }*/
 
     return return_num;
 }
