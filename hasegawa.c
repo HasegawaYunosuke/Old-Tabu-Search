@@ -30,6 +30,7 @@ double get_branch_distance(int a, int b);
 double get_branch_cost(int a, int b);
 double get_graph_cost(int a,int b);
 double get_now_parcentage(void);
+int check_parcentage(double bef_aft_distance);
 void get_min_exchange_indexs(int * solution_path, int * indexs);
 double make_distance(int x1, int y1, int x2, int y2);
 int get_x(int city_index);
@@ -38,6 +39,7 @@ int is_2opt_tabu(int * cities);
 void error_procedure(char * message);
 int check_manneri(int type);
 void add_2opt_tabulist(int * cities);
+int not_found_looping(int * cities, int * indexs, int type);
 
 
 int * hasegawa_search(int * solution_path)
@@ -123,14 +125,19 @@ int * two_opt_tabu(int * solution_path)
     }
     /* (2) Second, permit exchange toward worse, and use tabu-list */
     else {
-        if(turn_loop_times(READONLY) % 5 == 0) {
+        if(turn_loop_times(READONLY) % 3 == 0) {
             solution_path = two_opt_only(solution_path);
         }
         else {
             do {
                 choice_4indexs(DEFAULT, indexs, solution_path);
                 get_cities_by_indexs(cities, indexs, solution_path);
+                /*if(not_found_looping(cities, indexs, CHECK) == YES) {
+                    not_found_looping(cities, indexs, READONLY);
+                    break;
+                }*/
             } while(permit_worse(bef_aft_distance(cities)) == NO || is_2opt_tabu(cities) == YES);
+            //not_found_looping(cities, indexs, INIT);
             exchange_branch(solution_path, indexs);
         }
     }
@@ -276,20 +283,13 @@ int permit_worse(double bef_aft_distance)
     }
     else{
         /* permit_worse discribed > 0 */
-        if(get_worse_permit() < get_now_parcentage()) {
+        if(check_parcentage(bef_aft_distance) == NO) {
             return_num = NO;
         }
         else {
             return_num = YES;
         }
     }
-
-    /*if(return_num == YES) {
-        change_worse_permit(CLEAR);
-    }
-    else {
-        change_worse_permit(ADD);
-    }*/
 
     return return_num;
 }

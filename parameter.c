@@ -3,6 +3,7 @@
 
 /* functions */
 int search_is_done(int type);
+int not_found_looping(int * cities, int * indexs, int type);
 void set_tabu2opt_mode(void);
 void set_euclid_mode(void);
 void set_visual_mode(void);
@@ -30,6 +31,7 @@ int get_y(int city_index);
 double get_worse_permit(void);
 void change_worse_permit(int type);
 double get_now_parcentage(void);
+int check_parcentage(double bef_aft_distance);
 double get_graph_cost(int a, int b);
 void set_all_cost(void);
 void create_historys(void);
@@ -62,6 +64,10 @@ struct parameter {
     int search_times;
     int solution_data_flag;
     int search_is_done;
+    int not_found_cities[4];
+    int not_found_indexs[4];
+    int not_found_loop;
+    double not_found_def_aft_dis;
 };
 
 struct parameter * parameterp;
@@ -147,7 +153,10 @@ void initial_parameter(int tsp_size)
     parameterp->search_times = 0;
     parameterp->solution_data_flag = OFF;
     parameterp->search_is_done = NO;
+    parameterp->not_found_loop = 0;
+    parameterp->not_found_def_aft_dis = (-1) * DBL_MAX;
     set_2opt_loop();
+
 
     create_historys();
     /* create tabu list for 2-opt (only first procedure) */
@@ -187,6 +196,40 @@ int search_loop_times(int type)
     }
     else if(type == READONLY) {
         return_num = parameterp->search_times;
+    }
+
+    return return_num;
+}
+
+int not_found_looping(int * cities, int * indexs, int type)
+{
+    int i;
+    int return_num = NO;
+
+    switch(type) {
+        case CHECK:
+            if(parameterp->not_found_def_aft_dis < bef_aft_distance(cities)) {
+                parameterp->not_found_def_aft_dis = bef_aft_distance(cities);
+                for(i = 0; i < 4; i++) {
+                    parameterp->not_found_cities[i] = cities[i];
+                    parameterp->not_found_indexs[i] = indexs[i];
+                }
+            }
+            parameterp->not_found_loop++;
+            if(parameterp->not_found_loop > DEFAULT_NOTFOUNDLOOP) {
+                return_num = YES;
+            }
+            break;
+        case INIT:
+            parameterp->not_found_loop = 0;
+            parameterp->not_found_def_aft_dis = (-1) * DBL_MAX;
+            break;
+        case READONLY:
+            for(i = 0; i < 4; i++) {
+                cities[i] = parameterp->not_found_cities[i];
+                indexs[i] = parameterp->not_found_indexs[i];
+            }
+            break;
     }
 
     return return_num;
@@ -243,24 +286,6 @@ void set_2opt_loop(void)
     parameterp->two_opt_loop = DEFAULT_2OPTLOOP;
 }
 
-void set_now_parcentage(double before, double after)
-{
-    double all_cost = 0;
-
-    if(modep->graph_mode == ON) {
-        all_cost = get_all_cost_by_graph(get_solution_path());
-    }
-    else if(modep->euclid_mode == ON) {
-        all_cost = get_all_cost_by_euclid(get_solution_path());
-    }
-    else {
-        error_procedure("set_now_parcentage()");
-    }
-
-    /* permit_worse > 0 */
-    parameterp->now_parcentage = (after - before) / all_cost * 100;
-}
-
 void set_graph_data(double * graph_data)
 {
     parameterp->graph_data = graph_data;
@@ -288,6 +313,38 @@ int get_solution_data_flag(void)
 {
     return parameterp->solution_data_flag;
 }
+
+void set_now_parcentage(double before, double after)
+{
+    double best_cost = 0;
+
+    best_cost = get_best_cost();
+
+    /* permit_worse > 0 */
+    parameterp->now_parcentage = (after - before) / best_cost * 100;
+}
+
+/* return num is YES or NO */
+int check_parcentage(double bef_aft_distance)
+{
+    int return_num = NO;
+    double best_cost = get_best_cost();
+    double after_all_cost;
+
+    if(modep->euclid_mode == OFF) {
+        after_all_cost = get_all_cost_by_graph(get_solution_path()) - bef_aft_distance;
+    }
+    else {
+        after_all_cost = get_all_cost_by_euclid(get_solution_path()) - bef_aft_distance;
+    }
+
+    if(((get_worse_permit() / 100 + 1) * best_cost) > after_all_cost) {
+        return_num = YES;
+    }
+
+    return return_num;
+}
+
 double get_now_parcentage(void)
 {
     return parameterp->now_parcentage;
