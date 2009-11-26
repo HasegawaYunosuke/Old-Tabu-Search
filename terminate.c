@@ -2,6 +2,7 @@
 #include "header.h"
 
 /* functions */
+int search_is_done(int type);
 int loop_terminate(void);
 int search_terminate(void);
 int turn_loop_times(int type);
@@ -52,6 +53,7 @@ int search_terminate(void)
         /* DEL EN */
 
         return_num = YES;
+        search_is_done(INIT);
     }
 
     search_loop_times(CHECK);
