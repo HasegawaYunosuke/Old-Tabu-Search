@@ -34,12 +34,11 @@ int is_2opt_tabu(int * cities);
 void add_2opt_tabulist(int * cities);
 int get_tabu_mode(void);
 void set_tabu_mode(int type);
-double get_worse_permit(void);
-double get_now_parcentage(void);
-void change_worse_permit(int type);
 int permit_worse_distance(double bef_aft_distance);
 void create_2opt_tabulist(int tsp_size, int mode);
-//int turn_loop_times(int type);
+int turn_loop_times(int type);
+int not_found_looping(int * cities, int * indexs, int type);
+int check_parcentage(double bef_aft_distance);
 
 /* global variable */
 int create_mode;
@@ -112,7 +111,7 @@ int *two_opt(int * solution_path)
     else //if(get_tabu_mode() == ON)
      {
     
-    if(turn_loop_times(READONLY) % 5 == 0) {
+    if(turn_loop_times(READONLY) % 3 == 0) {
     
      now_distance = DBL_MAX * (-1);
      maximum = DBL_MAX * (-1);
@@ -131,7 +130,6 @@ int *two_opt(int * solution_path)
                 }
             }
         }
-
         for(i = 0; i < 4; i++) {
             if(indexes[i] > tsp_size) {
                 printf("indexes[%d] == %d\n",i,best_indexes[i]);
@@ -143,10 +141,10 @@ int *two_opt(int * solution_path)
       
         }else{
         
-        do{
+        do{ 
             int a,b;
             int max = solution_path[0];
-                       
+
              a = random_num(max);
             do {
                 b = random_num(max);
@@ -154,11 +152,16 @@ int *two_opt(int * solution_path)
 
             indexes[0] = a; indexes[1] = nextindex(a, max);
             indexes[2] = b; indexes[3] = nextindex(b, max);
-            
+
             get_cities_by_indexes(cities, indexes, solution_path);
-          
-               
+
+            if(not_found_looping(cities, indexes, COUNT) == YES) {
+                    not_found_looping(cities, indexes, READONLY);
+                    break;
+                }              
         } while(permit_worse_distance(before_after_distance(cities)) == NO || is_2opt_tabu(cities) == YES);
+
+         not_found_looping(cities, indexes, INIT);
          exchange_branches(solution_path, indexes);
         }
    
@@ -267,6 +270,8 @@ void exchange_branches(int * solution_path, int * indexes)
 
    free(copy);     
 }
+
+
 /* permit exchange toward worse if under permit_baseline */
 int permit_worse_distance(double bef_aft_distance)
 {
@@ -278,24 +283,16 @@ int permit_worse_distance(double bef_aft_distance)
     }
     else{
         /* permit_worse discribed > 0 */
-        if(get_worse_permit() < get_now_parcentage()) {
+        if(check_parcentage(bef_aft_distance) == NO) {
             return_num = NO;
         }
         else {
             return_num = YES;
         }
     }
-    /*
-    if(return_num == YES) {
-        change_worse_permit(CLEAR);
-    }
-    else {
-        change_worse_permit(ADD);
-    }
-*/
+
     return return_num;
 }
-
 /* one point crossover of ordinal representation  */
 int *order_one_cross(int * init_path_a, double * graph_data)
 {
