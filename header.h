@@ -9,6 +9,7 @@
 #include <sys/stat.h>
 #include <pthread.h>
 #include <float.h>
+#include <limits.h>
 
 /* macro variable */
 #define INIT 0
@@ -20,6 +21,7 @@
 #define NO OFF
 #define CHECK -1
 #define READONLY -2
+#define COUNT -3
 #define DEFAULT 0
 #define PERMITWORSE 10
 #define SMART2OPT 20
@@ -30,13 +32,14 @@
 
 /* macro parameter */
 #define TSPMAXSIZE 2000
-#define DEFAULT_PERMITWORSE 15
+#define DEFAULT_PERMITWORSE 2
 #define DEFAULT_ADDPERMITWORSE 1
 #define DEFAULT_SEARCHTIME 10
 #define DEFAULT_CITYPOINT 5
 #define DEFAULT_2OPTLOOP 100
 #define DEFAULT_HISTORYSIZE 20
 #define DEFAULT_SAMEPERCENTAGE 25
+#define DEFAULT_NOTFOUNDLOOP 1000
 
 /* grobal variable */
 struct mode {
