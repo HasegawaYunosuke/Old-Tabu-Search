@@ -25,7 +25,7 @@ int loop_terminate(void)
 
         return_num = YES;
         set_tabu_mode(OFF);
-        if(modep->hasegawa_mode == ON) {
+        if(modep->hasegawa_mode == ON || modep->tozaki_mode == ON) {
             create_2opt_tabulist(get_tsp_size(), CLEAR);
         }
     }

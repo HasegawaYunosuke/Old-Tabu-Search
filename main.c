@@ -29,7 +29,7 @@ int check_manneri(int type);
 
 int main(int argc, char ** argv)
 {
-    int i;
+    int i,j;
     int * sol;
 
     /* all in one initialize */
