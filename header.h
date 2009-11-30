@@ -32,7 +32,7 @@
 
 /* macro parameter */
 #define TSPMAXSIZE 2000
-#define DEFAULT_PERMITWORSE 10
+#define DEFAULT_PERMITWORSE 0.05
 #define DEFAULT_ADDPERMITWORSE 1
 #define DEFAULT_SEARCHTIME 10
 #define DEFAULT_CITYPOINT 5
@@ -53,6 +53,7 @@ struct mode {
     int tabu_mode;
     int tabu2opt_mode;
     int only2opt_mode;
+    int ga_mode;
 };
 
 struct mode * modep;

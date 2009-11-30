@@ -12,6 +12,8 @@ void set_pole_mode(void);
 void set_tozaki_mode(void);
 void set_tabu_mode(int type);
 int get_tabu_mode(void);
+void set_ga_mode(int type);
+int get_ga_mode(void);
 void create_2opt_tabulist(int tsp_size, int mode);
 void set_now_parcentage(double before, double after);
 void set_2opt_loop(void);
@@ -46,6 +48,8 @@ double get_all_cost_by_euclid(int * solution_path);
 double get_best_cost(void);
 int now_index(int target, int maximum);
 void show_on_off(int on_off);
+
+void set_counter(void);
 
 /* grobal variable */
 struct parameter {
@@ -130,6 +134,9 @@ void set_pole_mode(void)
     modep->hasegawa_mode = OFF;
     modep->only2opt_mode = OFF;
     modep->tabu2opt_mode = ON;
+    modep->ga_mode = OFF;
+    set_counter();
+    
 }
 
 void set_tozaki_mode(void)
@@ -261,7 +268,20 @@ int get_tabu_mode(void)
 {
     return modep->tabu_mode;
 }
+void set_ga_mode(int type)
+{
+    if(type == ON) {
+        modep->ga_mode = ON;
+    }
+    else if(type == OFF) {
+        modep->ga_mode = OFF;
+    }
+}
 
+int get_ga_mode(void)
+{
+    return modep->ga_mode;
+}
 double get_worse_permit(void)
 {
     return parameterp->permit_worse;
