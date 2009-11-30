@@ -40,7 +40,6 @@ int main(int argc, char ** argv)
         for(;;) {
             /* search */
             search();
-
             realtime_result();
 
             /* search-turn terminate */
