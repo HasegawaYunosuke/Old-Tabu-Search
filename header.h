@@ -53,6 +53,7 @@ struct mode {
     int tabu_mode;
     int tabu2opt_mode;
     int only2opt_mode;
+    int ga_mode;
 };
 
 struct mode * modep;
