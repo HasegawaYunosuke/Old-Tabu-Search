@@ -1,6 +1,7 @@
 #include "mpi_header.h"
 
 void set_MPI_parameter(void);
+void set_parameter_data(int num_of_all_proc, int process_number, int name_length, char * process_name);
 
 /* if Using Score System */
 void set_MPI_parameter(void)
@@ -14,10 +15,7 @@ void set_MPI_parameter(void)
     MPI_Comm_rank(MPI_COMM_WORLD, &process_number);
     MPI_Get_processor_name(process_name, &name_length);
 
-    parameterp->num_of_all_proc = num_of_all_proc;
-    parameterp->process_number = process_number;
-    parameterp->name_length = name_length;
-    parameterp->process_name = process_name;
+    set_parameter_data(num_of_all_proc, process_number, name_length, process_name);
 }
 
 void parallel_finalize(void)

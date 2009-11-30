@@ -3,7 +3,11 @@
 
 /* functions */
 int search_is_done(int type);
+void set_parameter_data(int num_of_all_proc, int process_number, int name_length, char * process_name);
+int get_num_of_all_proc(void);
+int get_process_number(void);
 int not_found_looping(int * cities, int * indexs, int type);
+void set_search_time(double search_time);
 void set_tabu2opt_mode(void);
 void set_euclid_mode(void);
 void set_visual_mode(void);
@@ -38,14 +42,12 @@ void set_all_cost(void);
 void create_historys(void);
 void add_history(void);
 void set_mode(void);
-void show_mode(void);
 void set_solution_data_flag(void);
 int get_solution_data_flag(void);
 double get_all_cost_by_graph(int * solution_path);
 double get_all_cost_by_euclid(int * solution_path);
 double get_best_cost(void);
 int now_index(int target, int maximum);
-void show_on_off(int on_off);
 
 /* grobal variable */
 struct parameter {
@@ -55,7 +57,6 @@ struct parameter {
     double now_parcentage;      /* Parcentage of now choice () */
     double permit_worse;        /* Parcentage of permitting to choice toward worse */
     double base_permit_worse;   /* Parcentage of permitting to choice toward worse */
-    double search_time;         /* whole program running time */
     int * main_base_data;       /* TSPLIB's data, discribed by Euclid */
     double * graph_data;        /* TSPLIB's data, discribed by Graph */
     int * solution_path;        /* the sequence of city data arrived */
@@ -72,7 +73,7 @@ struct parameter {
     int process_number;
     int num_of_all_proc;
     int name_length;
-    char process_name[1024];
+    char * process_name;
 };
 
 struct parameter * parameterp;
@@ -92,8 +93,22 @@ void set_mode(void)
     modep->only2opt_mode = ON;
 }
 
-void set_MPI_parameter(void)
+void set_parameter_data(int num_of_all_proc, int process_number, int name_length, char * process_name)
 {
+    parameterp->num_of_all_proc = num_of_all_proc;
+    parameterp->process_number = process_number;
+    parameterp->name_length = name_length;
+    parameterp->process_name = process_name;
+}
+
+int get_num_of_all_proc(void)
+{
+    return parameterp->num_of_all_proc;
+}
+
+int get_process_number(void)
+{
+    return parameterp->process_number;
 }
 
 int search_is_done(int type)
@@ -166,6 +181,8 @@ void initial_parameter(int tsp_size)
     parameterp->search_is_done = NO;
     parameterp->not_found_loop = 0;
     parameterp->not_found_def_aft_dis = (-1) * DBL_MAX;
+    parameterp->process_number = 0;
+    parameterp->num_of_all_proc = 1;
     set_2opt_loop();
 
 
@@ -451,25 +468,4 @@ int get_y(int city_index)
 
     main_base_data = get_main_base_data();
     return main_base_data[city_index * 2 + 1];
-}
-
-void show_mode(void)
-{
-    printf("visual_mode == "); show_on_off(modep->visual_mode);
-    printf("graph_mode == "); show_on_off(modep->graph_mode);
-    printf("euclid_mode == "); show_on_off(modep->euclid_mode);
-    printf("parallel_mode == "); show_on_off(modep->parallel_mode);
-    printf("hasegawa_mode == "); show_on_off(modep->hasegawa_mode);
-    printf("pole_mode == "); show_on_off(modep->pole_mode);
-    printf("tozaki_mode == "); show_on_off(modep->tozaki_mode);
-}
-
-void show_on_off(int on_off)
-{
-    if(on_off == ON) {
-        printf("ON\n");
-    }
-    else {
-        printf("OFF\n");
-    }
 }
