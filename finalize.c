@@ -6,5 +6,5 @@ void finalize(void);
 
 void finalize(void)
 {
-    printf("Program is normally terminated.....\n");
+    //printf("Program is normally terminated.....\n");
 }

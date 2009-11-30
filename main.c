@@ -49,6 +49,7 @@ int main(int argc, char ** argv)
             search();
 
                 /* DEL ST */
+/*
                 printf("DEL:all_cost == %f,",get_all_cost_by_graph(get_solution_path()));
                 printf("best == %.2f,",get_best_cost());
                 if(modep->tabu_mode == ON) {
@@ -64,6 +65,7 @@ int main(int argc, char ** argv)
                 else {
                     printf("mannneri OFF\n");
                 }
+*/
                 /* DEL EN */
 
             /* search-turn terminate */

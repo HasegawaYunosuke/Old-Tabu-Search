@@ -20,7 +20,7 @@ int loop_terminate(void)
         turn_loop_times(INIT);
 
         /* DEL ST */
-        printf("Turn is terminated by turn_loop_times()\n");
+        //printf("Turn is terminated by turn_loop_times()\n");
         /* DEL EN */
 
         return_num = YES;
@@ -33,7 +33,7 @@ int loop_terminate(void)
         turn_loop_times(INIT);
 
         /* DEL ST */
-        printf("Turn is terminated by timer()\n");
+        //printf("Turn is terminated by timer()\n");
         /* DEL EN */
 
         return_num = YES;
@@ -49,7 +49,7 @@ int search_terminate(void)
     if(timer(CHECK) == OFF) {
 
         /* DEL ST */
-        printf("Search is terminated by timer()\n");
+        //printf("Search is terminated by timer()\n");
         /* DEL EN */
 
         return_num = YES;
