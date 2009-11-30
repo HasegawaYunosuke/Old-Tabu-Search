@@ -24,6 +24,7 @@ int is_2opt_tabu(int * cities1)
                         {cities1[2],cities1[3],cities1[0],cities1[1]},
                         {cities1[1],cities1[0],cities1[3],cities1[2]},
                         {cities1[3],cities1[2],cities1[1],cities1[0]}};
+
     pthread_t matching_thread[4];
 
     pthread_mutex_init(&match_mutex, NULL);

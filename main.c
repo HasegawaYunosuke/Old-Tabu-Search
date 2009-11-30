@@ -27,10 +27,15 @@ int * get_solution_path(void);
 double get_best_cost(void);
 int check_manneri(int type);
 
+int get_counter(void);
+
 int main(int argc, char ** argv)
 {
     int i;
     int * sol;
+    int count = 0;
+    int best_count = 0;
+    double best = 0;
 
     /* all in one initialize */
     initialize(argc, argv);
@@ -51,19 +56,30 @@ int main(int argc, char ** argv)
                 /* DEL ST */
                 printf("DEL:all_cost == %f,",get_all_cost_by_graph(get_solution_path()));
                 printf("best == %.2f,",get_best_cost());
+    
                 if(modep->tabu_mode == ON) {
-                    printf("tabu ON,");
+                    printf("tabu  ON,");
                 }
                 else {
                     printf("tabu OFF,");
                 }
 
                 if(check_manneri(SHORTMODE) == YES) {
-                    printf("mannneri ON\n");
+                    printf("mannneri  ON,");
                 }
                 else {
-                    printf("mannneri OFF\n");
+                    printf("mannneri OFF,");
                 }
+                
+                if(modep->ga_mode == ON){
+                    printf("GA  ON,");
+                }
+                
+                else {
+                    printf("GA OFF,");
+                }
+                
+                printf("count = %d\n",get_counter());
                 /* DEL EN */
 
             /* search-turn terminate */
