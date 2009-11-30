@@ -41,6 +41,8 @@ int not_found_looping(int * cities, int * indexs, int type);
 int check_parcentage(double bef_aft_distance);
 
 void set_ga_mode(int type);
+void set_counter(void);
+void create_2opt_tabulist(int tsp_size, int mode);
 
 /* global variable */
 int create_mode;
@@ -61,7 +63,9 @@ int * pole_search(int * solution_path)
         
         solution_path = order_one_cross(solution_path, graph_data);
         set_ga_mode(ON);
-        set_tabu_mode(OFF);
+        set_counter();
+        create_2opt_tabulist(get_tsp_size(), INIT);
+        //set_tabu_mode(OFF);
         }
         }
      solution_path = two_opt(solution_path);

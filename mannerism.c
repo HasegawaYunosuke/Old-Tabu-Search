@@ -62,7 +62,7 @@ int get_counter(void)
 
 int middle_manneri(void)
 {
-    if(get_counter() > 100)
+    if(get_counter() > 150)
         return YES;
         
     else return NO;
