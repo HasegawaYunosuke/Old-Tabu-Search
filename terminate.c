@@ -4,6 +4,9 @@
 /* functions */
 int search_is_done(int type);
 int loop_terminate(void);
+void turn_terminated_show(void);
+void turn_terminated_by_time_show(void);
+void search_terminated_by_time_show(void);
 int search_terminate(void);
 int turn_loop_times(int type);
 int search_loop_times(int type);
@@ -18,11 +21,7 @@ int loop_terminate(void)
 
     if(turn_loop_times(CHECK) >= get_tsp_size() * 10 && get_tabu_mode() == YES) {
         turn_loop_times(INIT);
-
-        /* DEL ST */
-        printf("Turn is terminated by turn_loop_times()\n");
-        /* DEL EN */
-
+        turn_terminated_show();
         return_num = YES;
         set_tabu_mode(OFF);
         if(modep->tabu2opt_mode == ON) {
@@ -31,11 +30,7 @@ int loop_terminate(void)
     }
     if(timer(CHECK) == OFF) {
         turn_loop_times(INIT);
-
-        /* DEL ST */
-        printf("Turn is terminated by timer()\n");
-        /* DEL EN */
-
+        turn_terminated_by_time_show();
         return_num = YES;
     }
 
@@ -47,11 +42,7 @@ int search_terminate(void)
     int return_num = NO;
 
     if(timer(CHECK) == OFF) {
-
-        /* DEL ST */
-        printf("Search is terminated by timer()\n");
-        /* DEL EN */
-
+        search_terminated_by_time_show();
         return_num = YES;
         search_is_done(INIT);
     }

@@ -69,6 +69,10 @@ struct parameter {
     int not_found_indexs[4];
     int not_found_loop;
     double not_found_def_aft_dis;
+    int process_number;
+    int num_of_all_proc;
+    int name_length;
+    char process_name[1024];
 };
 
 struct parameter * parameterp;
@@ -86,6 +90,10 @@ void set_mode(void)
     modep->hasegawa_mode = ON;
     modep->tabu_mode = OFF;
     modep->only2opt_mode = ON;
+}
+
+void set_MPI_parameter(void)
+{
 }
 
 int search_is_done(int type)
