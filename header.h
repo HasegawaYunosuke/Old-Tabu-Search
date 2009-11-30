@@ -32,11 +32,7 @@
 
 /* macro parameter */
 #define TSPMAXSIZE 2000
-<<<<<<< HEAD:header.h
-#define DEFAULT_PERMITWORSE 2
-=======
 #define DEFAULT_PERMITWORSE 0.05
->>>>>>> pole:header.h
 #define DEFAULT_ADDPERMITWORSE 1
 #define DEFAULT_SEARCHTIME 10
 #define DEFAULT_CITYPOINT 5
