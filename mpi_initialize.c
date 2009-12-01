@@ -45,6 +45,12 @@ void initialize(int argc, char ** argv)
                         (void *) &visual_arg);
 //        pthread_join(visual_thread, NULL);
     }
+
+    /* if Using Score System */
+    if(modep->parallel_mode == ON) {
+        MPI_Init(&argc, &argv);
+        set_MPI_parameter();
+    }
 }
 
 double * make_graph(int * main_base_data)

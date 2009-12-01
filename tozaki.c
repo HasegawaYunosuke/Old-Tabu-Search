@@ -1,18 +1,19 @@
 /*
     This file "tozaki.c" can edit by ONLY Tozaki.
-    どれかのスレッドが解を見つけたら他のスレッドは強制的に関数を抜けるプログラム
 */
 
+#define _GUN_SOURCE
 /* header files */
 #include "header.h"
 #include <sched.h>
 #include <sys/syscall.h>
 #include <linux/unistd.h>
-#define _GUN_SOURCE 1
+
 #define THREAD_NUM 16
-#define DEFAULT_BRANCH_PERMITWORSE 10
-#define __CPU_ZERO
-#define __CPU_SET
+/* DEL ST at git push */
+#define CPU_ZERO(cpusetp)
+#define CPU_SET(cpu, cpusetp)
+/* DEL EN at git push */
 
 /* functions */
 int * tozaki_search(int * solution_path);
@@ -21,7 +22,7 @@ int * copy_graph_search(int * solution_path);
 int * copy_two_opt_tabu(int * solution_path);
 int * copy_two_opt_only(int * solution_path);
 void copy_choice_4indexs(int type, int * cities, int * solution_path);
-int copy_permit_worse(double bef_aft_distance, double * branch_permit_worse);
+int copy_permit_worse(double bef_aft_distance);
 int copy_mode_select(int mode, int * solution_path);
 void create_2opt_tabulist(int tsp_size, int mode);
 int copy_next_index(int target, int maximum);
@@ -47,21 +48,18 @@ void error_procedure(char * message);
 int check_manneri(int type);
 void add_2opt_tabulist(int * cities);
 void thread_core_assigned(void * arg);
-void thread_two_opt_tabu(int * solution_path, double * branch_permit_worse);
+void thread_two_opt_tabu(int * solution_path);
 int * get_solution_path();
-void branch_change_worse_permit(int type, double * branch_permit_worse);
 int get_tsp_size(void);
 
 /* grobal variable */
 int grobal_indexs[4];
 double best_bef_aft_cost;
-
 pthread_mutex_t parallel_mutex;
 
 typedef struct _thread_arg {
     int core_num;
     int thread_no;
-    double branch_permit_worse_persentage;
     int * path;
 } thread_arg_t;
 
@@ -81,7 +79,6 @@ int * tozaki_search(int * solution_path)
     else {
         error_procedure("tozaki_search()");
     }
-
     return return_data;
 }
 
@@ -98,7 +95,6 @@ int * copy_euclid_search(int * solution_path)
             return_data = copy_two_opt_tabu(solution_path);
             break;
     }
-
     return return_data;
 }
 
@@ -117,7 +113,6 @@ int * copy_graph_search(int * solution_path)
             return_data = copy_two_opt_tabu(solution_path);
             break;
     }
-
     return return_data;
 }
 
@@ -129,7 +124,6 @@ int copy_mode_select(int mode, int * solution_path)
     else if(modep->tabu2opt_mode == ON) {
         mode = TABU2OPT;
     }
-
     return mode;
 }
 
@@ -165,7 +159,6 @@ int * copy_two_opt_tabu(int * solution_path)
             for(i = 0; i < THREAD_NUM; i++) {
                 targ[i].core_num = i % cpu_num;
                 targ[i].thread_no = i;
-                targ[i].branch_permit_worse_persentage =  DEFAULT_BRANCH_PERMITWORSE;
                 targ[i].path = mallocer_ip(tsp_size + 1);
                 for(j = 0; j < tsp_size + 1; j++) {
                     targ[i].path[j] = solution_path[j];
@@ -186,16 +179,6 @@ int * copy_two_opt_tabu(int * solution_path)
             pthread_mutex_destroy(&mutex);
             
             copy_exchange_branch(solution_path, grobal_indexs);
-
-            for(i = 1; i < tsp_size; i++) {
-                for(j = i + 1; j <= tsp_size; j++) {
-                    if(solution_path[i] == solution_path[j]) {
-                        printf("There is same point\n");
-                        exit(1);
-                    }
-                }
-            }
-
         }
     }
     return solution_path;
@@ -207,22 +190,23 @@ void thread_core_assigned(void * arg)
     /* change void to thread_arg_t */
     thread_arg_t * targ = (thread_arg_t *)arg;
     int tsp_size = targ->path[0];
-    double branch_permit_worse = targ->branch_permit_worse_persentage;
 
-    __CPU_ZERO(&mask);
+    CPU_ZERO(&mask);
 
     if(sched_getaffinity(syscall(__NR_gettid), sizeof(mask), &mask) == -1) {
         error_procedure("sched_getaffnity()");
     }
-    __CPU_SET(targ->core_num, &mask);
+
+    CPU_SET(targ->core_num, &mask);
 
     if(sched_setaffinity(syscall(__NR_gettid), sizeof(mask), &mask) == -1) {
         error_procedure("sched_setaffnity()");
     }
-    thread_two_opt_tabu(targ->path, &branch_permit_worse);
+
+    thread_two_opt_tabu(targ->path);
 }
 
-void thread_two_opt_tabu(int * solution_path, double * branch_permit_worse)
+void thread_two_opt_tabu(int * solution_path)
 {
     int i;
     int indexs[4];
@@ -237,10 +221,8 @@ void thread_two_opt_tabu(int * solution_path, double * branch_permit_worse)
             not_found_looping(cities, indexs, READONLY);
             break;
         }
-
-    } while(copy_permit_worse(bef_aft_cost = copy_bef_aft_distance(cities), branch_permit_worse) == NO || is_2opt_tabu(cities) == YES);
+    } while(copy_permit_worse(bef_aft_cost = copy_bef_aft_distance(cities)) == NO || is_2opt_tabu(cities) == YES);
     
-    //printf("bef_aft_cost = %f\n",bef_aft_cost);
     not_found_looping(cities, indexs, INIT);
 
     if(get_tabu_mode() == ON) {
@@ -257,11 +239,10 @@ void thread_two_opt_tabu(int * solution_path, double * branch_permit_worse)
     if(get_tabu_mode() == ON) {
         pthread_mutex_unlock(&parallel_mutex);
     }
-    
 }
 
 /* permit exchange toward worse if under permit_baseline */
-int copy_permit_worse(double bef_aft_distance, double * branch_permit_worse)
+int copy_permit_worse(double bef_aft_distance)
 {
     int return_num = NO;
 
@@ -278,20 +259,7 @@ int copy_permit_worse(double bef_aft_distance, double * branch_permit_worse)
             return_num = YES;
         }
     }
-
     return return_num;
-}
-
-void branch_change_worse_permit(int type, double * branch_permit_worse)
-{
-    switch(type) {
-        case CLEAR:
-            * branch_permit_worse = DEFAULT_BRANCH_PERMITWORSE;
-            break;
-        case ADD:
-            * branch_permit_worse += DEFAULT_ADDPERMITWORSE / (get_tsp_size() * 100);
-            break;
-    }
 }
 
 void copy_choice_4indexs(int type, int * return_data, int * solution_path)
@@ -388,7 +356,6 @@ double copy_bef_aft_distance(int * cities)
         before = copy_get_cost(cities[0],cities[1],cities[2],cities[3]);
         after = copy_get_cost(cities[0],cities[2],cities[1],cities[3]);
     }
-
     set_now_parcentage(before, after);
 
     return (before - after);
@@ -440,7 +407,6 @@ void copy_exchange_branch(int * solution_path, int * indexs)
     }
 
     free(copy);
-
 }
 
 int copy_get_among(int start, int end, int tsp_size)
@@ -482,6 +448,5 @@ int copy_now_index(int target, int maximum)
             return_num = target % maximum + maximum;
         }
     }
-
     return return_num;
 }
