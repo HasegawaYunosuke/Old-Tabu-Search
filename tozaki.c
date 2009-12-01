@@ -10,8 +10,8 @@
 #define _GUN_SOURCE 1
 #define THREAD_NUM 16
 #define DEFAULT_BRANCH_PERMITWORSE 10
-#define __CPU_ZERO
-#define __CPU_SET
+//#define __CPU_ZERO
+//#define __CPU_SET
 
 /* functions */
 int * tozaki_search(int * solution_path);
@@ -208,7 +208,7 @@ void thread_core_assigned(void * arg)
     int tsp_size = targ->path[0];
     double branch_permit_worse = targ->branch_permit_worse_persentage;
 
-    __CPU_ZERO(&mask);
+    /*__CPU_ZERO(&mask);
 
     if(sched_getaffinity(syscall(__NR_gettid), sizeof(mask), &mask) == -1) {
         error_procedure("sched_getaffnity()");
@@ -217,7 +217,7 @@ void thread_core_assigned(void * arg)
 
     if(sched_setaffinity(syscall(__NR_gettid), sizeof(mask), &mask) == -1) {
         error_procedure("sched_setaffnity()");
-    }
+    }*/
     thread_two_opt_tabu(targ->path, &branch_permit_worse);
 }
 
