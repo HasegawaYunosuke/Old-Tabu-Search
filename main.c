@@ -22,21 +22,9 @@ int search_terminate(void);
 void initial_path(void);
 void search(void);
 void finalize(void);
-double get_all_cost_by_graph(int * cities);
-int * get_solution_path(void);
-double get_best_cost(void);
-int check_manneri(int type);
-
-int get_counter(void);
 
 int main(int argc, char ** argv)
 {
-    int i;
-    int * sol;
-    int count = 0;
-    int best_count = 0;
-    double best = 0;
-
     /* all in one initialize */
     initialize(argc, argv);
 

@@ -3,6 +3,7 @@
 
 /* functions */
 void set_time(int mode, int parametor);
+double get_time(void);
 
 /* grobal variable */
 double search_time = DEFAULT_SEARCHTIME;
@@ -11,6 +12,11 @@ double start_time;
 void set_time(int mode, int parametor)
 {
     search_time = (double)parametor;
+}
+
+double get_time(void)
+{
+    return search_time;
 }
 
 int timer(int sign)
