@@ -7,3 +7,4 @@ mpicc -o a.out main.o show.o parallel.o argument.o error.o mpi_initialize.o mpi_
 rm *.o
 mv header.h mpi_header
 mv base_header header.h
+ln -s /home/share/machinefile machinefile
