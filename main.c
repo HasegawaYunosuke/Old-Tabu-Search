@@ -47,14 +47,12 @@ int main(int argc, char ** argv)
     for(;;) {
         /* create initial-path by each mode */
         initial_path();
-
         /* search-turn loop */
         for(;;) {
             /* search */
             search();
 
                 /* DEL ST */
-/*
                 printf("DEL:all_cost == %f,",get_all_cost_by_graph(get_solution_path()));
                 printf("best == %.2f,",get_best_cost());
     
@@ -71,7 +69,7 @@ int main(int argc, char ** argv)
                 else {
                     printf("mannneri OFF,");
                 }
-                
+/*
                 if(modep->ga_mode == ON){
                     printf("GA  ON,");
                 }
@@ -80,6 +78,7 @@ int main(int argc, char ** argv)
                     printf("GA OFF,");
                 }
 */
+                printf("\n");
                 /* DEL EN */
 
             /* search-turn terminate */

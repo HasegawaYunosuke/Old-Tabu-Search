@@ -1,5 +1,6 @@
 /*
     This file "tozaki.c" can edit by ONLY Tozaki.
+    どれかのスレッドが解を見つけたら他のスレッドは強制的に関数を抜けるプログラム
 */
 
 /* header files */
