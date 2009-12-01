@@ -1,4 +1,4 @@
-#include "mpi_header.h"
+#include "header.h"
 
 void set_MPI_parameter(void);
 void set_parameter_data(int num_of_all_proc, int process_number, int name_length, char * process_name);
