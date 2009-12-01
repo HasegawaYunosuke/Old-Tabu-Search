@@ -22,6 +22,9 @@ int search_terminate(void);
 void initial_path(void);
 void search(void);
 void finalize(void);
+double get_all_cost_by_graph(int * solution_path);
+double get_best_cost(void);
+int * get_solution_path(void);
 
 int main(int argc, char ** argv)
 {
