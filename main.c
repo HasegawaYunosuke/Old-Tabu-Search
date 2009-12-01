@@ -65,21 +65,19 @@ int main(int argc, char ** argv)
                 }
 
                 if(check_manneri(SHORTMODE) == YES) {
-                    printf("mannneri  ON,");
+                    printf("mannneri  ON");
                 }
                 else {
-                    printf("mannneri OFF,");
+                    printf("mannneri OFF");
                 }
                 
                 if(modep->ga_mode == ON){
-                    printf("GA  ON,");
+                    printf("  *GA*");
                 }
                 
-                else {
-                    printf("GA OFF,");
-                }
-                
-                printf("count = %d\n",get_counter());
+                printf("\n");
+                               
+                //printf("count = %d\n",get_counter());
                 /* DEL EN */
 
             /* search-turn terminate */

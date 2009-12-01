@@ -16,7 +16,7 @@ int loop_terminate(void)
 {
     int return_num = NO;
 
-    if(turn_loop_times(CHECK) >= get_tsp_size() * 10 && get_tabu_mode() == YES) {
+    if(turn_loop_times(CHECK) >= get_tsp_size() * 10 && get_tabu_mode() == YES && modep->pole_mode == OFF) {
         turn_loop_times(INIT);
 
         /* DEL ST */

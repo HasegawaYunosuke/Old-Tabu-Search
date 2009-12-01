@@ -62,7 +62,7 @@ int get_counter(void)
 
 int middle_manneri(void)
 {
-    if(get_counter() > 150)
+    if(get_counter() > GA_COUNTER)
         return YES;
         
     else return NO;

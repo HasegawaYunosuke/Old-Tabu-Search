@@ -40,6 +40,8 @@
 #define DEFAULT_HISTORYSIZE 20
 #define DEFAULT_SAMEPERCENTAGE 25
 #define DEFAULT_NOTFOUNDLOOP 1000
+#define GA_CROSS_POINT 50
+#define GA_COUNTER 100
 
 /* grobal variable */
 struct mode {
