@@ -44,7 +44,7 @@ int main(int argc, char ** argv)
             /* search */
             search();
 
-                /* DEL ST */
+                /* DEL ST */ 
                 printf("DEL:all_cost == %f,",get_all_cost_by_graph(get_solution_path()));
                 printf("best == %.2f,",get_best_cost());
     
@@ -61,13 +61,9 @@ int main(int argc, char ** argv)
                 else {
                     printf("mannneri OFF");
                 }
-                
-                if(modep->ga_mode == ON){
-                    printf("  *GA*");
-                }
-                
+                                
                 printf("\n");
-                               
+                              
                 //printf("count = %d\n",get_counter());
                 /* DEL EN */
 

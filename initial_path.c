@@ -18,6 +18,8 @@ int search_loop_times(int type);
 int * mallocer_ip(int size);
 double * mallocer_dp(int size);
 
+void set_ga_solution_path(int * solution_path);
+
 void initial_path(void)
 {
     /* create initial-path by each mode */
@@ -26,6 +28,9 @@ void initial_path(void)
     }
     else {
         set_solution_path(initial_graph_path(get_graph_data()));
+        
+        if(modep->pole_mode == ON)
+            set_ga_solution_path(initial_graph_path(get_graph_data()));
     }
 }
 

@@ -52,6 +52,9 @@ double get_best_cost(void);
 int now_index(int target, int maximum);
 
 void set_counter(void);
+int * get_ga_solution_path(void);
+void set_ga_solution_path(int * solution_path);
+int get_ga_mode(void);
 
 /* grobal variable */
 struct parameter {
@@ -78,6 +81,8 @@ struct parameter {
     int num_of_all_proc;
     int name_length;
     char * process_name;
+
+    int * ga_solution_path;  
 };
 
 struct parameter * parameterp;
@@ -351,6 +356,11 @@ void set_solution_path(int * solution_path)
     set_solution_data_flag();
 }
 
+void set_ga_solution_path(int * solution_path)
+{
+    parameterp->ga_solution_path = solution_path;
+}
+
 void set_solution_data_flag(void)
 {
     parameterp->solution_data_flag = ON;
@@ -422,6 +432,11 @@ int * get_solution_path(void)
     return parameterp->solution_path;
 }
 
+int * get_ga_solution_path(void)
+{
+    return parameterp->ga_solution_path;
+}
+
 void set_all_cost(void)
 {
     double all_cost = 0;
@@ -437,6 +452,7 @@ void set_all_cost(void)
 
     if(all_cost < parameterp->best_cost) {
         parameterp->best_cost = all_cost;
+        //printf("best == %.2f\n",get_best_cost());        
     }
 }
 
