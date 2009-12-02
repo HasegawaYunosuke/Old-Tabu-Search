@@ -76,6 +76,7 @@ struct parameter {
     double not_found_def_aft_dis;
     int process_number;
     int num_of_all_proc;
+    int MPI_group;
     int name_length;
     char * process_name;
 };
@@ -189,6 +190,7 @@ void initial_parameter(int tsp_size)
     parameterp->not_found_def_aft_dis = (-1) * DBL_MAX;
     parameterp->process_number = 0;
     parameterp->num_of_all_proc = 1;
+    parameterp->MPI_group = 0;
     set_2opt_loop();
 
 
