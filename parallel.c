@@ -1,9 +1,11 @@
 #include "header.h"
 
 void set_MPI_parameter(void);
+void set_MPI_group(void);
 void set_parameter_data(int num_of_all_proc, int process_number, int name_length, char * process_name);
 int get_num_of_all_proc(void);
 int get_process_number(void);
+char * get_process_name(void);
 
 /* if Using Score System */
 void set_MPI_parameter(void)
@@ -23,6 +25,7 @@ void set_MPI_parameter(void)
 void parallel_finalize(void)
 {
     MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Barrier(MPI_COMM_WORLD);
     MPI_Finalize();
 }
 
@@ -30,9 +33,5 @@ void set_MPI_group(void)
 {
     int num_of_all_proc = get_num_of_all_proc();
     int process_number = get_process_number();
-
-    /* DEL ST */
-    printf("num_of_all_proc = %d\n", num_of_all_proc);
-    printf("process_number = %d\n", process_number);
-    /* DEL EN */
+    char * process_name = get_process_name();
 }

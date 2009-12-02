@@ -6,6 +6,7 @@ int search_is_done(int type);
 void set_parameter_data(int num_of_all_proc, int process_number, int name_length, char * process_name);
 int get_num_of_all_proc(void);
 int get_process_number(void);
+char * get_process_name(void);
 int not_found_looping(int * cities, int * indexs, int type);
 void set_search_time(double search_time);
 void set_tabu2opt_mode(void);
@@ -114,6 +115,11 @@ int get_num_of_all_proc(void)
 int get_process_number(void)
 {
     return parameterp->process_number;
+}
+
+char * get_process_name(void)
+{
+    return parameterp->process_name;
 }
 
 int search_is_done(int type)
