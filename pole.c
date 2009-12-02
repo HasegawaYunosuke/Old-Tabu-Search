@@ -13,19 +13,69 @@ void order_to_path(int *, double *);
 double path_dinstance (int *, double *);
 double * get_graph_data(void);
 int * mallocer_ip(int size);
-int * create_graph_path2(int * path, double * graph_data, int create_mode);
+int * create_graph_path(int * path, double * graph_data, int create_mode);
+int * graph_search(int * solution_path);
+int check_manneri(int type);
+void error_procedure(char * message);
+
+
+int *two_opt(int*);
+void set_now_parcentage(double before, double after);
+int nowindex(int target, int maximum);
+int nextindex(int target, int maximum);
+int previndex(int target, int maximum);
+double get_cost_of_branch(int a, int ad, int b, int bd);
+double get_graph_cost(int a,int b);
+void get_cities_by_indexes(int * cities, int * indexes, int * solution_path);
+double before_after_distance(int * cities);
+void exchange_branches(int * solution_path, int * indexes);
+
+int is_2opt_tabu(int * cities);
+void add_2opt_tabulist(int * cities);
+int get_tabu_mode(void);
+void set_tabu_mode(int type);
+int permit_worse_distance(double bef_aft_distance);
+void create_2opt_tabulist(int tsp_size, int mode);
+int turn_loop_times(int type);
+int not_found_looping(int * cities, int * indexs, int type);
+int check_parcentage(double bef_aft_distance);
+
+void set_ga_mode(int type);
+int get_ga_mode(void);
+void set_counter(void);
+void create_2opt_tabulist(int tsp_size, int mode);
 
 /* global variable */
 int create_mode;
 
 int * pole_search(int * solution_path)
 {
-	double * graph_data = get_graph_data();
-
+    double * graph_data = get_graph_data();
+         
     /* Search Graph-Data */
-    if(modep->graph_mode == ON) {
-        solution_path = order_one_cross(solution_path, graph_data);
-    }
+    if(modep->graph_mode == ON) {   
+        set_ga_mode(OFF); 
+        
+        if(check_manneri(SHORTMODE) == YES) {            
+        set_tabu_mode(ON);
+               
+        
+        if(check_manneri(MIDDLEMODE) == YES){
+        
+        
+        set_ga_mode(ON);
+        set_counter();
+        create_2opt_tabulist(get_tsp_size(), CLEAR);
+        //set_tabu_mode(OFF);
+        }
+        }
+        if(get_ga_mode() == ON)
+        solution_path = order_one_cross(solution_path, graph_data); 
+        
+        solution_path = two_opt(solution_path);
+    
+    }                      
+               
     /* Search Euclid-Data (non-available) */
     else if(modep->euclid_mode == ON) {
         error_procedure("pole_search() non-available");
@@ -33,9 +83,233 @@ int * pole_search(int * solution_path)
     /* Error */
     else {
         error_procedure("pole_search()");
-    }        
+    }
+    
+    return solution_path;
+                   
+}     
+/*two opt search*/
+int *two_opt(int * solution_path)
+{
+    int i, j, k, count;
+    int tsp_size = solution_path[0];
+    int cities[4];
+    int indexes[4];
+    int best_indexes[4];
+    double now_distance = DBL_MAX * (-1);
+    double maximum = DBL_MAX * (-1);
+
+    if(get_tabu_mode() == OFF) {
+        for(i = 1; i < tsp_size - 2; i++) {
+            indexes[0] = i; indexes[1] = i + 1;
+            for(j = i + 2; j < tsp_size; j++) {
+                indexes[2] = j; indexes[3] = j + 1;
+                get_cities_by_indexes(cities, indexes, solution_path);
+                now_distance = before_after_distance(cities);
+                if(now_distance > maximum) {
+                    maximum = now_distance;
+                    for(k = 0; k < 4; k++) {
+                        best_indexes[k] = indexes[k];
+                    }
+                }
+            }
+        }
+
+        for(i = 0; i < 4; i++) {
+            if(indexes[i] > tsp_size) {
+                printf("indexes[%d] == %d\n",i,best_indexes[i]);
+                error_procedure("two_opt()");
+            }
+        }
+
+        exchange_branches(solution_path, best_indexes);
+        
+}
+    else //if(get_tabu_mode() == ON)
+     {
+    
+    if(turn_loop_times(READONLY) % 2 == 0) {
+    
+     now_distance = DBL_MAX * (-1);
+     maximum = DBL_MAX * (-1);
+    
+        for(i = 1; i < tsp_size - 2; i++) {
+            indexes[0] = i; indexes[1] = i + 1;
+            for(j = i + 2; j < tsp_size; j++) {
+                indexes[2] = j; indexes[3] = j + 1;
+                get_cities_by_indexes(cities, indexes, solution_path);
+                now_distance = before_after_distance(cities);
+                if(now_distance > maximum) {
+                    maximum = now_distance;
+                    for(k = 0; k < 4; k++) {
+                        best_indexes[k] = indexes[k];
+                    }
+                }
+            }
+        }
+        for(i = 0; i < 4; i++) {
+            if(indexes[i] > tsp_size) {
+                printf("indexes[%d] == %d\n",i,best_indexes[i]);
+                error_procedure("two_opt()");
+            }
+        }  
+        
+        exchange_branches(solution_path, best_indexes);    
+      
+        }else{
+        
+        do{ 
+            int a,b;
+            int max = solution_path[0];
+
+             a = random_num(max);
+            do {
+                b = random_num(max);
+            } while(b == previndex(a, max) || b == a || b == nextindex(a, max));
+
+            indexes[0] = a; indexes[1] = nextindex(a, max);
+            indexes[2] = b; indexes[3] = nextindex(b, max);
+
+            get_cities_by_indexes(cities, indexes, solution_path);
+
+            if(not_found_looping(cities, indexes, COUNT) == YES) {
+                    not_found_looping(cities, indexes, READONLY);
+                    break;
+                }              
+        } while(permit_worse_distance(before_after_distance(cities)) == NO || is_2opt_tabu(cities) == YES);
+
+         not_found_looping(cities, indexes, INIT);
+         exchange_branches(solution_path, indexes);
+        }
+   
+
+
+
+   }
+    
+    return solution_path;
 }
 
+void get_cities_by_indexes(int * cities, int * indexes, int * solution_path)
+{
+    int i;
+
+    for(i = 0; i < 4; i++) {
+        if(indexes[i] > solution_path[0]) {
+            error_procedure("get_cities_by_indexes's");
+        }
+        cities[i] = solution_path[indexes[i]];
+    }
+      
+}
+
+double before_after_distance(int * cities)
+{
+    double before, after;
+
+    before = get_cost_of_branch(cities[0],cities[1],cities[2],cities[3]);
+    after = get_cost_of_branch(cities[0],cities[2],cities[1],cities[3]);
+   
+    set_now_parcentage(before, after);
+
+    return (before - after);
+}
+double get_cost_of_branch(int a, int ad, int b, int bd){
+return (get_graph_cost(a, ad) + get_graph_cost(b, bd));    
+}
+
+/* (1 <= return_num <= Max) */
+int nextindex(int target, int maximum)
+{
+    return nowindex((target % maximum + 1), maximum);
+}
+
+/* (1 <= return_num <= Max) */
+int previndex(int target, int maximum)
+{
+    return nowindex(((target == 1) ? maximum : target -1), maximum);
+}
+
+/* (1 <= return_num <= Max) */
+int nowindex(int target, int maximum)
+{
+    int return_num;
+
+    if(target > 0) {
+        return_num = (((return_num = target % maximum) == 0) ? maximum : return_num);
+    }
+    else {
+        return_num = (((return_num = target * (-1) % maximum) == 0) ? maximum : return_num);
+        if(target % maximum == 0) {
+            return_num = maximum;
+        }
+        else {
+            return_num = target % maximum + maximum;
+        }
+    }
+
+    return return_num;
+}
+
+void exchange_branches(int * solution_path, int * indexes)
+{
+    int i, count;
+    int tsp_size = solution_path[0];
+    int * copy;
+    int cities[4];
+
+    for(i = 0; i < 4; i++) {
+        if(indexes[i] > tsp_size) {
+            printf("indexes[%d] == %d\n",i,indexes[i]);
+            error_procedure("exchange_branches()");
+        }
+    }
+    copy = mallocer_ip(tsp_size + 1);
+
+    for(i = 0; i <= tsp_size; i++) {
+        copy[i] = solution_path[i];
+    }
+    
+     count = indexes[2] - indexes[1];
+     
+     if(count<0)
+     count += tsp_size;
+     
+    
+    for(i = 0; i <= count; i++) {
+        solution_path[nowindex((indexes[2] - i), tsp_size)] = copy[nowindex((indexes[1] + i), tsp_size)];
+    }
+    
+    if(get_tabu_mode() == ON) {         
+    get_cities_by_indexes(cities, indexes, solution_path);
+    add_2opt_tabulist(cities);
+    }
+
+   free(copy);     
+}
+
+
+/* permit exchange toward worse if under permit_baseline */
+int permit_worse_distance(double bef_aft_distance)
+{
+    int return_num = NO;
+
+    /* if exchange is toward better, permit */
+    if(bef_aft_distance > 0) {
+        return_num = YES;
+    }
+    else{
+        /* permit_worse discribed > 0 */
+        if(check_parcentage(bef_aft_distance) == NO) {
+            return_num = NO;
+        }
+        else {
+            return_num = YES;
+        }
+    }
+
+    return return_num;
+}
 /* one point crossover of ordinal representation  */
 int *order_one_cross(int * init_path_a, double * graph_data)
 {
@@ -52,7 +326,7 @@ int *order_one_cross(int * init_path_a, double * graph_data)
     child[0] = tsp_size;
     
     init_path_b = mallocer_ip(tsp_size + 1);    
-    init_path_b = create_graph_path2(init_path_b, graph_data, create_mode);
+    init_path_b = create_graph_path(init_path_b, graph_data, create_mode);
 
     int start_point = rand() % (tsp_size - 1);
     
@@ -77,7 +351,7 @@ int *order_one_cross(int * init_path_a, double * graph_data)
     path_to_order(path_a, graph_data);
     path_to_order(path_b, graph_data);  
 
-    int cross_point = rand() % (tsp_size / 5);    
+    int cross_point = /*rand() %*/ (tsp_size / GA_CROSS_POINT);    
     cross_point = tsp_size - cross_point - 1;
 
     for (i = 0; i < cross_point; i++){
@@ -182,65 +456,3 @@ double path_dinstance (int * solution_path, double * graph_data)
     return(distance);	
 }
 
-/* create the second initial path */
-int * create_graph_path2(int * return_data, double * graph_data, int create_mode)
-{
-    int i, j;
-    int mini_index;
-    int second_index;
-    int first_point;
-    int tsp_size = (int)graph_data[0];
-    int now_city, next_city;
-    int is_choiced[TSPMAXSIZE] = {NO};
-    double distance = DBL_MAX;
-    double min_distance = DBL_MAX;
-
-    first_point = random_num(tsp_size);
-
-    now_city = first_point;
-    is_choiced[first_point] = YES;
-    return_data[1] = first_point;
-
-    for(i = 2; i < tsp_size; i++) {
-        for(j =1; j <= tsp_size; j++) {
-            if(is_choiced[j] == NO) {
-                next_city = j;
-                distance = graph_data[now_city + tsp_size * next_city];
-                if(min_distance >= distance) {
-                    mini_index = next_city;
-                    min_distance = distance;
-                }
-            }
-            else {
-                continue;
-            }
-        }
-
-        is_choiced[mini_index] = YES;
-        min_distance = DBL_MAX;
-        
-        for(j =1; j <= tsp_size; j++) {
-            if(is_choiced[j] == NO) {
-                next_city = j;
-                distance = graph_data[now_city + tsp_size * next_city];
-                if(min_distance >= distance) {
-                    second_index = next_city;
-                    min_distance = distance;
-                }
-            }
-            else {
-                continue;
-            }
-        }
-                
-        is_choiced[mini_index] = NO;
-        is_choiced[second_index] = YES;
-        return_data[i] = second_index;
-        min_distance = DBL_MAX;
-        now_city = second_index;
-    }
-    
-    return_data[tsp_size] = mini_index;
-    
-    return (return_data);
-}

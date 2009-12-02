@@ -21,16 +21,13 @@ void search(void)
     }
     else if(modep->tozaki_mode == ON) {
         solution_path = tozaki_search(solution_path);
-        sleep(1);
     }
     else if(modep->pole_mode == ON) {
         solution_path = pole_search(solution_path);
-        sleep(1);
     }
     else {
         error_procedure("Un-define-search()-mode is choiced");
         sleep(1);
     }
-
     set_solution_path(solution_path);
 }

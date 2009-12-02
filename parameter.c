@@ -3,6 +3,11 @@
 
 /* functions */
 int search_is_done(int type);
+void set_parameter_data(int num_of_all_proc, int process_number, int name_length, char * process_name);
+int get_num_of_all_proc(void);
+int get_process_number(void);
+int not_found_looping(int * cities, int * indexs, int type);
+void set_search_time(double search_time);
 void set_tabu2opt_mode(void);
 void set_euclid_mode(void);
 void set_visual_mode(void);
@@ -11,6 +16,8 @@ void set_pole_mode(void);
 void set_tozaki_mode(void);
 void set_tabu_mode(int type);
 int get_tabu_mode(void);
+void set_ga_mode(int type);
+int get_ga_mode(void);
 void create_2opt_tabulist(int tsp_size, int mode);
 void set_now_parcentage(double before, double after);
 void set_2opt_loop(void);
@@ -30,19 +37,21 @@ int get_y(int city_index);
 double get_worse_permit(void);
 void change_worse_permit(int type);
 double get_now_parcentage(void);
+int check_parcentage(double bef_aft_distance);
+double bef_aft_distance(int * cities);
 double get_graph_cost(int a, int b);
 void set_all_cost(void);
 void create_historys(void);
 void add_history(void);
 void set_mode(void);
-void show_mode(void);
 void set_solution_data_flag(void);
 int get_solution_data_flag(void);
 double get_all_cost_by_graph(int * solution_path);
 double get_all_cost_by_euclid(int * solution_path);
 double get_best_cost(void);
 int now_index(int target, int maximum);
-void show_on_off(int on_off);
+
+void set_counter(void);
 
 /* grobal variable */
 struct parameter {
@@ -52,7 +61,6 @@ struct parameter {
     double now_parcentage;      /* Parcentage of now choice () */
     double permit_worse;        /* Parcentage of permitting to choice toward worse */
     double base_permit_worse;   /* Parcentage of permitting to choice toward worse */
-    double search_time;         /* whole program running time */
     int * main_base_data;       /* TSPLIB's data, discribed by Euclid */
     double * graph_data;        /* TSPLIB's data, discribed by Graph */
     int * solution_path;        /* the sequence of city data arrived */
@@ -62,6 +70,14 @@ struct parameter {
     int search_times;
     int solution_data_flag;
     int search_is_done;
+    int not_found_cities[4];
+    int not_found_indexs[4];
+    int not_found_loop;
+    double not_found_def_aft_dis;
+    int process_number;
+    int num_of_all_proc;
+    int name_length;
+    char * process_name;
 };
 
 struct parameter * parameterp;
@@ -79,6 +95,24 @@ void set_mode(void)
     modep->hasegawa_mode = ON;
     modep->tabu_mode = OFF;
     modep->only2opt_mode = ON;
+}
+
+void set_parameter_data(int num_of_all_proc, int process_number, int name_length, char * process_name)
+{
+    parameterp->num_of_all_proc = num_of_all_proc;
+    parameterp->process_number = process_number;
+    parameterp->name_length = name_length;
+    parameterp->process_name = process_name;
+}
+
+int get_num_of_all_proc(void)
+{
+    return parameterp->num_of_all_proc;
+}
+
+int get_process_number(void)
+{
+    return parameterp->process_number;
 }
 
 int search_is_done(int type)
@@ -121,6 +155,10 @@ void set_pole_mode(void)
     modep->pole_mode = ON;
     modep->tozaki_mode = OFF;
     modep->hasegawa_mode = OFF;
+    modep->only2opt_mode = OFF;
+    modep->tabu2opt_mode = ON;
+    modep->ga_mode = OFF;
+    set_counter();
 }
 
 void set_tozaki_mode(void)
@@ -147,7 +185,12 @@ void initial_parameter(int tsp_size)
     parameterp->search_times = 0;
     parameterp->solution_data_flag = OFF;
     parameterp->search_is_done = NO;
+    parameterp->not_found_loop = 0;
+    parameterp->not_found_def_aft_dis = (-1) * DBL_MAX;
+    parameterp->process_number = 0;
+    parameterp->num_of_all_proc = 1;
     set_2opt_loop();
+
 
     create_historys();
     /* create tabu list for 2-opt (only first procedure) */
@@ -192,6 +235,40 @@ int search_loop_times(int type)
     return return_num;
 }
 
+int not_found_looping(int * cities, int * indexs, int type)
+{
+    int i;
+    int return_num = NO;
+
+    switch(type) {
+        case COUNT:
+            if(parameterp->not_found_def_aft_dis < bef_aft_distance(cities)) {
+                parameterp->not_found_def_aft_dis = bef_aft_distance(cities);
+                for(i = 0; i < 4; i++) {
+                    parameterp->not_found_cities[i] = cities[i];
+                    parameterp->not_found_indexs[i] = indexs[i];
+                }
+            }
+            parameterp->not_found_loop++;
+            if(parameterp->not_found_loop > DEFAULT_NOTFOUNDLOOP) {
+                return_num = YES;
+            }
+            break;
+        case INIT:
+            parameterp->not_found_loop = 0;
+            parameterp->not_found_def_aft_dis = (-1) * DBL_MAX;
+            break;
+        case READONLY:
+            for(i = 0; i < 4; i++) {
+                cities[i] = parameterp->not_found_cities[i];
+                indexs[i] = parameterp->not_found_indexs[i];
+            }
+            break;
+    }
+
+    return return_num;
+}
+
 void set_city_point(int * point_of_cities)
 {
     int i;
@@ -215,7 +292,20 @@ int get_tabu_mode(void)
 {
     return modep->tabu_mode;
 }
+void set_ga_mode(int type)
+{
+    if(type == ON) {
+        modep->ga_mode = ON;
+    }
+    else if(type == OFF) {
+        modep->ga_mode = OFF;
+    }
+}
 
+int get_ga_mode(void)
+{
+    return modep->ga_mode;
+}
 double get_worse_permit(void)
 {
     return parameterp->permit_worse;
@@ -241,12 +331,6 @@ int get_2opt_loop(void)
 void set_2opt_loop(void)
 {
     parameterp->two_opt_loop = DEFAULT_2OPTLOOP;
-}
-
-void set_now_parcentage(double before, double after)
-{
-    /* permit_worse > 0 */
-    parameterp->now_parcentage = (after - before) / before * 100;
 }
 
 void set_graph_data(double * graph_data)
@@ -276,6 +360,38 @@ int get_solution_data_flag(void)
 {
     return parameterp->solution_data_flag;
 }
+
+void set_now_parcentage(double before, double after)
+{
+    double best_cost = 0;
+
+    best_cost = get_best_cost();
+
+    /* permit_worse > 0 */
+    parameterp->now_parcentage = (after - before) / best_cost * 100;
+}
+
+/* return num is YES or NO */
+int check_parcentage(double bef_aft_distance)
+{
+    int return_num = NO;
+    double best_cost = get_best_cost();
+    double after_all_cost;
+
+    if(modep->euclid_mode == OFF) {
+        after_all_cost = get_all_cost_by_graph(get_solution_path()) - bef_aft_distance;
+    }
+    else {
+        after_all_cost = get_all_cost_by_euclid(get_solution_path()) - bef_aft_distance;
+    }
+
+    if(((get_worse_permit() / 100 + 1) * best_cost) > after_all_cost) {
+        return_num = YES;
+    }
+
+    return return_num;
+}
+
 double get_now_parcentage(void)
 {
     return parameterp->now_parcentage;
@@ -371,25 +487,4 @@ int get_y(int city_index)
 
     main_base_data = get_main_base_data();
     return main_base_data[city_index * 2 + 1];
-}
-
-void show_mode(void)
-{
-    printf("visual_mode == "); show_on_off(modep->visual_mode);
-    printf("graph_mode == "); show_on_off(modep->graph_mode);
-    printf("euclid_mode == "); show_on_off(modep->euclid_mode);
-    printf("parallel_mode == "); show_on_off(modep->parallel_mode);
-    printf("hasegawa_mode == "); show_on_off(modep->hasegawa_mode);
-    printf("pole_mode == "); show_on_off(modep->pole_mode);
-    printf("tozaki_mode == "); show_on_off(modep->tozaki_mode);
-}
-
-void show_on_off(int on_off)
-{
-    if(on_off == ON) {
-        printf("ON\n");
-    }
-    else {
-        printf("OFF\n");
-    }
 }
