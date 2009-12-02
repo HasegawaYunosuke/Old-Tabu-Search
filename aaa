@@ -1,0 +1,375 @@
+Finish?
+DEL:2opt:count == 4
+DEL:all_cost == 566.235813,best == 566.24,tabu OFF,mannneri OFF
+DEL:2opt:count == 16
+DEL:all_cost == 551.515172,best == 551.52,tabu OFF,mannneri OFF
+DEL:2opt:count == 34
+DEL:all_cost == 533.607365,best == 533.61,tabu OFF,mannneri OFF
+DEL:2opt:count == 9
+DEL:all_cost == 520.030366,best == 520.03,tabu OFF,mannneri OFF
+DEL:2opt:count == 31
+DEL:all_cost == 507.381256,best == 507.38,tabu OFF,mannneri OFF
+DEL:2opt:count == 1
+DEL:all_cost == 504.006825,best == 504.01,tabu OFF,mannneri OFF
+DEL:2opt:count == 1
+DEL:all_cost == 503.030117,best == 503.03,tabu OFF,mannneri OFF
+DEL:2opt:count == 1
+DEL:all_cost == 504.006825,best == 503.03,tabu OFF,mannneri OFF
+DEL:2opt:count == 1
+DEL:all_cost == 503.030117,best == 503.03,tabu OFF,mannneri OFF
+DEL:2opt:count == 1
+DEL:all_cost == 504.006825,best == 503.03,tabu OFF,mannneri OFF
+DEL:2opt:count == 1
+DEL:all_cost == 503.030117,best == 503.03,tabu OFF,mannneri OFF
+DEL:2opt:count == 1
+DEL:all_cost == 504.006825,best == 503.03,tabu OFF,mannneri OFF
+DEL:2opt:count == 1
+DEL:all_cost == 503.030117,best == 503.03,tabu OFF,mannneri OFF
+DEL:2opt:count == 1
+DEL:all_cost == 504.006825,best == 503.03,tabu OFF,mannneri OFF
+DEL:2opt:count == 1
+DEL:all_cost == 503.030117,best == 503.03,tabu OFF,mannneri OFF
+DEL:2opt:count == 1
+DEL:all_cost == 504.006825,best == 503.03,tabu OFF,mannneri OFF
+DEL:2opt:count == 1
+DEL:all_cost == 503.030117,best == 503.03,tabu OFF,mannneri OFF
+DEL:2opt:count == 1
+DEL:all_cost == 504.006825,best == 503.03,tabu OFF,mannneri OFF
+DEL:2opt:count == 1
+DEL:all_cost == 503.030117,best == 503.03,tabu OFF,mannneri ON
+DEL:2opt:count == 1
+DEL:all_cost == 504.006825,best == 503.03,tabu ON,mannneri ON
+DEL:TABU:count == 1,indexs[1],[2] == (29,30)
+DEL:all_cost == 503.030117,best == 503.03,tabu ON,mannneri ON
+looooooooooooooooop break
+zakiiiiiiii
+51
+41
+19
+42
+40
+13
+25
+14
+18
+6
+24
+43
+23
+7
+26
+8
+48
+27
+51
+46
+12
+47
+4
+17
+37
+44
+15
+45
+33
+39
+10
+30
+34
+21
+29
+2
+16
+50
+9
+49
+5
+38
+11
+32
+1
+22
+31
+28
+3
+20
+35
+36
+11111111
+21Loops
+wakiwaki:51
+wakiwaki:41
+wakiwaki:19
+wakiwaki:42
+wakiwaki:40
+wakiwaki:13
+wakiwaki:25
+wakiwaki:14
+wakiwaki:18
+wakiwaki:6
+wakiwaki:24
+wakiwaki:43
+wakiwaki:23
+wakiwaki:7
+wakiwaki:26
+wakiwaki:8
+wakiwaki:48
+wakiwaki:27
+wakiwaki:51
+wakiwaki:46
+wakiwaki:12
+wakiwaki:47
+wakiwaki:4
+wakiwaki:17
+wakiwaki:37
+wakiwaki:44
+wakiwaki:15
+wakiwaki:45
+wakiwaki:33
+wakiwaki:39
+wakiwaki:10
+wakiwaki:30
+wakiwaki:34
+wakiwaki:21
+wakiwaki:29
+wakiwaki:2
+wakiwaki:16
+wakiwaki:50
+wakiwaki:9
+wakiwaki:49
+wakiwaki:5
+wakiwaki:38
+wakiwaki:11
+wakiwaki:32
+wakiwaki:1
+wakiwaki:22
+wakiwaki:31
+wakiwaki:28
+wakiwaki:3
+wakiwaki:20
+wakiwaki:35
+wakiwaki:36
+DEL:TABU:count == 39,indexs[1],[2] == (1,40)
+DEL:all_cost == 506.343733,best == 503.03,tabu ON,mannneri ON
+DEL:TABU:count == 7,indexs[1],[2] == (33,40)
+DEL:all_cost == 512.450604,best == 503.03,tabu ON,mannneri ON
+DEL:TABU:count == 29,indexs[1],[2] == (41,19)
+DEL:all_cost == 504.408538,best == 503.03,tabu ON,mannneri ON
+DEL:TABU:count == 9,indexs[1],[2] == (50,8)
+DEL:all_cost == 506.421311,best == 503.03,tabu ON,mannneri ON
+DEL:TABU:count == 6,indexs[1],[2] == (33,39)
+DEL:all_cost == 491.932469,best == 491.93,tabu ON,mannneri ON
+DEL:TABU:count == 2,indexs[1],[2] == (9,11)
+DEL:all_cost == 484.924818,best == 484.92,tabu ON,mannneri ON
+DEL:TABU:count == 42,indexs[1],[2] == (9,51)
+DEL:all_cost == 483.050542,best == 483.05,tabu ON,mannneri ON
+DEL:TABU:count == 40,indexs[1],[2] == (11,51)
+DEL:all_cost == 488.141048,best == 483.05,tabu ON,mannneri ON
+DEL:TABU:count == 5,indexs[1],[2] == (5,10)
+DEL:all_cost == 477.402656,best == 477.40,tabu ON,mannneri ON
+DEL:TABU:count == 16,indexs[1],[2] == (5,21)
+DEL:all_cost == 465.848077,best == 465.85,tabu ON,mannneri ON
+DEL:TABU:count == 2,indexs[1],[2] == (39,41)
+DEL:all_cost == 467.319686,best == 465.85,tabu ON,mannneri ON
+DEL:TABU:count == 31,indexs[1],[2] == (20,51)
+DEL:all_cost == 460.850885,best == 460.85,tabu ON,mannneri ON
+DEL:TABU:count == 19,indexs[1],[2] == (30,49)
+DEL:all_cost == 458.021390,best == 458.02,tabu ON,mannneri OFF
+DEL:TABU:count == 28,indexs[1],[2] == (50,27)
+DEL:all_cost == 457.533287,best == 457.53,tabu ON,mannneri OFF
+DEL:TABU:count == 1,indexs[1],[2] == (46,47)
+DEL:all_cost == 453.597414,best == 453.60,tabu ON,mannneri OFF
+DEL:TABU:count == 48,indexs[1],[2] == (30,27)
+DEL:all_cost == 456.144155,best == 453.60,tabu ON,mannneri OFF
+DEL:TABU:count == 14,indexs[1],[2] == (15,29)
+DEL:all_cost == 458.444426,best == 453.60,tabu ON,mannneri OFF
+DEL:TABU:count == 36,indexs[1],[2] == (30,15)
+DEL:all_cost == 460.289853,best == 453.60,tabu ON,mannneri OFF
+DEL:TABU:count == 1,indexs[1],[2] == (19,20)
+DEL:all_cost == 462.500587,best == 453.60,tabu ON,mannneri OFF
+DEL:TABU:count == 1,indexs[1],[2] == (19,20)
+DEL:all_cost == 460.289853,best == 453.60,tabu ON,mannneri OFF
+41Loops
+wakiwaki:51
+wakiwaki:36
+wakiwaki:3
+wakiwaki:28
+wakiwaki:31
+wakiwaki:22
+wakiwaki:1
+wakiwaki:32
+wakiwaki:11
+wakiwaki:38
+wakiwaki:2
+wakiwaki:16
+wakiwaki:50
+wakiwaki:9
+wakiwaki:49
+wakiwaki:5
+wakiwaki:4
+wakiwaki:47
+wakiwaki:12
+wakiwaki:46
+wakiwaki:51
+wakiwaki:27
+wakiwaki:48
+wakiwaki:8
+wakiwaki:26
+wakiwaki:7
+wakiwaki:23
+wakiwaki:43
+wakiwaki:24
+wakiwaki:6
+wakiwaki:18
+wakiwaki:14
+wakiwaki:25
+wakiwaki:13
+wakiwaki:41
+wakiwaki:40
+wakiwaki:19
+wakiwaki:42
+wakiwaki:17
+wakiwaki:37
+wakiwaki:44
+wakiwaki:15
+wakiwaki:45
+wakiwaki:33
+wakiwaki:39
+wakiwaki:10
+wakiwaki:30
+wakiwaki:34
+wakiwaki:21
+wakiwaki:29
+wakiwaki:20
+wakiwaki:35
+DEL:TABU:count == 20,indexs[1],[2] == (17,37)
+DEL:all_cost == 463.412546,best == 453.60,tabu ON,mannneri OFF
+DEL:TABU:count == 21,indexs[1],[2] == (16,37)
+DEL:all_cost == 456.545443,best == 453.60,tabu ON,mannneri OFF
+DEL:TABU:count == 48,indexs[1],[2] == (12,9)
+DEL:all_cost == 459.440357,best == 453.60,tabu ON,mannneri OFF
+DEL:TABU:count == 12,indexs[1],[2] == (44,5)
+DEL:all_cost == 463.304747,best == 453.60,tabu ON,mannneri OFF
+DEL:TABU:count == 38,indexs[1],[2] == (6,44)
+DEL:all_cost == 456.553368,best == 453.60,tabu ON,mannneri OFF
+DEL:TABU:count == 2,indexs[1],[2] == (38,40)
+DEL:all_cost == 457.763206,best == 453.60,tabu ON,mannneri OFF
+DEL:TABU:count == 1,indexs[1],[2] == (12,13)
+DEL:all_cost == 458.628579,best == 453.60,tabu ON,mannneri OFF
+DEL:TABU:count == 48,indexs[1],[2] == (41,38)
+DEL:all_cost == 459.121309,best == 453.60,tabu ON,mannneri OFF
+DEL:TABU:count == 3,indexs[1],[2] == (37,40)
+DEL:all_cost == 462.052559,best == 453.60,tabu ON,mannneri OFF
+DEL:TABU:count == 2,indexs[1],[2] == (38,40)
+DEL:all_cost == 452.378308,best == 452.38,tabu ON,mannneri OFF
+DEL:TABU:count == 1,indexs[1],[2] == (26,27)
+DEL:all_cost == 455.757507,best == 452.38,tabu ON,mannneri OFF
+52Loops
+wakiwaki:51
+wakiwaki:29
+wakiwaki:21
+wakiwaki:34
+wakiwaki:30
+wakiwaki:10
+wakiwaki:39
+wakiwaki:33
+wakiwaki:45
+wakiwaki:15
+wakiwaki:44
+wakiwaki:37
+wakiwaki:17
+wakiwaki:4
+wakiwaki:42
+wakiwaki:40
+wakiwaki:19
+wakiwaki:41
+wakiwaki:13
+wakiwaki:25
+wakiwaki:14
+wakiwaki:18
+wakiwaki:47
+wakiwaki:6
+wakiwaki:24
+wakiwaki:43
+wakiwaki:7
+wakiwaki:23
+wakiwaki:26
+wakiwaki:8
+wakiwaki:48
+wakiwaki:27
+wakiwaki:51
+wakiwaki:46
+wakiwaki:12
+wakiwaki:5
+wakiwaki:49
+wakiwaki:38
+wakiwaki:9
+wakiwaki:50
+wakiwaki:16
+wakiwaki:2
+wakiwaki:11
+wakiwaki:32
+wakiwaki:1
+wakiwaki:22
+wakiwaki:31
+wakiwaki:28
+wakiwaki:3
+wakiwaki:36
+wakiwaki:35
+wakiwaki:20
+DEL:TABU:count == 1,indexs[1],[2] == (36,37)
+DEL:all_cost == 453.705378,best == 452.38,tabu ON,mannneri OFF
+DEL:TABU:count == 2,indexs[1],[2] == (25,27)
+DEL:all_cost == 457.574372,best == 452.38,tabu ON,mannneri OFF
+DEL:TABU:count == 1,indexs[1],[2] == (26,27)
+DEL:all_cost == 453.349675,best == 452.38,tabu ON,mannneri OFF
+DEL:TABU:count == 1,indexs[1],[2] == (24,25)
+DEL:all_cost == 449.932538,best == 449.93,tabu ON,mannneri OFF
+56Loops
+wakiwaki:51
+wakiwaki:29
+wakiwaki:21
+wakiwaki:34
+wakiwaki:30
+wakiwaki:10
+wakiwaki:39
+wakiwaki:33
+wakiwaki:45
+wakiwaki:15
+wakiwaki:44
+wakiwaki:37
+wakiwaki:17
+wakiwaki:4
+wakiwaki:42
+wakiwaki:40
+wakiwaki:19
+wakiwaki:41
+wakiwaki:13
+wakiwaki:25
+wakiwaki:14
+wakiwaki:18
+wakiwaki:47
+wakiwaki:6
+wakiwaki:23
+wakiwaki:24
+wakiwaki:43
+wakiwaki:7
+wakiwaki:26
+wakiwaki:8
+wakiwaki:48
+wakiwaki:27
+wakiwaki:51
+wakiwaki:46
+wakiwaki:12
+wakiwaki:5
+wakiwaki:38
+wakiwaki:49
+wakiwaki:9
+wakiwaki:50
+wakiwaki:16
+wakiwaki:2
+wakiwaki:11
+wakiwaki:32
+wakiwaki:1
+wakiwaki:22
+wakiwa

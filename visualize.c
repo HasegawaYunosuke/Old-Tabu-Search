@@ -67,17 +67,66 @@ void visualizer(int * visual_arg)
     int * nt_city_coordinate;
     int * solu_path;
     int socket;
+    int i;
     int prev_loop = turn_loop_times(READONLY);
+    int mainX_max = 0;
+    int mainX_min = 0;
+    int mainY_max = 0;
+    int mainY_min = 0;
+    int x = 0,y = 0;
+    int a = 2,b = 3;
 
     socket = clntSock();
 
     nt_city_coordinate = get_main_base_data();
+    mainX_min = nt_city_coordinate[2];
+    mainY_min = nt_city_coordinate[3];
+
+    for(i = 2; i < (nt_city_coordinate[0]+1)*2 ;i++){
+        if(i%2 == 0){
+            if(mainX_max < nt_city_coordinate[i]){
+                mainX_max = nt_city_coordinate[i];
+            }
+            if(mainX_min > nt_city_coordinate[i]){
+                mainX_min = nt_city_coordinate[i];
+            }
+        }
+        else{
+            if(mainY_max < nt_city_coordinate[i]){
+                mainY_max = nt_city_coordinate[i];
+            }
+            if(mainY_min > nt_city_coordinate[i]){
+                mainY_min = nt_city_coordinate[i];
+            }
+        }
+    }
+
+    if(mainX_max > 500){
+        x = mainX_max / 500;
+        for(i = 0; i < nt_city_coordinate[0]; i++){
+            nt_city_coordinate[a] = nt_city_coordinate[a] / x;
+            printf("X[%d]:%d\n", a,nt_city_coordinate[a]);
+            a += 2;
+        }
+    }
+
+    if(mainY_max > 300){
+        y = mainY_max / 300;
+        printf("%d\n",y);
+        for(i = 0; i < nt_city_coordinate[0]; i++){
+            nt_city_coordinate[b] = nt_city_coordinate[b] / y;
+            printf("Y[%d]:%d\n",b,nt_city_coordinate[b]);
+            b += 2;
+        }
+    }
 
     send(socket, nt_city_coordinate, (nt_city_coordinate[0]+1)*2*4,0);
 
     while((solu_path = get_solution_path()) == NULL) {
         printf("FUCK:\n");
     }
+
+    //printf("maxX:%d\nminX:%d\nmaxY:%d\nminY:%d\n",mainX_max,mainX_min,mainY_max,mainY_min);
 
     solu_path[tsp_size+1] = (int)get_all_cost_by_graph(get_solution_path());
 
