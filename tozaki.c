@@ -2,18 +2,14 @@
     This file "tozaki.c" can edit by ONLY Tozaki.
 */
 
-#define _GUN_SOURCE
 /* header files */
 #include "header.h"
+#define _GUN_SOURCE
 #include <sched.h>
-#include <sys/syscall.h>
 #include <linux/unistd.h>
-
 #define THREAD_NUM 16
-/* DEL ST at git push */
-#define CPU_ZERO(cpusetp)
-#define CPU_SET(cpu, cpusetp)
-/* DEL EN at git push */
+#define CPU_ZERO
+#define CPU_SET
 
 /* functions */
 int * tozaki_search(int * solution_path);
@@ -191,7 +187,6 @@ void thread_core_assigned(void * arg)
     thread_arg_t * targ = (thread_arg_t *)arg;
     int tsp_size = targ->path[0];
 
-
     CPU_ZERO(&mask);
 
     if(sched_getaffinity(syscall(__NR_gettid), sizeof(mask), &mask) == -1) {
@@ -203,7 +198,6 @@ void thread_core_assigned(void * arg)
     if(sched_setaffinity(syscall(__NR_gettid), sizeof(mask), &mask) == -1) {
         error_procedure("sched_setaffnity()");
     }
-
     thread_two_opt_tabu(targ->path);
 }
 
