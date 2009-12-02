@@ -26,6 +26,12 @@ double get_all_cost_by_graph(int * solution_path);
 double get_best_cost(void);
 int * get_solution_path(void);
 
+/* DEL ST */
+int * get_solution_path(void);
+double get_all_cost_by_graph(int * solution_path);
+double get_best_cost(void);
+/* DEL EN */
+
 int main(int argc, char ** argv)
 {
     /* all in one initialize */
@@ -38,7 +44,6 @@ int main(int argc, char ** argv)
     for(;;) {
         /* create initial-path by each mode */
         initial_path();
-
         /* search-turn loop */
         for(;;) {
             /* search */
