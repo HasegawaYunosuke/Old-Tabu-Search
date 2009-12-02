@@ -191,6 +191,7 @@ void thread_core_assigned(void * arg)
     thread_arg_t * targ = (thread_arg_t *)arg;
     int tsp_size = targ->path[0];
 
+
     CPU_ZERO(&mask);
 
     if(sched_getaffinity(syscall(__NR_gettid), sizeof(mask), &mask) == -1) {

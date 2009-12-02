@@ -41,6 +41,7 @@ int not_found_looping(int * cities, int * indexs, int type);
 int check_parcentage(double bef_aft_distance);
 
 void set_ga_mode(int type);
+int get_ga_mode(void);
 void set_counter(void);
 void create_2opt_tabulist(int tsp_size, int mode);
 
@@ -50,35 +51,31 @@ int create_mode;
 int * pole_search(int * solution_path)
 {
     double * graph_data = get_graph_data();
-    
-    
-        
+         
     /* Search Graph-Data */
     if(modep->graph_mode == ON) {   
+        set_ga_mode(OFF); 
+        
         if(check_manneri(SHORTMODE) == YES) {            
         set_tabu_mode(ON);
-        set_ga_mode(OFF);        
+               
         
         if(check_manneri(MIDDLEMODE) == YES){
         
-        solution_path = order_one_cross(solution_path, graph_data);
+        
         set_ga_mode(ON);
         set_counter();
-        create_2opt_tabulist(get_tsp_size(), INIT);
+        create_2opt_tabulist(get_tsp_size(), CLEAR);
         //set_tabu_mode(OFF);
         }
         }
-     solution_path = two_opt(solution_path);
+        if(get_ga_mode() == ON)
+        solution_path = order_one_cross(solution_path, graph_data); 
+        
+        solution_path = two_opt(solution_path);
     
-    }           
-           
-            
-        
-        
-     
-        
-
-
+    }                      
+               
     /* Search Euclid-Data (non-available) */
     else if(modep->euclid_mode == ON) {
         error_procedure("pole_search() non-available");
@@ -354,7 +351,7 @@ int *order_one_cross(int * init_path_a, double * graph_data)
     path_to_order(path_a, graph_data);
     path_to_order(path_b, graph_data);  
 
-    int cross_point = rand() % (tsp_size / 100);    
+    int cross_point = /*rand() %*/ (tsp_size / GA_CROSS_POINT);    
     cross_point = tsp_size - cross_point - 1;
 
     for (i = 0; i < cross_point; i++){

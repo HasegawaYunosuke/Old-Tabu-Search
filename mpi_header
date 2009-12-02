@@ -10,6 +10,7 @@
 #include <pthread.h>
 #include <float.h>
 #include <limits.h>
+#include <mpi.h>
 
 /* macro variable */
 #define INIT 0
