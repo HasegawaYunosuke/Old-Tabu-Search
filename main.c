@@ -22,15 +22,6 @@ int search_terminate(void);
 void initial_path(void);
 void search(void);
 void finalize(void);
-double get_all_cost_by_graph(int * solution_path);
-double get_best_cost(void);
-int * get_solution_path(void);
-
-/* DEL ST */
-int * get_solution_path(void);
-double get_all_cost_by_graph(int * solution_path);
-double get_best_cost(void);
-/* DEL EN */
 
 int main(int argc, char ** argv)
 {
@@ -48,6 +39,7 @@ int main(int argc, char ** argv)
         for(;;) {
             /* search */
             search();
+            realtime_result();
 
             /* search-turn terminate */
             if(loop_terminate() == YES) {break;}
