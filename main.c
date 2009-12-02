@@ -11,7 +11,6 @@
 
     If compile is terminated by something error, please complain to writer.
 */
-//It's push test.
 
 /* header files */
 #include "header.h"
