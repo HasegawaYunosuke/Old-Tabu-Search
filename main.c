@@ -22,7 +22,7 @@ int search_terminate(void);
 void initial_path(void);
 void search(void);
 void finalize(void);
-
+void set_MPI_group(void);
 int main(int argc, char ** argv)
 {
     /* all in one initialize */
@@ -46,6 +46,7 @@ int main(int argc, char ** argv)
         }
         /* whole-search-terminate */
         if(search_terminate() == YES) {break;}
+        set_MPI_group;
     }
 
     /* finalize procedure */

@@ -29,9 +29,15 @@ void parallel_finalize(void)
     MPI_Finalize();
 }
 
+int set_MPI_group_times = 0;
+
 void set_MPI_group(void)
 {
     int num_of_all_proc = get_num_of_all_proc();
     int process_number = get_process_number();
     char * process_name = get_process_name();
+
+    set_MPI_group_times++;
+
+    printf("%d:process_name == %s\n",set_MPI_group_times,process_name);
 }
