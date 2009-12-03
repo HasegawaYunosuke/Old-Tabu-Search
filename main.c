@@ -46,8 +46,16 @@ int main(int argc, char ** argv)
         }
         /* whole-search-terminate */
         if(search_terminate() == YES) {break;}
-        set_MPI_group;
+        /* DEL ST */
+        printf("Loop内\n");
+        set_MPI_group();
+        /* DEL EN */
     }
+
+    /* DEL ST */
+    printf("Loop外\n");
+    set_MPI_group();
+    /* DEL EN */
 
     /* finalize procedure */
     finalize();
