@@ -34,4 +34,12 @@ void set_MPI_group(void)
     int num_of_all_proc = get_num_of_all_proc();
     int process_number = get_process_number();
     char * process_name = get_process_name();
+    int my_group;
+    int group_num;
+
+    if(num_of_all_proc < 4) {
+        error_procedure("set_MPI_group()");
+    }
+
+    group_num = num_of_all_proc / DEFAULT_MPIGROUPNUM;
 }
