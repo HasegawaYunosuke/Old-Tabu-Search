@@ -6,6 +6,7 @@ int search_is_done(int type);
 void set_parameter_data(int num_of_all_proc, int process_number, int name_length, char * process_name);
 int get_num_of_all_proc(void);
 int get_process_number(void);
+int get_name_length(void);
 char * get_process_name(void);
 int not_found_looping(int * cities, int * indexs, int type);
 void set_search_time(double search_time);
@@ -101,10 +102,15 @@ void set_mode(void)
 
 void set_parameter_data(int num_of_all_proc, int process_number, int name_length, char * process_name)
 {
+    int i;
+
     parameterp->num_of_all_proc = num_of_all_proc;
     parameterp->process_number = process_number;
     parameterp->name_length = name_length;
-    parameterp->process_name = process_name;
+    parameterp->process_name = malloc(sizeof(char) * name_length);
+    for(i = 0; i < name_length; i++) {
+        parameterp->process_name[i] = process_name[i];
+    }
 }
 
 int get_num_of_all_proc(void)
@@ -115,6 +121,11 @@ int get_num_of_all_proc(void)
 int get_process_number(void)
 {
     return parameterp->process_number;
+}
+
+int get_name_length(void)
+{
+    return parameterp->name_length;
 }
 
 char * get_process_name(void)
