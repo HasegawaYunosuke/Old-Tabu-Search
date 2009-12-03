@@ -22,9 +22,6 @@ int search_terminate(void);
 void initial_path(void);
 void search(void);
 void finalize(void);
-double get_all_cost_by_graph(int * solution_path);
-double get_best_cost(void);
-int * get_solution_path(void);
 
 int main(int argc, char ** argv)
 {
@@ -38,34 +35,12 @@ int main(int argc, char ** argv)
     for(;;) {
         /* create initial-path by each mode */
         initial_path();
-
         /* search-turn loop */
         for(;;) {
             /* search */
             search();
 
-                /* DEL ST */ 
-                printf("DEL:all_cost == %f,",get_all_cost_by_graph(get_solution_path()));
-                printf("best == %.2f,",get_best_cost());
-    
-                if(modep->tabu_mode == ON) {
-                    printf("tabu  ON,");
-                }
-                else {
-                    printf("tabu OFF,");
-                }
-
-                if(check_manneri(SHORTMODE) == YES) {
-                    printf("mannneri  ON");
-                }
-                else {
-                    printf("mannneri OFF");
-                }
-                                
-                printf("\n");
-                              
-                //printf("count = %d\n",get_counter());
-                /* DEL EN */
+            realtime_result();
 
             /* search-turn terminate */
             if(loop_terminate() == YES) {break;}
