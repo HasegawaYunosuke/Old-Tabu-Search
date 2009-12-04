@@ -3,6 +3,7 @@
 void set_MPI_parameter(void);
 void set_MPI_group(void);
 void set_parameter_data(int num_of_all_proc, int process_number, int name_length, char * process_name);
+void set_MPI_group_data(int group_num, int my_group);
 int get_num_of_all_proc(void);
 int get_process_number(void);
 char * get_process_name(void);
@@ -35,17 +36,20 @@ void set_MPI_group(void)
     int num_of_all_proc = get_num_of_all_proc();
     int process_number = get_process_number();
     char * process_name = get_process_name();
+    int group_num;
     int my_group;
 
-    if(num_of_all_proc < 4) {
-        error_procedure("set_MPI_group():under 4 process");
-    }
-    else if(num_of_all_proc % 4 != 0) {
-        error_procedure("set_MPI_group():process % 4 != 0");
+    if(num_of_all_proc < 4 || num_of_all_proc % 4 != 0) {
+        error_procedure("set_MPI_group()");
     }
 
-    my_group = num_of_all_proc / DEFAULT_MPIGROUPNUM;
-    printf("set_MPI_group():my_group == %d\n",group_num);
+    group_num = num_of_all_proc / DEFAULT_MPIGROUPNUM;
+    my_group = process_number / group_num;
 
-    set_MPI_group_data(group_num);
+    /* DEL ST */
+    printf("set_MPI_group():group_num == %d\n",group_num);
+    printf("set_MPI_group():my_group == %d\n",my_group);
+    /* DEL EN */
+
+    set_MPI_group_data(group_num, my_group);
 }

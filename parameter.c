@@ -7,7 +7,7 @@ void set_parameter_data(int num_of_all_proc, int process_number, int name_length
 int get_num_of_all_proc(void);
 int get_process_number(void);
 int get_name_length(void);
-void set_MPI_group_data(int MPI_group);
+void set_MPI_group_data(int all_MPI_group, int MPI_group);
 int get_MPI_group_data(void);
 char * get_process_name(void);
 int not_found_looping(int * cities, int * indexs, int type);
@@ -81,6 +81,7 @@ struct parameter {
     int process_number;
     int num_of_all_proc;
     int MPI_group;
+    int all_MPI_group;
     int name_length;
     char * process_name;
 };
@@ -115,9 +116,10 @@ void set_parameter_data(int num_of_all_proc, int process_number, int name_length
     }
 }
 
-void set_MPI_group_data(int MPI_group)
+void set_MPI_group_data(int all_MPI_group, int MPI_group)
 {
     parameterp->MPI_group = MPI_group;
+    parameterp->all_MPI_group = all_MPI_group;
 }
 
 int get_MPI_group_data(void)
