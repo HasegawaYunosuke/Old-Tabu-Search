@@ -8,7 +8,6 @@ double make_distance(int x1, int y1, int x2, int y2);
 void set_graph_data(double * graph_data);
 void initialize(int argc, char ** argv);
 void set_MPI_parameter(void);
-void set_MPI_group(void);
 void option_checker(int argc, char ** argv);
 void visualizer(int * visual_arg);
 int * read_data(void);
@@ -51,7 +50,6 @@ void initialize(int argc, char ** argv)
     if(modep->parallel_mode == ON) {
         MPI_Init(&argc, &argv);
         set_MPI_parameter();
-        set_MPI_group();
     }
 }
 

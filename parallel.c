@@ -20,6 +20,7 @@ void set_MPI_parameter(void)
     MPI_Get_processor_name(process_name, &name_length);
 
     set_parameter_data(num_of_all_proc, process_number, name_length, process_name);
+    set_MPI_group();
 }
 
 void parallel_finalize(void)
@@ -35,7 +36,6 @@ void set_MPI_group(void)
     int process_number = get_process_number();
     char * process_name = get_process_name();
     int my_group;
-    int group_num;
 
     if(num_of_all_proc < 4) {
         error_procedure("set_MPI_group():under 4 process");
@@ -44,8 +44,8 @@ void set_MPI_group(void)
         error_procedure("set_MPI_group():process % 4 != 0");
     }
 
-    group_num = num_of_all_proc / DEFAULT_MPIGROUPNUM;
-    printf("my_group_num == %d\n",group_num);
+    my_group = num_of_all_proc / DEFAULT_MPIGROUPNUM;
+    printf("set_MPI_group():my_group == %d\n",group_num);
 
-
+    set_MPI_group_data(group_num);
 }

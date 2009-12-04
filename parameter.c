@@ -7,6 +7,8 @@ void set_parameter_data(int num_of_all_proc, int process_number, int name_length
 int get_num_of_all_proc(void);
 int get_process_number(void);
 int get_name_length(void);
+void set_MPI_group_data(int MPI_group);
+int get_MPI_group_data(void);
 char * get_process_name(void);
 int not_found_looping(int * cities, int * indexs, int type);
 void set_search_time(double search_time);
@@ -111,6 +113,16 @@ void set_parameter_data(int num_of_all_proc, int process_number, int name_length
     for(i = 0; i < name_length; i++) {
         parameterp->process_name[i] = process_name[i];
     }
+}
+
+void set_MPI_group_data(int MPI_group)
+{
+    parameterp->MPI_group = MPI_group;
+}
+
+int get_MPI_group_data(void)
+{
+    return parameterp->MPI_group;
 }
 
 int get_num_of_all_proc(void)

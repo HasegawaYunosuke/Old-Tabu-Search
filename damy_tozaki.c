@@ -6,7 +6,7 @@
 #include "header.h"
 #define _GUN_SOURCE
 #include <sched.h>
-#include <linux/unistd.h>
+//#include <linux/unistd.h>
 #define THREAD_NUM 16
 #define CPU_ZERO
 #define CPU_SET
@@ -182,8 +182,8 @@ int * copy_two_opt_tabu(int * solution_path)
 
 void thread_core_assigned(void * arg)
 {
+    /* DamyProgram
     cpu_set_t mask;
-    /* change void to thread_arg_t */
     thread_arg_t * targ = (thread_arg_t *)arg;
     int tsp_size = targ->path[0];
 
@@ -199,6 +199,7 @@ void thread_core_assigned(void * arg)
         error_procedure("sched_setaffnity()");
     }
     thread_two_opt_tabu(targ->path);
+    DamyProgram*/
 }
 
 void thread_two_opt_tabu(int * solution_path)
