@@ -38,8 +38,12 @@ void set_MPI_group(void)
     int group_num;
 
     if(num_of_all_proc < 4) {
-        error_procedure("set_MPI_group()");
+        error_procedure("set_MPI_group():under 4 process");
+    }
+    else if(num_of_all_proc % 4 != 0) {
+        error_procedure("set_MPI_group():process % 4 != 0");
     }
 
     group_num = num_of_all_proc / DEFAULT_MPIGROUPNUM;
+    printf("my_group_num == %d\n",group_num);
 }
