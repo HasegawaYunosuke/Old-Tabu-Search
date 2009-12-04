@@ -46,4 +46,6 @@ void set_MPI_group(void)
 
     group_num = num_of_all_proc / DEFAULT_MPIGROUPNUM;
     printf("my_group_num == %d\n",group_num);
+
+
 }
