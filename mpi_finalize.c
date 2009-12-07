@@ -8,7 +8,7 @@ void parallel_finalize(void);
 
 void finalize(void)
 {
-    final_result_show();
+    //final_result_show();
     if(modep->parallel_mode) {
         parallel_finalize();
     }
