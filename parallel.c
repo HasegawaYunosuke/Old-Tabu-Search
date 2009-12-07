@@ -7,6 +7,7 @@ void set_MPI_group_data(int group_num, int my_group);
 int get_num_of_all_proc(void);
 int get_process_number(void);
 char * get_process_name(void);
+void best_MPI_send(void);
 
 /* if Using Score System */
 void set_MPI_parameter(void)
@@ -22,6 +23,9 @@ void set_MPI_parameter(void)
 
     set_parameter_data(num_of_all_proc, process_number, name_length, process_name);
     set_MPI_group();
+    /*DEL ST*/
+    best_MPI_send();
+    /*DEL EN*/
 }
 
 void parallel_finalize(void)
@@ -46,4 +50,35 @@ void set_MPI_group(void)
     group_num = num_of_all_proc / DEFAULT_MPIGROUPNUM;
     my_group = process_number / group_num;
     set_MPI_group_data(group_num, my_group);
+}
+
+#define BEST_SOLUTION 101
+
+void best_MPI_send(void)
+{
+    int pnum = get_process_number();
+    int send_process_name;
+    int recv_process_name;
+    int ary[5] = {0};
+    int i;
+    MPI_Status stat;
+
+    if(get_process_number() == 0) {
+        for(i = 0; i < 5; i++) {
+            ary[i] = i;
+            printf("send:ary[%d] == %d\n",i,ary[i]);
+        }
+        send_process_name = 1;
+        MPI_Send((void *)ary, 5, MPI_INT, send_process_name, BEST_SOLUTION, MPI_COMM_WORLD);
+    }
+    else if(get_process_number() == 1){
+        recv_process_name = 0;
+        for(i = 0; i < 5; i++) {
+            printf("bef;recv:ary[%d] == %d\n",i,ary[i]);
+        }
+        MPI_Recv((void *)ary, 5, MPI_INT, recv_process_name, BEST_SOLUTION, MPI_COMM_WORLD, &stat);
+        for(i = 0; i < 5; i++) {
+            printf("recv:ary[%d] == %d\n",i,ary[i]);
+        }
+    }
 }
