@@ -64,7 +64,7 @@ int * pole_search(int * solution_path)
             int *solution_path_b;
             set_ga_mode(ON);
             set_counter();
-            create_2opt_tabulist(get_tsp_size(), CLEAR);
+            //create_2opt_tabulist(get_tsp_size(), CLEAR);
             solution_path_b = get_ga_solution_path();
             set_ga_solution_path(solution_path);
             //printf("\nGA!!");
@@ -181,10 +181,6 @@ int *two_opt(int * solution_path)
          not_found_looping(cities, indexes, INIT);
          exchange_branches(solution_path, indexes);
         }
-   
-
-
-
    }
     
     return solution_path;
