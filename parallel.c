@@ -1,9 +1,11 @@
 #include "header.h"
 
+int * mallocer_ip(int size);
 void set_MPI_parameter(void);
 void set_MPI_group(void);
 void set_parameter_data(int num_of_all_proc, int process_number, int name_length, char * process_name);
 void set_MPI_group_data(int group_num, int my_group);
+void set_other_solution_path(void);
 void set_other_solution_path_data(int * solution_path);
 int get_num_of_all_proc(void);
 int get_process_number(void);
