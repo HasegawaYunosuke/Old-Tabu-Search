@@ -4,8 +4,11 @@ void set_MPI_parameter(void);
 void set_MPI_group(void);
 void set_parameter_data(int num_of_all_proc, int process_number, int name_length, char * process_name);
 void set_MPI_group_data(int group_num, int my_group);
+void set_other_solution_path_data(int * solution_path);
 int get_num_of_all_proc(void);
 int get_process_number(void);
+int get_tsp_size(void);
+int get_all_MPI_group_data(void);
 char * get_process_name(void);
 void best_MPI_send(void);
 
@@ -23,9 +26,21 @@ void set_MPI_parameter(void)
 
     set_parameter_data(num_of_all_proc, process_number, name_length, process_name);
     set_MPI_group();
+    set_other_solution_path();
     /*DEL ST*/
     best_MPI_send();
     /*DEL EN*/
+}
+
+void set_other_solution_path(void)
+{
+    int create_num = get_all_MPI_group_data() - 1;
+    int tsp_size = get_tsp_size();
+    int * save_pointer;
+
+    save_pointer = mallocer_ip(tsp_size * create_num * 2);
+
+    set_other_solution_path_data(save_pointer);
 }
 
 void parallel_finalize(void)
@@ -56,7 +71,7 @@ void set_MPI_group(void)
 
 void best_MPI_send(void)
 {
-    int pnum = get_process_number();
+    int my_process_num = get_process_number();
     int send_process_name;
     int recv_process_name;
     int ary[5] = {0};

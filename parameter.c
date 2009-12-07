@@ -9,6 +9,7 @@ int get_process_number(void);
 int get_name_length(void);
 void set_MPI_group_data(int all_MPI_group, int MPI_group);
 int get_MPI_group_data(void);
+int get_all_MPI_group_data(void);
 char * get_process_name(void);
 int not_found_looping(int * cities, int * indexs, int type);
 void set_search_time(double search_time);
@@ -30,6 +31,7 @@ double * get_graph_data(void);
 void set_main_base_data(int * main_base_data);
 int * get_main_base_data(void);
 void set_solution_path(int * solution_path);
+void set_other_solution_path_data(int * solution_path);
 int * get_solution_path(void);
 void initial_parameter(int tsp_size);
 int turn_loop_times(int type);
@@ -68,6 +70,7 @@ struct parameter {
     int * main_base_data;       /* TSPLIB's data, discribed by Euclid */
     double * graph_data;        /* TSPLIB's data, discribed by Graph */
     int * solution_path;        /* the sequence of city data arrived */
+    int * other_solution_path;  /* the sequence of city data arrived */
     double all_cost;            /* solution_path's cost */
     double best_cost;
     int turn_times;
@@ -125,6 +128,11 @@ void set_MPI_group_data(int all_MPI_group, int MPI_group)
 int get_MPI_group_data(void)
 {
     return parameterp->MPI_group;
+}
+
+int get_all_MPI_group_data(void)
+{
+    return parameterp->all_MPI_group;
 }
 
 int get_num_of_all_proc(void)
@@ -222,6 +230,7 @@ void initial_parameter(int tsp_size)
     parameterp->process_number = 0;
     parameterp->num_of_all_proc = 1;
     parameterp->MPI_group = 0;
+    parameterp->all_MPI_group = 0;
     set_2opt_loop();
 
 
@@ -382,6 +391,11 @@ void set_solution_path(int * solution_path)
     set_all_cost();
     add_history();
     set_solution_data_flag();
+}
+
+void set_other_solution_path_data(int * other_solution_path)
+{
+    parameterp->other_solution_path = other_solution_path;
 }
 
 void set_solution_data_flag(void)
