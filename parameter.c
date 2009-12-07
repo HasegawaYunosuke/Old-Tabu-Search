@@ -34,8 +34,10 @@ void set_main_base_data(int * main_base_data);
 int * get_main_base_data(void);
 void set_solution_path(int * solution_path);
 void set_best_solution_path(int * best_solution_path);
+int * get_best_solution_path(void);
 void set_best_solution_path_data(void);
 void set_other_solution_path_data(int * solution_path);
+int * get_other_solution_path_data(void);
 int * get_solution_path(void);
 void initial_parameter(int tsp_size);
 int turn_loop_times(int type);
@@ -434,6 +436,11 @@ void set_best_solution_path_data(void)
 void set_other_solution_path_data(int * other_solution_path)
 {
     parameterp->other_solution_path = other_solution_path;
+}
+
+int * get_other_solution_path_data(void)
+{
+    return parameterp->other_solution_path;
 }
 
 void set_solution_data_flag(void)

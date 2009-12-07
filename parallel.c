@@ -8,6 +8,7 @@ void set_MPI_group_data(int group_num, int my_group);
 void set_same_group_list(int * list);
 void set_other_solution_path(void);
 void set_other_solution_path_data(int * solution_path);
+int * get_other_solution_path_data(void);
 void create_same_group_list(int group_num, int my_group);
 int get_num_of_all_proc(void);
 int get_process_number(void);
@@ -16,6 +17,11 @@ int get_all_MPI_group_data(void);
 int * get_same_group_list(void);
 char * get_process_name(void);
 void best_MPI_send(void);
+void best_MPI_recv(int recv_process_number);
+int * get_best_solution_path(void);
+
+/* grobal variable */
+pthread_mutex_t recv_sol_lock;
 
 /* if Using Score System */
 void set_MPI_parameter(void)
@@ -40,11 +46,9 @@ void set_MPI_parameter(void)
 void set_other_solution_path(void)
 {
     int create_num = get_all_MPI_group_data() - 1;
-    int tsp_size = get_tsp_size();
     int * save_pointer;
 
-    save_pointer = mallocer_ip(tsp_size * create_num * 2);
-
+    save_pointer = mallocer_ip((get_tsp_size() + 10) * create_num);
     set_other_solution_path_data(save_pointer);
 }
 
@@ -68,6 +72,7 @@ void set_MPI_group(void)
     my_group = get_process_number() / group_num;
     set_MPI_group_data(group_num, my_group);
     create_same_group_list(group_num, my_group);
+    pthread_mutex_init(&recv_sol_lock, NULL);
 }
 
 void create_same_group_list(int group_num, int my_group)
@@ -93,28 +98,41 @@ void create_same_group_list(int group_num, int my_group)
 void best_MPI_send(void)
 {
     int my_process_num = get_process_number();
-    int send_process_name;
-    int recv_process_name;
-    int ary[5] = {0};
+    int element_num = get_tsp_size() + 10;
+    int * my_best_sol = get_best_solution_path();
+    int * other_list = get_same_group_list();
     int i;
     MPI_Status stat;
 
-    if(get_process_number() == 0) {
-        for(i = 0; i < 5; i++) {
-            ary[i] = i;
-            printf("send:ary[%d] == %d\n",i,ary[i]);
-        }
-        send_process_name = 1;
-        MPI_Send((void *)ary, 5, MPI_INT, send_process_name, BEST_SOLUTION, MPI_COMM_WORLD);
+    for(i = 0; i < get_all_MPI_group_data() - 1; i++) {
+        MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[i], BEST_SOLUTION, MPI_COMM_WORLD);
     }
-    else if(get_process_number() == 1){
-        recv_process_name = 0;
-        for(i = 0; i < 5; i++) {
-            printf("bef;recv:ary[%d] == %d\n",i,ary[i]);
+}
+
+
+void best_MPI_recv(int recv_process_number)
+{
+    int tsp_size = get_tsp_size();
+    int element_num = tsp_size + 10;
+    int buffer[TSPMAXSIZE];
+    int * other_sol_path = get_other_solution_path_data();
+    int * other_list = get_same_group_list();
+    int this_threads_index = 0;
+    MPI_Status stat;
+
+    for(i = 0; i < get_all_MPI_group_data() - 1; i++) {
+        if(other_list[i] == recv_process_number) {
+            this_threads_index = i * element_num;
         }
-        MPI_Recv((void *)ary, 5, MPI_INT, recv_process_name, BEST_SOLUTION, MPI_COMM_WORLD, &stat);
-        for(i = 0; i < 5; i++) {
-            printf("recv:ary[%d] == %d\n",i,ary[i]);
+    }
+
+    for(;;) {
+        MPI_Recv((void *)buffer, element_num, MPI_INT, recv_process_number, BEST_SOLUTION, MPI_COMM_WORLD, &stat);
+
+        pthread_mutex_lock(&recv_sol_lock);
+        for(i = 0; i < element_num; i++) {
+            other_sol_path[this_threads_index + i] = buffer[i];
         }
+        pthread_mutex_unlock(&recv_sol_lock);
     }
 }
