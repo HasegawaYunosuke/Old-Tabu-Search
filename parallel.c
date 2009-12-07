@@ -17,8 +17,11 @@ int get_all_MPI_group_data(void);
 int * get_same_group_list(void);
 char * get_process_name(void);
 void best_MPI_send(void);
-void best_MPI_recv(int recv_process_number);
+void best_MPI_recv(int * recv_process_number);
 int * get_best_solution_path(void);
+/* DEL ST */
+void show_saved_other_sol(void);
+/* DEL EN */
 
 /* grobal variable */
 pthread_mutex_t recv_sol_lock;
@@ -38,9 +41,6 @@ void set_MPI_parameter(void)
     set_parameter_data(num_of_all_proc, process_number, name_length, process_name);
     set_MPI_group();
     set_other_solution_path();
-    /*DEL ST*/
-    best_MPI_send();
-    /*DEL EN*/
 }
 
 void set_other_solution_path(void)
@@ -54,9 +54,14 @@ void set_other_solution_path(void)
 
 void parallel_finalize(void)
 {
+    /* DEL ST */
+    //show_saved_other_sol();
+    /* DEL EN */
     MPI_Barrier(MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD);
     MPI_Finalize();
+    free(get_other_solution_path_data());
+    free(get_same_group_list());
 }
 
 void set_MPI_group(void)
@@ -110,8 +115,9 @@ void best_MPI_send(void)
 }
 
 
-void best_MPI_recv(int recv_process_number)
+void best_MPI_recv(int * recv_process_number)
 {
+    int i;
     int tsp_size = get_tsp_size();
     int element_num = tsp_size + 10;
     int buffer[TSPMAXSIZE];
@@ -121,18 +127,34 @@ void best_MPI_recv(int recv_process_number)
     MPI_Status stat;
 
     for(i = 0; i < get_all_MPI_group_data() - 1; i++) {
-        if(other_list[i] == recv_process_number) {
+        if(other_list[i] == (*recv_process_number)) {
             this_threads_index = i * element_num;
         }
     }
 
     for(;;) {
-        MPI_Recv((void *)buffer, element_num, MPI_INT, recv_process_number, BEST_SOLUTION, MPI_COMM_WORLD, &stat);
-
+        MPI_Recv((void *)buffer, element_num, MPI_INT, (*recv_process_number), BEST_SOLUTION, MPI_COMM_WORLD, &stat);
         pthread_mutex_lock(&recv_sol_lock);
         for(i = 0; i < element_num; i++) {
             other_sol_path[this_threads_index + i] = buffer[i];
         }
         pthread_mutex_unlock(&recv_sol_lock);
+        break;
     }
 }
+
+/* DEL ST */
+void show_saved_other_sol(void)
+{
+    int * other_sol_path = get_other_solution_path_data();
+    int tsp_size = get_tsp_size();
+    int element_num = tsp_size + 10;
+    int i,j;
+
+    for(i = 0; i < (get_all_MPI_group_data() - 1); i++) {
+        for(j = 0; j < element_num; j++) {
+            printf("%d:index[%3d]:%d\n",i,j,other_sol_path[i * element_num + j]);
+        }
+    }
+}
+/* DEL EN */

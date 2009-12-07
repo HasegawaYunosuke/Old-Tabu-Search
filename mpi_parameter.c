@@ -37,10 +37,10 @@ void set_best_solution_path(int * best_solution_path);
 int * get_best_solution_path(void);
 void set_best_solution_path_data(void);
 void set_other_solution_path_data(int * solution_path);
+int * get_same_group_list(void);
 int * get_other_solution_path_data(void);
 int * get_solution_path(void);
 void initial_parameter(int tsp_size);
-
 int turn_loop_times(int type);
 int search_loop_times(int type);
 int get_2opt_loop(void);
@@ -544,6 +544,7 @@ void set_all_cost(void)
     if(all_cost < parameterp->best_cost) {
         parameterp->best_cost = all_cost;
         set_best_solution_path_data();
+        best_MPI_send();
     }
 }
 
