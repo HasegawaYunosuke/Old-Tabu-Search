@@ -7,7 +7,8 @@
 #define _GUN_SOURCE
 #include <sched.h>
 #include <linux/unistd.h>
-#define THREAD_NUM 16
+#define THREAD_NUM 2
+#define TOTAL_SOLUTION_NUM 64
 #define CPU_ZERO
 #define CPU_SET
 
@@ -18,14 +19,14 @@ int * copy_graph_search(int * solution_path);
 int * copy_two_opt_tabu(int * solution_path);
 int * copy_two_opt_only(int * solution_path);
 void copy_choice_4indexs(int type, int * cities, int * solution_path);
-int copy_permit_worse(double bef_aft_distance);
+int copy_permit_worse(double bef_aft_distance, double * worse);
 int copy_mode_select(int mode, int * solution_path);
 void create_2opt_tabulist(int tsp_size, int mode);
 int copy_next_index(int target, int maximum);
 int copy_prev_index(int target, int maximum);
 int copy_now_index(int target, int maximum);
 int * mallocer_ip(int size);
-double copy_bef_aft_distance(int * cities);
+double copy_bef_aft_distance(int * cities, double * worse);
 void copy_exchange_branch(int * solution_path, int * indexs);
 void copy_get_cities_by_indexs(int * cities, int * indexs, int * solution_path);
 double get_worse_permit(void);
@@ -47,10 +48,14 @@ void thread_core_assigned(void * arg);
 void thread_two_opt_tabu(int * solution_path);
 int * get_solution_path();
 int get_tsp_size(void);
+void copy_set_now_parcentage(double before, double after, double * worse);
+int copy_check_parcentage(double bef_aft_distance, double * worse);
 
 /* grobal variable */
 int grobal_indexs[4];
 double best_bef_aft_cost;
+int improved_checker;
+int thread_loop_counter;
 pthread_mutex_t parallel_mutex;
 
 typedef struct _thread_arg {
@@ -149,7 +154,9 @@ int * copy_two_opt_tabu(int * solution_path)
             cpu_num = sysconf(_SC_NPROCESSORS_CONF);
             /* mutex init */
             pthread_mutex_init(&parallel_mutex, NULL);
-            best_bef_aft_cost = DBL_MAX * (-1);         
+            best_bef_aft_cost = DBL_MAX * (-1);
+            improved_checker = OFF;
+            thread_loop_counter = 0;
   
             /* go to thread_two_opt_tabu() */
             for(i = 0; i < THREAD_NUM; i++) {
@@ -198,6 +205,7 @@ void thread_core_assigned(void * arg)
     if(sched_setaffinity(syscall(__NR_gettid), sizeof(mask), &mask) == -1) {
         error_procedure("sched_setaffnity()");
     }
+
     thread_two_opt_tabu(targ->path);
 }
 
@@ -207,8 +215,13 @@ void thread_two_opt_tabu(int * solution_path)
     int indexs[4];
     int cities[4];
     double bef_aft_cost;
+    double worse;
     
     do {
+        if(improved_checker == ON) {
+            return;
+        }
+
         copy_choice_4indexs(DEFAULT, indexs, solution_path);
         copy_get_cities_by_indexs(cities, indexs, solution_path);
         
@@ -216,12 +229,16 @@ void thread_two_opt_tabu(int * solution_path)
             not_found_looping(cities, indexs, READONLY);
             break;
         }
-    } while(copy_permit_worse(bef_aft_cost = copy_bef_aft_distance(cities)) == NO || is_2opt_tabu(cities) == YES);
+    } while(copy_permit_worse(bef_aft_cost = copy_bef_aft_distance(cities, &worse), &worse) == NO || is_2opt_tabu(cities) == YES);
     
     not_found_looping(cities, indexs, INIT);
 
     if(get_tabu_mode() == ON) {
         pthread_mutex_lock(&parallel_mutex);
+    }
+
+    if(bef_aft_cost > 0) {
+        improved_checker = ON;
     }
 
     if(best_bef_aft_cost < bef_aft_cost) {
@@ -231,13 +248,18 @@ void thread_two_opt_tabu(int * solution_path)
         }
     }
 
+    thread_loop_counter++;
+
     if(get_tabu_mode() == ON) {
         pthread_mutex_unlock(&parallel_mutex);
+    }
+    if(thread_loop_counter < TOTAL_SOLUTION_NUM) {
+        thread_two_opt_tabu(solution_path);
     }
 }
 
 /* permit exchange toward worse if under permit_baseline */
-int copy_permit_worse(double bef_aft_distance)
+int copy_permit_worse(double bef_aft_distance, double * worse)
 {
     int return_num = NO;
 
@@ -247,7 +269,7 @@ int copy_permit_worse(double bef_aft_distance)
     }
     else{
         /* permit_worse discribed > 0 */
-        if(check_parcentage(bef_aft_distance) == NO) {
+        if(check_parcentage(bef_aft_distance, worse) == NO) {
             return_num = NO;
         }
         else {
@@ -312,13 +334,14 @@ void copy_get_min_exchange_indexs(int * solution_path, int * best_indexs)
     int indexs[4];
     double now_distance = DBL_MAX * (-1);
     double maximum = DBL_MAX * (-1);
+    double worse;
 
     for(i = 1; i < tsp_size - 2; i++) {
         indexs[0] = i; indexs[1] = i + 1;
         for(j = i + 2; j < tsp_size; j++) {
             indexs[2] = j; indexs[3] = j + 1;
             copy_get_cities_by_indexs(cities, indexs, solution_path);
-            now_distance = copy_bef_aft_distance(cities);
+            now_distance = copy_bef_aft_distance(cities, &worse);
             if(maximum < now_distance) {
                 maximum = now_distance;
                 for(k = 0; k < 4; k++) {
@@ -338,8 +361,39 @@ void copy_get_cities_by_indexs(int * cities, int * indexs, int * solution_path)
     }
 }
 
+void copy_set_now_parcentage(double before, double after, double * worse)
+{
+    double best_cost = 0;
+
+    best_cost = get_best_cost();
+
+    /* permit_worse > 0 */
+    * worse = (after - before) / best_cost * 100;
+}
+
+/* return num is YES or NO */
+int copy_check_parcentage(double bef_aft_distance, double * worse)
+{
+    int return_num = NO;
+    double best_cost = get_best_cost();
+    double after_all_cost;
+
+    if(modep->euclid_mode == OFF) {
+        after_all_cost = get_all_cost_by_graph(get_solution_path()) - bef_aft_distance;
+    }
+    else {
+        after_all_cost = get_all_cost_by_euclid(get_solution_path()) - bef_aft_distance;
+    }
+
+    if(((get_worse_permit() / 100 + 1) * best_cost) > after_all_cost) {
+        return_num = YES;
+    }
+
+    return return_num;
+}
+
 /* return "YES" or "NO" (Decrease -> YES) */
-double copy_bef_aft_distance(int * cities)
+double copy_bef_aft_distance(int * cities,double * worse)
 {
     double before, after;
 
@@ -351,7 +405,7 @@ double copy_bef_aft_distance(int * cities)
         before = copy_get_cost(cities[0],cities[1],cities[2],cities[3]);
         after = copy_get_cost(cities[0],cities[2],cities[1],cities[3]);
     }
-    set_now_parcentage(before, after);
+    set_now_parcentage(before, after, worse);
 
     return (before - after);
 }
