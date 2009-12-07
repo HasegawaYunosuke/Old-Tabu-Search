@@ -10,6 +10,7 @@ void show_mode(void);
 void show_on_off(int on_off, char * buffer);
 int get_num_of_all_proc(void);
 int get_process_number(void);
+int get_MPI_group_data(void);
 char * get_process_name(void);
 int * get_solution_path(void);
 double get_all_cost_by_graph(int * cities);
@@ -73,6 +74,7 @@ void final_result_show(void)
     printf("All Proces Num:%2d\n",get_num_of_all_proc());
     printf("Process Number:%2d\n",get_process_number());
     printf("Process Name:%s\n",get_process_name());
+    printf("MPI Group:%2d\n",get_MPI_group_data());
     printf("Running Time:%f\n",get_time());
     printf("Best Cost:%.2f\n",get_best_cost());
     printf("\nActive Modes--->\n");

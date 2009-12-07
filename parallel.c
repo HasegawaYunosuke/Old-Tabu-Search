@@ -45,11 +45,5 @@ void set_MPI_group(void)
 
     group_num = num_of_all_proc / DEFAULT_MPIGROUPNUM;
     my_group = process_number / group_num;
-
-    /* DEL ST */
-    printf("set_MPI_group():group_num == %d\n",group_num);
-    printf("set_MPI_group():my_group == %d\n",my_group);
-    /* DEL EN */
-
     set_MPI_group_data(group_num, my_group);
 }
