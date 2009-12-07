@@ -31,6 +31,8 @@ double * get_graph_data(void);
 void set_main_base_data(int * main_base_data);
 int * get_main_base_data(void);
 void set_solution_path(int * solution_path);
+void set_best_solution_path(int * best_solution_path);
+void set_best_solution_path_data(void);
 void set_other_solution_path_data(int * solution_path);
 int * get_solution_path(void);
 void initial_parameter(int tsp_size);
@@ -70,7 +72,8 @@ struct parameter {
     int * main_base_data;       /* TSPLIB's data, discribed by Euclid */
     double * graph_data;        /* TSPLIB's data, discribed by Graph */
     int * solution_path;        /* the sequence of city data arrived */
-    int * other_solution_path;  /* the sequence of city data arrived */
+    int * best_solution_path;   /* Local Best Solution Path */
+    int * other_solution_path;
     double all_cost;            /* solution_path's cost */
     double best_cost;
     int turn_times;
@@ -393,6 +396,28 @@ void set_solution_path(int * solution_path)
     set_solution_data_flag();
 }
 
+void set_best_solution_path(int * best_solution_path)
+{
+    parameterp->best_solution_path = best_solution_path;
+}
+
+int * get_best_solution_path(void)
+{
+    return parameterp->best_solution_path;
+}
+
+void set_best_solution_path_data(void)
+{
+    int i;
+    int tsp_size = get_tsp_size();
+    int * now_best_sol_path = get_solution_path();
+    int * old_best_sol_path = get_best_solution_path();
+
+    for(i = 0; i < tsp_size; i++) {
+        old_best_sol_path[i] = now_best_sol_path[i + 1];
+    }
+}
+
 void set_other_solution_path_data(int * other_solution_path)
 {
     parameterp->other_solution_path = other_solution_path;
@@ -484,6 +509,7 @@ void set_all_cost(void)
 
     if(all_cost < parameterp->best_cost) {
         parameterp->best_cost = all_cost;
+        set_best_solution_path_data();
     }
 }
 
