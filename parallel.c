@@ -8,6 +8,7 @@ void set_MPI_group_data(int group_num, int my_group);
 void set_same_group_list(int * list);
 void set_other_solution_path(void);
 void set_other_solution_path_data(int * solution_path);
+void create_same_group_list(int group_num, int my_group);
 int get_num_of_all_proc(void);
 int get_process_number(void);
 int get_tsp_size(void);
@@ -56,33 +57,35 @@ void parallel_finalize(void)
 
 void set_MPI_group(void)
 {
-    int i,j = 0;
-    int num_of_all_proc = get_num_of_all_proc();
-    int process_number = get_process_number();
-    char * process_name = get_process_name();
     int group_num;
     int my_group;
-    int group_start_process;
-    int * same_group_list;
 
-    if(num_of_all_proc < 4 || num_of_all_proc % 4 != 0) {
+    if(get_num_of_all_proc() < 4 || get_num_of_all_proc() % 4 != 0) {
         error_procedure("set_MPI_group()");
     }
 
-    group_num = num_of_all_proc / DEFAULT_MPIGROUPNUM;
-    my_group = process_number / group_num;
+    group_num = get_num_of_all_proc() / DEFAULT_MPIGROUPNUM;
+    my_group = get_process_number() / group_num;
     set_MPI_group_data(group_num, my_group);
+    create_same_group_list(group_num, my_group);
+}
+
+void create_same_group_list(int group_num, int my_group)
+{
+    int i,j = 0;
+    int group_start_process;
+    int * same_group_list;
 
     same_group_list = mallocer_ip(group_num - 1);
-    group_start_process = my_group * DEFAULT_MPIGROUPNUM;
+    group_start_process = my_group * group_num;
     for(i = group_start_process; i < (group_num + group_start_process); i++) {
-        if(i != process_number) {
+        if(i != get_process_number()) {
             same_group_list[j] = i;
             j++;
         }
     }
+
     set_same_group_list(same_group_list);
-    free(same_group_list);
 }
 
 #define BEST_SOLUTION 101
