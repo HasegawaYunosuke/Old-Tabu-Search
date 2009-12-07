@@ -59,7 +59,7 @@ int * initial_graph_path(double * graph_data)
     /* first time procedure */
     if(search_loop_times(READONLY) == 0 && turn_loop_times(READONLY) == 0) {
         return_data = mallocer_ip(malloc_size + 10);
-        set_best_solution_path(malloc_size + 10);
+        set_best_solution_path(mallocer_ip(malloc_size + 10));
         srand(time(NULL));
         /* set return_data[0] to 'TSP-example-size' */
         return_data[0] = (int)graph_data[0];
