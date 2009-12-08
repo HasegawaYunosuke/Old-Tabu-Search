@@ -18,6 +18,9 @@ int random_num(int maximum)
     if((return_data = rand() % maximum) == 0) {
         return_data = maximum;
     }
+    if((return_data = (get_MPI_group_data() * get_process_number() + 1) * return_data % maximum) == 0) {
+        return_data = maximum;
+    }
 
     return return_data;
 }

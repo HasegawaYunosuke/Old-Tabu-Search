@@ -10,14 +10,21 @@ void initialize(int argc, char ** argv);
 void set_MPI_parameter(void);
 void option_checker(int argc, char ** argv);
 void visualizer(int * visual_arg);
+int * get_same_group_list(void);
+int get_all_MPI_group_data(void);
 int * read_data(void);
+void best_MPI_recv(int * recv_process_number);
 
 void initialize(int argc, char ** argv)
 {
+    int i;
     int * main_base_data;
-    double * graph_data;
     int visual_arg; /* Please edit !! for Waki */
+    int * other_list;
+    int recv_thread_num;
+    double * graph_data;
     pthread_t visual_thread;
+    pthread_t * MPI_recv_thread;
 
     /* comand-line short option check */
     option_checker(argc, argv);
@@ -50,6 +57,15 @@ void initialize(int argc, char ** argv)
     if(modep->parallel_mode == ON) {
         MPI_Init(&argc, &argv);
         set_MPI_parameter();
+        recv_thread_num = get_all_MPI_group_data() - 1;
+        MPI_recv_thread = (pthread_t *)malloc(recv_thread_num * sizeof(pthread_t));
+        other_list = get_same_group_list();
+        for(i = 0; i < recv_thread_num; i++) {
+            pthread_create(&MPI_recv_thread[i],
+                            NULL,
+                            (void *)best_MPI_recv,
+                            (void *)&other_list[i]);
+        }
     }
 }
 
