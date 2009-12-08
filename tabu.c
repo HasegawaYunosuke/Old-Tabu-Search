@@ -9,6 +9,7 @@ void create_2opt_tabulist(int tsp_size, int mode);
 int get_list_size(int tsp_size);
 void flag_set(void);
 int * mallocer_ip(int list_size);
+int get_tsp_size(void);
 
 /* grobal variable */
 int * tabulist_2opt[4];
@@ -70,6 +71,11 @@ void add_2opt_tabulist(int * cities)
     for(i = 0; i < 4; i++) {
         tabulist_2opt[i][tabulist_2opt_index] = cities[i];
     }
+    
+    if(tabulist_2opt_index >= get_list_size(get_tsp_size())) {
+        tabulist_2opt_index = 0;
+    }
+    
     tabulist_2opt_index++;
 }
 
