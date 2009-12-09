@@ -102,7 +102,7 @@ void visualizer(int * visual_arg)
     }
 
     if(mainX_max > 500){
-        x = mainX_max / 500;
+        x = mainX_max / 470;
         for(i = 0; i < nt_city_coordinate[0]; i++){
             nt_city_coordinate[a] = nt_city_coordinate[a] / x;
             printf("X[%d]:%d\n", a,nt_city_coordinate[a]);
@@ -137,7 +137,6 @@ void visualizer(int * visual_arg)
                 break;
             }
         }
-
         send(socket, solu_path, (solu_path[0]+2)*4,0);
         solu_path = NULL;
         solu_path = get_solution_path();
@@ -148,6 +147,7 @@ void visualizer(int * visual_arg)
             send(socket, solu_path, (solu_path[0]+2)*4,0);
             break;
         }
+
     }
 
     cleanSock(socket);
