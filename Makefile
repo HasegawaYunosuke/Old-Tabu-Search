@@ -11,5 +11,11 @@ clean:
 	rm *.o
 
 mpi:
+	echo "#define MPIMODE" > header.buf
+	cat header.h | grep -v "define MPIMODE" >> header.buf
+	mv header.buf header.h
 	mpicc -c $(MPIC)
 	mpicc -o a.out $(MPIO) $(CFLAGS)
+	echo "/* #define MPIMODE */" > header.buf
+	cat header.h | grep -v "define MPIMODE" >> header.buf
+	mv header.buf header.h
