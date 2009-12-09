@@ -6,7 +6,9 @@
 #include "header.h"
 #define _GUN_SOURCE
 #include <sched.h>
+#ifdef LINUXUSER
 #include <linux/unistd.h>
+#endif
 #define THREAD_NUM 2
 #define TOTAL_SOLUTION_NUM 64
 #define CPU_ZERO
@@ -189,6 +191,7 @@ int * copy_two_opt_tabu(int * solution_path)
 
 void thread_core_assigned(void * arg)
 {
+    #ifdef LINUXUSER
     cpu_set_t mask;
     /* change void to thread_arg_t */
     thread_arg_t * targ = (thread_arg_t *)arg;
@@ -207,6 +210,7 @@ void thread_core_assigned(void * arg)
     }
 
     thread_two_opt_tabu(targ->path);
+    #endif
 }
 
 void thread_two_opt_tabu(int * solution_path)
