@@ -16,6 +16,8 @@ int * get_main_base_data(void);
 double get_all_cost_by_graph(int * cities);
 int get_solution_data_flag(void);
 int turn_loop_times(int type);
+int get_group_start_process(void);
+int get_process_number(void);
 
 int clntSock(void)
 {
@@ -67,6 +69,8 @@ void visualizer(int * visual_arg)
     int * nt_city_coordinate;
     int * solu_path;
     int socket;
+    int start_pro_num;
+    int pro_num;
     int i;
     int prev_loop = turn_loop_times(READONLY);
     int mainX_max = 0;
@@ -77,6 +81,9 @@ void visualizer(int * visual_arg)
     int a = 2,b = 3;
 
     socket = clntSock();
+
+    pro_num = get_process_number();
+    start_pro_num = get_process_number();
 
     nt_city_coordinate = get_main_base_data();
     mainX_min = nt_city_coordinate[2];
@@ -110,6 +117,8 @@ void visualizer(int * visual_arg)
         }
     }
 
+    nt_city_coordinate[a] = pro_num;
+
     if(mainY_max > 300){
         y = mainY_max / 300;
         printf("%d\n",y);
@@ -120,7 +129,7 @@ void visualizer(int * visual_arg)
         }
     }
 
-    send(socket, nt_city_coordinate, (nt_city_coordinate[0]+1)*2*4,0);
+    send(socket, nt_city_coordinate, (nt_city_coordinate[0]+2)*2*4,0);
 
     while((solu_path = get_solution_path()) == NULL) {
         printf("FUCK:\n");
