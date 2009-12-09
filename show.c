@@ -86,6 +86,7 @@ void final_result_show(void)
 void show_mode(void)
 {
     show_on_off(modep->visual_mode, "Visual_Mode");
+    show_on_off(modep->realtime_visual_mode, "Realtime-Visual_Mode");
     show_on_off(modep->graph_mode, "Graph_Mode");
     show_on_off(modep->euclid_mode, "Euclid_Mode");
     show_on_off(modep->parallel_mode, "Parallel_Mode");
