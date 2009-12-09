@@ -21,13 +21,7 @@ int loop_terminate(void)
 
     if(turn_loop_times(CHECK) >= get_tsp_size() * 10 && get_tabu_mode() == YES && modep->pole_mode == OFF) {
         turn_loop_times(INIT);
-
-        /* DEL ST */
-        printf("Turn is terminated by turn_loop_times()");
-        /* DEL EN */
-
         turn_terminated_show();
-
         return_num = YES;
         set_tabu_mode(OFF);
         if(modep->hasegawa_mode == ON || modep->tozaki_mode == ON) {

@@ -4,6 +4,7 @@
 /* functions */
 void initial_path(void);
 void set_solution_path(int * solution_path);
+void set_best_solution_path(int * solution_path);
 int * get_solution_path(void);
 int * get_main_base_data(void);
 double * get_graph_data(void);
@@ -18,6 +19,8 @@ int search_loop_times(int type);
 int * mallocer_ip(int size);
 double * mallocer_dp(int size);
 
+void set_ga_solution_path(int * solution_path);
+
 void initial_path(void)
 {
     /* create initial-path by each mode */
@@ -26,6 +29,9 @@ void initial_path(void)
     }
     else {
         set_solution_path(initial_graph_path(get_graph_data()));
+        
+        if(modep->pole_mode == ON)
+            set_ga_solution_path(initial_graph_path(get_graph_data()));
     }
 }
 
@@ -40,6 +46,7 @@ int * initial_euclid_path(int * euclid_data)
     if(search_loop_times(READONLY) == 0 && turn_loop_times(READONLY) == 0) {
         /* +10 is for something parameter */
         return_data = mallocer_ip(euclid_data[0] + 10);
+        set_best_solution_path(mallocer_ip(euclid_data[0] + 10));
         srand(time(NULL));
         /* set return_data[0] to 'TSP-example-size' */
         return_data[0] = euclid_data[0];
@@ -57,6 +64,7 @@ int * initial_graph_path(double * graph_data)
     /* first time procedure */
     if(search_loop_times(READONLY) == 0 && turn_loop_times(READONLY) == 0) {
         return_data = mallocer_ip(malloc_size + 10);
+        set_best_solution_path(mallocer_ip(malloc_size + 10));
         srand(time(NULL));
         /* set return_data[0] to 'TSP-example-size' */
         return_data[0] = (int)graph_data[0];
