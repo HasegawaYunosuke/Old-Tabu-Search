@@ -38,6 +38,8 @@ int * get_best_solution_path(void);
 void set_best_solution_path_data(void);
 void set_other_solution_path_data(int * solution_path);
 int * get_same_group_list(void);
+void set_group_start_process(int group_start_process)
+int get_group_start_process(void)
 int * get_other_solution_path_data(void);
 int * get_solution_path(void);
 void initial_parameter(int tsp_size);
@@ -65,6 +67,9 @@ double get_best_cost(void);
 int now_index(int target, int maximum);
 
 void set_counter(void);
+int * get_ga_solution_path(void);
+void set_ga_solution_path(int * solution_path);
+int get_ga_mode(void);
 
 /* grobal variable */
 struct parameter {
@@ -94,8 +99,10 @@ struct parameter {
     int MPI_group;
     int all_MPI_group;
     int * same_group_list;
+    int group_start_process;
     int name_length;
     char * process_name;
+    int * ga_solution_path;
 };
 
 struct parameter * parameterp;
@@ -185,6 +192,16 @@ int get_name_length(void)
 char * get_process_name(void)
 {
     return parameterp->process_name;
+}
+
+void set_group_start_process(int group_start_process)
+{
+    parameterp->group_start_process = group_start_process;
+}
+
+int get_group_start_process(void)
+{
+    return parameterp->group_start_process;
 }
 
 int search_is_done(int type)
@@ -425,6 +442,11 @@ void set_solution_path(int * solution_path)
     set_solution_data_flag();
 }
 
+void set_ga_solution_path(int * solution_path)
+{
+    parameterp->ga_solution_path = solution_path;
+}
+
 void set_best_solution_path(int * best_solution_path)
 {
     parameterp->best_solution_path = best_solution_path;
@@ -526,6 +548,11 @@ double * get_graph_data(void)
 int * get_solution_path(void)
 {
     return parameterp->solution_path;
+}
+
+int * get_ga_solution_path(void)
+{
+    return parameterp->ga_solution_path;
 }
 
 void set_all_cost(void)
