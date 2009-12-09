@@ -5,7 +5,7 @@
 void option_checker(int argc, char ** argv);
 void set_mode(void);
 void set_euclid_mode(void);
-void set_visual_mode(void);
+void set_visual_mode(int mode);
 void set_parallel_mode(void);
 void set_pole_mode(void);
 void set_tozaki_mode(void);
@@ -28,7 +28,7 @@ void option_checker(int argc, char ** argv)
     set_mode();
 
     /* check short options */
-    while((opt = getopt(argc, argv, "mbevplzt:f:h")) != -1) {
+    while((opt = getopt(argc, argv, "mbev:plzt:f:h")) != -1) {
         switch(opt) {
             case 'b':
                 set_tabu2opt_mode();
@@ -40,7 +40,7 @@ void option_checker(int argc, char ** argv)
                 set_euclid_mode();
                 break;
             case 'v':
-                set_visual_mode();
+                set_visual_mode(atoi(optarg));
                 break;
             case 'p':
                 set_parallel_mode();

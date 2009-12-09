@@ -48,6 +48,7 @@
 /* grobal variable */
 struct mode {
     int visual_mode;
+    int realtime_visual_mode;
     int graph_mode;
     int euclid_mode;
     int parallel_mode;

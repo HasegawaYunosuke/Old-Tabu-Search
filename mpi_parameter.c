@@ -17,7 +17,7 @@ int not_found_looping(int * cities, int * indexs, int type);
 void set_search_time(double search_time);
 void set_tabu2opt_mode(void);
 void set_euclid_mode(void);
-void set_visual_mode(void);
+void set_visual_mode(int mode);
 void set_parallel_mode(void);
 void set_pole_mode(void);
 void set_tozaki_mode(void);
@@ -133,6 +133,8 @@ void set_mode(void)
     modep->hasegawa_mode = ON;
     modep->tabu_mode = OFF;
     modep->only2opt_mode = ON;
+    modep->visual_mode = OFF;
+    modep->realtime_visual_mode = OFF;
 }
 
 void set_parameter_data(int num_of_all_proc, int process_number, int name_length, char * process_name)
@@ -229,9 +231,12 @@ void set_euclid_mode(void)
     modep->graph_mode = OFF;
 }
 
-void set_visual_mode(void)
+void set_visual_mode(int mode)
 {
     modep->visual_mode = ON;
+    if(mode == 1) {
+        modep->realtime_visual_mode = ON;
+    }
 }
 
 void set_parallel_mode(void)
