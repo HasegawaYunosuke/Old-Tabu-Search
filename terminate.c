@@ -46,7 +46,7 @@ int search_terminate(void)
     if(timer(CHECK) == OFF) {
         if(modep->visual_mode == ON) {
             tell_terminate_to_visualize();
-            pthread_join(visual_thread, NULL);
+            //pthread_join(visual_thread, NULL);
         }
         search_terminated_by_time_show();
         return_num = YES;
