@@ -77,7 +77,7 @@ void help_document(char ** argv)
     printf("This program is made by Yunosuke Hasegawa, Yuya Tanaka, Takashi Waki, and Yoshihito Tozaki.\n");
     printf("The role of this program is solving TSP using Tabu-Search.\n");
     printf("Written by C language, and Java. Java only use in case of \"graphical-mode\".\n\n");
-    printf("Usage: %s [-m] [-b] [-e] [-p] [-l] [-z] [-h] [-v] [-t search_time[s]] [-f tspfile]\n",argv[0]);
+    printf("Usage: %s [-m] [-b] [-e] [-p] [-l] [-z] [-h] [-v mode] [-t search_time[s]] [-f tspfile]\n",argv[0]);
 
     printf("\nOption Detail --->\n\n");
     printf("%s -m\n",argv[0]);
@@ -94,8 +94,8 @@ void help_document(char ** argv)
     printf("\tChoice \"Tozaki Mode\".\n");
     printf("%s -h\n",argv[0]);
     printf("\tThis Help Document.\n");
-    printf("%s -v\n",argv[0]);
-    printf("\tSwitch to Visualize Mode.\n");
+    printf("%s -v [visual_mode]\n",argv[0]);
+    printf("\tSwitch to Visualize Mode. If you want to \"Realtime-Visualize-Mode\", useage: -v 1.\n");
     printf("%s -t [search_time[second]]\n",argv[0]);
     printf("\tSet the Tabu-Search running time.\n");
     printf("%s -f [tspfile]\n",argv[0]);
