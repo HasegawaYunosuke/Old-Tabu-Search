@@ -17,7 +17,6 @@ void initialize(int argc, char ** argv)
     int * main_base_data;
     double * graph_data;
     int visual_arg; /* Please edit !! for Waki */
-    pthread_t visual_thread;
 
     /* comand-line short option check */
     option_checker(argc, argv);
