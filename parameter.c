@@ -40,7 +40,6 @@ void set_other_solution_path_data(int * solution_path);
 int * get_other_solution_path_data(void);
 int * get_solution_path(void);
 void initial_parameter(int tsp_size);
-
 int turn_loop_times(int type);
 int search_loop_times(int type);
 int get_2opt_loop(void);
@@ -97,10 +96,10 @@ struct parameter {
     int MPI_group;
     int all_MPI_group;
     int * same_group_list;
+    int group_start_process;
     int name_length;
     char * process_name;
-
-    int * ga_solution_path;  
+    int * ga_solution_path;
 };
 
 struct parameter * parameterp;
