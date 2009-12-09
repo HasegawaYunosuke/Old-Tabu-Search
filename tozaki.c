@@ -180,7 +180,7 @@ int * copy_two_opt_tabu(int * solution_path)
             }
             /* mutex destroy */
             pthread_mutex_destroy(&mutex);
-            
+
             copy_exchange_branch(solution_path, grobal_indexs);
         }
     }

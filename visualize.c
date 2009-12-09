@@ -146,18 +146,18 @@ void visualizer(int * visual_arg)
                 break;
             }
         }
+
+        if(solu_path[0] == 0) {
+            printf("visualize.c:All Search is Done...\n");
+            send(socket, solu_path, (solu_path[0]+2)*4,0);
+            break;
+        }
+
         send(socket, solu_path, (solu_path[0]+2)*4,0);
+
         solu_path = NULL;
         solu_path = get_solution_path();
         solu_path[tsp_size+1] = (int)get_all_cost_by_graph(get_solution_path());
-
-        /*if(search_is_done(READONLY) == YES) {
-            printf("visualize.c:All Search is Done...\n");
-            solu_path[0] = 0;
-            send(socket, solu_path, (solu_path[0]+2)*4,0);
-            break;
-        }*/
-
     }
 
     cleanSock(socket);
