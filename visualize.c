@@ -121,7 +121,7 @@ void visualizer(int * visual_arg)
 
     if(mainY_max > 300){
         y = mainY_max / 300;
-        printf("%d\n",y);
+        //printf("%d\n",y);
         for(i = 0; i < nt_city_coordinate[0]; i++){
             nt_city_coordinate[b] = nt_city_coordinate[b] / y;
             //printf("Y[%d]:%d\n",b,nt_city_coordinate[b]);
@@ -129,8 +129,10 @@ void visualizer(int * visual_arg)
         }
     }
 
-    send(socket, nt_city_coordinate, (nt_city_coordinate[0]+2)*2*4,0);
+    //printf("X[%d]:%d\n",a,nt_city_coordinate[a]);
 
+    send(socket, nt_city_coordinate, (nt_city_coordinate[0]+2)*2*4,0);
+    
     while((solu_path = get_solution_path()) == NULL) {
         printf("FUCK:\n");
     }
