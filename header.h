@@ -1,4 +1,4 @@
-//#define MPIMODE
+#define MPIMODE
 
 /* include files */
 #include <stdio.h>
@@ -12,7 +12,7 @@
 #include <pthread.h>
 #include <float.h>
 #include <limits.h>
-#ifdef
+#ifdef MPIMODE
 #include <mpi.h>
 #endif
 
