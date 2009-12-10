@@ -1,4 +1,4 @@
-#define MPIMODE
+//#define MPIMODE
 
 /* include files */
 #include <stdio.h>

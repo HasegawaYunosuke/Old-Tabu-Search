@@ -4,6 +4,5 @@ DAMYNOMPI = main.o show.o argument.o error.o finalize.o hasegawa.o history.o ini
 
 a.out: $(DAMYNOMPI)
 
-
 clean:
 	rm -f $(DAMYNOMPI) *.o
