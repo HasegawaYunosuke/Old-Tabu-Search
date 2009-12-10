@@ -14,6 +14,8 @@ int get_tsp_size(void);
 int timer(int type);
 void create_2opt_tabulist(int tsp_size, int mode);
 int get_tsp_size(void);
+int * get_solution_path(void);
+void tell_terminate_to_visualize(void);
 
 int loop_terminate(void)
 {
@@ -30,9 +32,7 @@ int loop_terminate(void)
     }
     if(timer(CHECK) == OFF) {
         turn_loop_times(INIT);
-
         turn_terminated_by_time_show();
-
         return_num = YES;
     }
 
@@ -44,14 +44,22 @@ int search_terminate(void)
     int return_num = NO;
 
     if(timer(CHECK) == OFF) {
-
+        if(modep->visual_mode == ON) {
+            tell_terminate_to_visualize();
+            //pthread_join(visual_thread, NULL);
+        }
         search_terminated_by_time_show();
-
         return_num = YES;
         search_is_done(INIT);
     }
-
     search_loop_times(CHECK);
 
     return return_num;
+}
+
+void tell_terminate_to_visualize(void)
+{
+    int * solution_path = get_solution_path();
+
+    solution_path[0] = 0;
 }

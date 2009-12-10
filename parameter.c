@@ -17,7 +17,7 @@ int not_found_looping(int * cities, int * indexs, int type);
 void set_search_time(double search_time);
 void set_tabu2opt_mode(void);
 void set_euclid_mode(void);
-void set_visual_mode(void);
+void set_visual_mode(int mode);
 void set_parallel_mode(void);
 void set_pole_mode(void);
 void set_tozaki_mode(void);
@@ -40,7 +40,6 @@ void set_other_solution_path_data(int * solution_path);
 int * get_other_solution_path_data(void);
 int * get_solution_path(void);
 void initial_parameter(int tsp_size);
-
 int turn_loop_times(int type);
 int search_loop_times(int type);
 int get_2opt_loop(void);
@@ -68,6 +67,13 @@ void set_counter(void);
 int * get_ga_solution_path(void);
 void set_ga_solution_path(int * solution_path);
 int get_ga_mode(void);
+
+#ifdef MPIMODE
+int * get_same_group_list(void);
+void set_group_start_process(int group_start_process);
+int get_group_start_process(void);
+void best_MPI_send(void);
+#endif
 
 /* grobal variable */
 struct parameter {
@@ -97,10 +103,10 @@ struct parameter {
     int MPI_group;
     int all_MPI_group;
     int * same_group_list;
+    int group_start_process;
     int name_length;
     char * process_name;
-
-    int * ga_solution_path;  
+    int * ga_solution_path;
 };
 
 struct parameter * parameterp;
@@ -131,6 +137,8 @@ void set_mode(void)
     modep->hasegawa_mode = ON;
     modep->tabu_mode = OFF;
     modep->only2opt_mode = ON;
+    modep->visual_mode = OFF;
+    modep->realtime_visual_mode = OFF;
 }
 
 void set_parameter_data(int num_of_all_proc, int process_number, int name_length, char * process_name)
@@ -192,6 +200,19 @@ char * get_process_name(void)
     return parameterp->process_name;
 }
 
+#ifdef MPIMODE
+void set_group_start_process(int group_start_process)
+{
+    parameterp->group_start_process = group_start_process;
+}
+#endif
+#ifdef MPIMODE
+int get_group_start_process(void)
+{
+    return parameterp->group_start_process;
+}
+#endif
+
 int search_is_done(int type)
 {
     switch(type) {
@@ -217,9 +238,12 @@ void set_euclid_mode(void)
     modep->graph_mode = OFF;
 }
 
-void set_visual_mode(void)
+void set_visual_mode(int mode)
 {
     modep->visual_mode = ON;
+    if(mode == 1) {
+        modep->realtime_visual_mode = ON;
+    }
 }
 
 void set_parallel_mode(void)
@@ -559,6 +583,9 @@ void set_all_cost(void)
     if(all_cost < parameterp->best_cost) {
         parameterp->best_cost = all_cost;
         set_best_solution_path_data();
+        #ifdef MPIMODE
+        best_MPI_send();
+        #endif
     }
 }
 

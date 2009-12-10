@@ -8,8 +8,9 @@ void set_MPI_group_data(int group_num, int my_group);
 void set_same_group_list(int * list);
 void set_other_solution_path(void);
 void set_other_solution_path_data(int * solution_path);
-int * get_other_solution_path_data(void);
+void set_group_start_process(int group_start_process);
 void create_same_group_list(int group_num, int my_group);
+int * get_other_solution_path_data(void);
 int get_num_of_all_proc(void);
 int get_process_number(void);
 int get_tsp_size(void);
@@ -96,6 +97,7 @@ void create_same_group_list(int group_num, int my_group)
     }
 
     set_same_group_list(same_group_list);
+    set_group_start_process(group_start_process);
 }
 
 #define BEST_SOLUTION 101
