@@ -1,5 +1,5 @@
-//#define MPIMODE
-//#define LINUXUSER
+#define MPIMODE
+#define LINUXUSER
 
 /* include files */
 #include <stdio.h>
