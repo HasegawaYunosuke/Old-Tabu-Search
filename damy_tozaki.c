@@ -4,12 +4,15 @@
 
 /* header files */
 #include "header.h"
-#define _GUN_SOURCE
 #include <sched.h>
-//#include <linux/unistd.h>
+#define _GUN_SOURCE
 #define THREAD_NUM 16
 #define CPU_ZERO
 #define CPU_SET
+
+#ifdef LINUXUSER
+#include <linux/unistd.h>
+#endif
 
 /* functions */
 int * tozaki_search(int * solution_path);
@@ -182,6 +185,7 @@ int * copy_two_opt_tabu(int * solution_path)
 
 void thread_core_assigned(void * arg)
 {
+    #ifdef LINUXUSER
     /* DamyProgram
     cpu_set_t mask;
     thread_arg_t * targ = (thread_arg_t *)arg;
@@ -200,6 +204,7 @@ void thread_core_assigned(void * arg)
     }
     thread_two_opt_tabu(targ->path);
     DamyProgram*/
+    #endif
 }
 
 void thread_two_opt_tabu(int * solution_path)
