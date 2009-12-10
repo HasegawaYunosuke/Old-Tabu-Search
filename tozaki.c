@@ -8,7 +8,7 @@
 #include <sched.h>
 #include <linux/unistd.h>
 #define THREAD_NUM 2
-#define TOTAL_SOLUTION_NUM 64
+#define TOTAL_SOLUTION_NUM 16
 #define CPU_ZERO
 #define CPU_SET
 
@@ -66,15 +66,15 @@ typedef struct _thread_arg {
 
 int * tozaki_search(int * solution_path)
 {
-    int * return_data;
-
+	int * return_data;
+	
     /* Search Euclid-Data */
     if(modep->euclid_mode == ON) {
         return_data = copy_euclid_search(solution_path);
     }
     /* Search Graph-Data (non-available) */
     else if(modep->graph_mode == ON) {
-        return_data = copy_graph_search(solution_path);
+		return_data = copy_graph_search(solution_path);
     }
     /* Error */
     else {
