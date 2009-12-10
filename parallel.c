@@ -8,7 +8,7 @@ void set_MPI_group_data(int group_num, int my_group);
 void set_same_group_list(int * list);
 void set_other_solution_path(void);
 void set_other_solution_path_data(int * solution_path);
-void set_group_start_process(int group_start_process)
+void set_group_start_process(int group_start_process);
 void create_same_group_list(int group_num, int my_group);
 int * get_other_solution_path_data(void);
 int get_num_of_all_proc(void);

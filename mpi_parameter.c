@@ -38,8 +38,8 @@ int * get_best_solution_path(void);
 void set_best_solution_path_data(void);
 void set_other_solution_path_data(int * solution_path);
 int * get_same_group_list(void);
-void set_group_start_process(int group_start_process)
-int get_group_start_process(void)
+void set_group_start_process(int group_start_process);
+int get_group_start_process(void);
 int * get_other_solution_path_data(void);
 int * get_solution_path(void);
 void initial_parameter(int tsp_size);
