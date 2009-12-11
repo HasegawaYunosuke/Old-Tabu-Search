@@ -68,6 +68,13 @@ int * get_ga_solution_path(void);
 void set_ga_solution_path(int * solution_path);
 int get_ga_mode(void);
 
+#ifdef MPIMODE
+int * get_same_group_list(void);
+void set_group_start_process(int group_start_process);
+int get_group_start_process(void);
+void best_MPI_send(void);
+#endif
+
 /* grobal variable */
 struct parameter {
     int tsp_size;               /* TSP's Example Size */
@@ -130,6 +137,8 @@ void set_mode(void)
     modep->hasegawa_mode = ON;
     modep->tabu_mode = OFF;
     modep->only2opt_mode = ON;
+    modep->visual_mode = OFF;
+    modep->realtime_visual_mode = OFF;
 }
 
 void set_parameter_data(int num_of_all_proc, int process_number, int name_length, char * process_name)
@@ -190,6 +199,19 @@ char * get_process_name(void)
 {
     return parameterp->process_name;
 }
+
+#ifdef MPIMODE
+void set_group_start_process(int group_start_process)
+{
+    parameterp->group_start_process = group_start_process;
+}
+#endif
+#ifdef MPIMODE
+int get_group_start_process(void)
+{
+    return parameterp->group_start_process;
+}
+#endif
 
 int search_is_done(int type)
 {
@@ -561,6 +583,9 @@ void set_all_cost(void)
     if(all_cost < parameterp->best_cost) {
         parameterp->best_cost = all_cost;
         set_best_solution_path_data();
+        #ifdef MPIMODE
+        best_MPI_send();
+        #endif
     }
 }
 

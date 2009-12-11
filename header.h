@@ -1,3 +1,6 @@
+/* #define MPIMODE */
+#define LINUXUSER
+
 /* include files */
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,6 +13,9 @@
 #include <pthread.h>
 #include <float.h>
 #include <limits.h>
+#ifdef MPIMODE
+#include <mpi.h>
+#endif
 
 /* macro variable */
 #define INIT 0
