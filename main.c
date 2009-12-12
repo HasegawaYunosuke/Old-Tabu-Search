@@ -7,7 +7,7 @@
     I'll show you to how to compile it. You would find out some C-document.
     So, type to comand-line according to following.
 
-        $ ./compile.sh
+        $ make [some options]
 
     If compile is terminated by something error, please complain to writer.
 */
