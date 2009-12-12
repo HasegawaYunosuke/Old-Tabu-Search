@@ -57,11 +57,21 @@ int short_manneri(void)
 
 int middle_manneri(void)
 {
-    if(get_counter() > GA_COUNTER) {
-        return YES;
+    if(modep->ga_mode == ON || modep->pole_mode == ON) {
+        if(get_counter() > GA_COUNTER) {
+            return YES;
+        }
+        else {
+            return NO;
+        }
     }
-    else {
-        return NO;
+    else if(modep->hasegawa_mode == ON) {
+        if(get_counter() > DEFAULT_MIDDLEMANNNERI) {
+            return YES;
+        }
+        else {
+            return NO;
+        }
     }
 }
 
