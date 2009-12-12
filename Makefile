@@ -11,6 +11,11 @@ a.out:
 	$(CC) -o a.out $(NOMPIO) $(CFLAGS) $(LIBS)
 	rm *.o
 
+thread.out:
+	$(CC) -c $(NOMPIC)
+	$(CC) -o a.out $(NOMPIO) $(CFLAGS) $(LIBS)
+	rm *.o
+
 clean:
 	rm *.o
 
@@ -19,7 +24,7 @@ mpi:
 	cat header.h | grep -v "define MPIMODE" >> header.buf
 	mv header.buf header.h
 	mpicc -c $(MPIC)
-	mpicc -o a.out $(MPIO) $(CFLAGS) $(LIBS)
+	mpicc -o b.out $(MPIO) $(CFLAGS) $(LIBS)
 	echo "/* #define MPIMODE */" > header.buf
 	cat header.h | grep -v "define MPIMODE" >> header.buf
 	mv header.buf header.h
