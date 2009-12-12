@@ -4,6 +4,7 @@
 /* functions */
 void final_result_show(FILE * fp);
 void finalize(void);
+void mannneri_finalize(void);
 double * get_graph_data(void);
 int * get_main_base_data(void);
 struct parameter * get_parameterp(void);
@@ -34,6 +35,7 @@ void finalize(void)
     }
     free(get_main_base_data());
     free(get_parameterp());
+    mannneri_finalize();
     printf("Program is normally terminated.....\n");
 }
 

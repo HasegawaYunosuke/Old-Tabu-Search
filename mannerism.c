@@ -2,18 +2,31 @@
 #include "header.h"
 
 /* functions */
+void mannneri_initialize(void);
+void mannneri_finalize(void);
 int check_manneri(int type);
 int check_fill(void);
 int check_historical_similar(void);
+void error_procedure(char * message);
 
 void set_counter(void);
 int get_counter(void);
 double get_best_cost(void);
 
 /* global variable */
-int solution_count;
-double best_distance;
+struct mid_manneri_parameter {
+    int solution_count;
+    double best_distance;
+};
 
+struct mid_manneri_parameter * mid_parameterp;
+
+void mannneri_initialize(void)
+{
+    if((mid_parameterp = (struct mid_manneri_parameter *)malloc(sizeof(struct mid_manneri_parameter))) == NULL) {
+        error_procedure("mid_manneri_parameter malloc()");
+    }
+}
 
 int check_manneri(int type)
 {
@@ -41,29 +54,38 @@ int short_manneri(void)
 
     return check_historical_similar();
 }
+
+int middle_manneri(void)
+{
+    if(get_counter() > GA_COUNTER) {
+        return YES;
+    }
+    else {
+        return NO;
+    }
+}
+
 void set_counter(void)
 {
-    solution_count = 0;
-    best_distance = 0;
+    mid_parameterp->solution_count = 0;
+    mid_parameterp->best_distance = 0;
 }
 
 int get_counter(void)
 {
-    if (best_distance == get_best_cost())
-        solution_count++;                
-    
-    else if (best_distance != get_best_cost())
-        solution_count = 0;
+    if(mid_parameterp->best_distance == get_best_cost()) {
+        mid_parameterp->solution_count++;
+    }
+    else if(mid_parameterp->best_distance != get_best_cost()) {
+        mid_parameterp->solution_count = 0;
+    }
 
-        best_distance = get_best_cost();
-        
-        return(solution_count);
+    mid_parameterp->best_distance = get_best_cost();
+
+    return mid_parameterp->solution_count;
 }
 
-int middle_manneri(void)
+void mannneri_finalize(void)
 {
-    if(get_counter() > GA_COUNTER)
-        return YES;
-        
-    else return NO;
+    free(mid_parameterp);
 }

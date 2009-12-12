@@ -2,6 +2,7 @@
 #include "header.h"
 
 /* functions */
+void mannneri_initialize(void);
 int search_is_done(int type);
 void set_parameter_data(int num_of_all_proc, int process_number, int name_length, char * process_name);
 int get_num_of_all_proc(void);
@@ -294,13 +295,14 @@ void initial_parameter(int tsp_size)
     parameterp->all_MPI_group = 0;
     set_2opt_loop();
 
+    /* initilize manneri-functions */
+    mannneri_initialize();
 
     create_historys();
     /* create tabu list for 2-opt (only first procedure) */
     if(modep->tabu2opt_mode == ON) {
         create_2opt_tabulist(get_tsp_size(), INIT);
     }
-
 }
 
 int turn_loop_times(int type)
