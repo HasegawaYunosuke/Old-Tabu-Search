@@ -20,6 +20,8 @@ char * get_process_name(void);
 void best_MPI_send(void);
 void best_MPI_recv(int * recv_process_number);
 int * get_best_solution_path(void);
+void show_mode(FILE * fp);
+void output_log(void);
 /* DEL ST */
 void show_saved_other_sol(void);
 /* DEL EN */
@@ -160,3 +162,21 @@ void show_saved_other_sol(void)
     }
 }
 /* DEL EN */
+
+void output_log(void)
+{
+    char time_data[64];
+    char logfilename[128];
+    time_t timer;
+    struct tm * date;
+    FILE * fp;
+
+    timer = time(NULL);
+    date = localtime(&timer);
+    strftime(time_data, 63, "log_data/%Y%m%d_%H:%M:%S",date);
+    //sprintf(logfilename, "%s.node:%d.log",time_data,get_process_number());
+    //fp = fopen(logfilename, "w");
+    fp = fopen(time_data, "w");
+    show_mode(fp);
+    fclose(fp);
+}

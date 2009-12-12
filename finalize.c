@@ -18,13 +18,13 @@ void finalize(void)
 
     #ifdef MPIMODE
     if(modep->parallel_mode) {
+    }
+    else {
         parallel_finalize();
     }
     #endif
 
-    if(modep->euclid_mode == ON) {
-    }
-    else {
+    if(modep->graph_mode == ON) {
         free(get_graph_data());
     }
     free(get_main_base_data());
