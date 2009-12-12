@@ -7,10 +7,9 @@ void mannneri_finalize(void);
 int check_manneri(int type);
 int check_fill(void);
 int check_historical_similar(void);
-void error_procedure(char * message);
-
-void set_counter(void);
 int get_counter(void);
+void error_procedure(char * message);
+void set_counter(void);
 double get_best_cost(void);
 
 /* global variable */
@@ -26,6 +25,7 @@ void mannneri_initialize(void)
     if((mid_parameterp = (struct mid_manneri_parameter *)malloc(sizeof(struct mid_manneri_parameter))) == NULL) {
         error_procedure("mid_manneri_parameter malloc()");
     }
+    set_counter();
 }
 
 int check_manneri(int type)
@@ -65,7 +65,7 @@ int middle_manneri(void)
             return NO;
         }
     }
-    else if(modep->hasegawa_mode == ON) {
+    else {
         if(get_counter() > DEFAULT_MIDDLEMANNNERI) {
             return YES;
         }

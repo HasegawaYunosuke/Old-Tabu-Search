@@ -12,6 +12,7 @@ int turn_loop_times(int type);
 int search_loop_times(int type);
 int get_tsp_size(void);
 int timer(int type);
+void set_middle_mannneri(int on_or_off);
 void create_2opt_tabulist(int tsp_size, int mode);
 int get_tsp_size(void);
 int * get_solution_path(void);
@@ -28,6 +29,7 @@ int loop_terminate(void)
         set_tabu_mode(OFF);
         if(modep->hasegawa_mode == ON || modep->tozaki_mode == ON) {
             create_2opt_tabulist(get_tsp_size(), CLEAR);
+            set_middle_mannneri(OFF);
         }
     }
     if(timer(CHECK) == OFF) {

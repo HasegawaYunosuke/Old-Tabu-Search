@@ -40,7 +40,7 @@ void error_procedure(char * message);
 int check_manneri(int type);
 void add_2opt_tabulist(int * cities);
 int not_found_looping(int * cities, int * indexs, int type);
-
+void set_middle_mannneri(int on_or_off);
 
 int * hasegawa_search(int * solution_path)
 {
@@ -83,6 +83,10 @@ int * graph_search(int * solution_path)
 {
     int * return_data;
     int mode;
+
+    if(check_manneri(MIDDLEMODE) == YES) {
+        set_middle_mannneri(ON);
+    }
 
     mode = mode_select(mode, solution_path);
 

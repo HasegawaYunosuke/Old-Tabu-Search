@@ -8,6 +8,7 @@ void search_terminated_by_time_show(void);
 void final_result_show(FILE * fp);
 void show_mode(FILE *);
 void show_on_off(FILE *, int on_off, char * buffer);
+int get_tsp_size(void);
 int get_num_of_all_proc(void);
 int get_process_number(void);
 int get_MPI_group_data(void);
@@ -30,15 +31,22 @@ void realtime_result(void)
         else {
             printf("tabu OFF,");
         }
-
+        printf("mannneri(S,M,L) == (");
         if(check_manneri(SHORTMODE) == YES) {
-            printf("mannneri ON\n");
+            printf("ON,");
         }
         else {
-            printf("mannneri OFF\n");
+            printf("OFF,");
         }
-    /* DEL EN */
+        if(check_manneri(MIDDLEMODE) == YES) {
+            printf("ON,");
+        }
+        else {
+            printf("OFF,");
+        }
+        printf("OFF)\n");
     }
+    /* DEL EN */
 }
 
 void turn_terminated_show(void)
@@ -71,6 +79,7 @@ void search_terminated_by_time_show(void)
 void final_result_show(FILE * fp)
 {
     fprintf(fp, "*******************************************************\n");
+    fprintf(fp, "TSP Size:%5d\n",get_tsp_size());
     fprintf(fp, "All Proces Num:%2d\n",get_num_of_all_proc());
     fprintf(fp, "Process Number:%2d\n",get_process_number());
     fprintf(fp, "Process Name:%s\n",get_process_name());
