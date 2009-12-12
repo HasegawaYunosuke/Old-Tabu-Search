@@ -8,6 +8,7 @@ double * get_graph_data(void);
 int * get_main_base_data(void);
 struct parameter * get_parameterp(void);
 void output_log(void);
+void error_procedure(char * message);
 
 #ifdef MPIMODE
 void parallel_finalize(void);
@@ -48,7 +49,9 @@ void output_log(void)
     date = localtime(&timer);
     strftime(time_data, 63, "log_data/%Y%m%d_%H:%M:%S",date);
     sprintf(logfilename, "%s.node:%d.log",time_data,get_process_number());
-    fp = fopen(logfilename, "w");
+    if((fp = fopen(logfilename, "w")) == NULL) {
+        error_procedure("can\'t find \"log_data\" directory");
+    }
     final_result_show(fp);
     fclose(fp);
 }
