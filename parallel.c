@@ -114,8 +114,10 @@ void best_MPI_send(void)
     MPI_Status stat;
 
     #ifdef MPIMODE
-    for(i = 0; i < get_all_MPI_group_data() - 1; i++) {
-        MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[i], BEST_SOLUTION, MPI_COMM_WORLD);
+    if(check_manneri(MIDDLEMODE) == YES) {
+        for(i = 0; i < get_all_MPI_group_data() - 1; i++) {
+            MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[i], BEST_SOLUTION, MPI_COMM_WORLD);
+        }
     }
     #endif
 }
