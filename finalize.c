@@ -16,9 +16,9 @@ void parallel_finalize(void);
 void finalize(void)
 {
     final_result_show(stdout);
-    #ifdef MPIMODE
+    //#ifdef MPIMODE
     output_log();
-    #endif
+    //#endif
 
     #ifdef MPIMODE
     if(modep->parallel_mode) {
@@ -34,4 +34,21 @@ void finalize(void)
     free(get_main_base_data());
     free(get_parameterp());
     printf("Program is normally terminated.....\n");
+}
+
+void output_log(void)
+{
+    char time_data[64];
+    char logfilename[128];
+    time_t timer;
+    struct tm * date;
+    FILE * fp;
+
+    timer = time(NULL);
+    date = localtime(&timer);
+    strftime(time_data, 63, "log_data/%Y%m%d_%H:%M:%S",date);
+    sprintf(logfilename, "%s.node:%d.log",time_data,get_process_number());
+    fp = fopen(logfilename, "w");
+    final_result_show(fp);
+    fclose(fp);
 }
