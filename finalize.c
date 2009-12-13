@@ -2,7 +2,7 @@
 #include "header.h"
 
 /* functions */
-void final_result_show(void);
+void final_result_show(FILE * fp);
 void finalize(void);
 double * get_graph_data(void);
 int * get_main_base_data(void);
@@ -15,7 +15,7 @@ void parallel_finalize(void);
 
 void finalize(void)
 {
-    final_result_show();
+    final_result_show(stdout);
     output_log();
 
     #ifdef MPIMODE

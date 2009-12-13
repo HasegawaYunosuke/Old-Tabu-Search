@@ -2,5 +2,6 @@ a.out
 machinefile
 tags
 *~
+*.exe
 test.repo/*
 log_data/*

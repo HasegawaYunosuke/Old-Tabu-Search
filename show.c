@@ -5,7 +5,7 @@ void realtime_result(void);
 void turn_terminated_show(void);
 void turn_terminated_by_time_show(void);
 void search_terminated_by_time_show(void);
-void final_result_show(void);
+void final_result_show(FILE * fp);
 void show_mode(FILE *);
 void show_on_off(FILE *, int on_off, char * buffer);
 int get_num_of_all_proc(void);
@@ -68,19 +68,19 @@ void search_terminated_by_time_show(void)
     /* DEL EN */
 }
 
-void final_result_show(void)
+void final_result_show(FILE * fp)
 {
-    printf("*******************************************************\n");
-    printf("All Proces Num:%2d\n",get_num_of_all_proc());
-    printf("Process Number:%2d\n",get_process_number());
-    printf("Process Name:%s\n",get_process_name());
-    printf("MPI Group:%2d\n",get_MPI_group_data());
-    printf("Running Time:%f\n",get_time());
-    printf("Best Cost:%.2f\n",get_best_cost());
-    printf("\nActive Modes--->\n");
-    show_mode(stdout);
-    printf("<---Active Modes\n");
-    printf("*******************************************************\n");
+    fprintf(fp, "*******************************************************\n");
+    fprintf(fp, "All Proces Num:%2d\n",get_num_of_all_proc());
+    fprintf(fp, "Process Number:%2d\n",get_process_number());
+    fprintf(fp, "Process Name:%s\n",get_process_name());
+    fprintf(fp, "MPI Group:%2d\n",get_MPI_group_data());
+    fprintf(fp, "Running Time:%f\n",get_time());
+    fprintf(fp, "Best Cost:%.2f\n",get_best_cost());
+    fprintf(fp, "\nActive Modes--->\n");
+    show_mode(fp);
+    fprintf(fp, "<---Active Modes\n");
+    fprintf(fp, "*******************************************************\n");
 }
 
 void show_mode(FILE * fp)

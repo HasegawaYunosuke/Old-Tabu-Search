@@ -20,7 +20,7 @@ char * get_process_name(void);
 void best_MPI_send(void);
 void best_MPI_recv(int * recv_process_number);
 int * get_best_solution_path(void);
-void show_mode(FILE * fp);
+void final_result_show(FILE * fp);
 void output_log(void);
 /* DEL ST */
 void show_saved_other_sol(void);
@@ -177,6 +177,6 @@ void output_log(void)
     strftime(time_data, 63, "log_data/%Y%m%d_%H:%M:%S",date);
     sprintf(logfilename, "%s.node:%d.log",time_data,get_process_number());
     fp = fopen(logfilename, "w");
-    show_mode(fp);
+    final_result_show(fp);
     fclose(fp);
 }
