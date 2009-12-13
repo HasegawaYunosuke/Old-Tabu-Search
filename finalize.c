@@ -7,6 +7,7 @@ void finalize(void);
 double * get_graph_data(void);
 int * get_main_base_data(void);
 struct parameter * get_parameterp(void);
+void output_log(void);
 
 #ifdef MPIMODE
 void parallel_finalize(void);
@@ -15,6 +16,7 @@ void parallel_finalize(void);
 void finalize(void)
 {
     final_result_show();
+    output_log();
 
     #ifdef MPIMODE
     if(modep->parallel_mode) {

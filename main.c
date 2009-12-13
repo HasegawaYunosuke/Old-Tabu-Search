@@ -52,7 +52,5 @@ int main(int argc, char ** argv)
     /* finalize procedure */
     finalize();
 
-    sleep(5);
-
     return 0;
 }

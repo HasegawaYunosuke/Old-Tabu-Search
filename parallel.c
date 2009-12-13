@@ -62,6 +62,7 @@ void parallel_finalize(void)
     /* DEL EN */
     MPI_Barrier(MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Barrier(MPI_COMM_WORLD);
     MPI_Finalize();
     free(get_other_solution_path_data());
     free(get_same_group_list());
@@ -174,9 +175,8 @@ void output_log(void)
     timer = time(NULL);
     date = localtime(&timer);
     strftime(time_data, 63, "log_data/%Y%m%d_%H:%M:%S",date);
-    //sprintf(logfilename, "%s.node:%d.log",time_data,get_process_number());
-    //fp = fopen(logfilename, "w");
-    fp = fopen(time_data, "w");
+    sprintf(logfilename, "%s.node:%d.log",time_data,get_process_number());
+    fp = fopen(logfilename, "w");
     show_mode(fp);
     fclose(fp);
 }
