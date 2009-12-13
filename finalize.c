@@ -16,7 +16,9 @@ void parallel_finalize(void);
 void finalize(void)
 {
     final_result_show(stdout);
+    #ifdef MPIMODE
     output_log();
+    #endif
 
     #ifdef MPIMODE
     if(modep->parallel_mode) {
