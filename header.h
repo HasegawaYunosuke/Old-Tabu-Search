@@ -1,5 +1,5 @@
 /* #define MPIMODE */
-#define LINUXUSER
+//#define LINUXUSER
 
 /* include files */
 #include <stdio.h>
@@ -47,6 +47,7 @@
 #define DEFAULT_SAMEPERCENTAGE 25
 #define DEFAULT_NOTFOUNDLOOP 1000
 #define DEFAULT_MPIGROUPNUM 4
+#define DEFAULT_MIDDLEMANNNERI 100
 #define GA_CROSS_POINT 25
 #define GA_COUNTER 100
 
@@ -64,6 +65,7 @@ struct mode {
     int tabu2opt_mode;
     int only2opt_mode;
     int ga_mode;
+    int middle_manneri;
 };
 
 struct mode * modep;

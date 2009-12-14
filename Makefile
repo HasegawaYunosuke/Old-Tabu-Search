@@ -6,7 +6,15 @@ NOMPIO = main.o show.o argument.o error.o finalize.o hasegawa.o history.o initia
 MPIC = $(NOMPIC) parallel.c
 MPIO = $(NOMPIO) parallel.o
 
-a.out:
+nompi.exe:	$(NOMPIO)
+	$(CC) -o nompi.exe $(NOMPIO) $(CFLAGS) $(LIBS)
+	rm *.o
+
+thread.exe:	$(NOMPIO)
+	$(CC) -o thread.exe $(NOMPIO) $(CFLAGS) $(LIBS)
+	rm *.o
+
+thread.out:
 	$(CC) -c $(NOMPIC)
 	$(CC) -o a.out $(NOMPIO) $(CFLAGS) $(LIBS)
 	rm *.o
@@ -19,7 +27,7 @@ mpi:
 	cat header.h | grep -v "define MPIMODE" >> header.buf
 	mv header.buf header.h
 	mpicc -c $(MPIC)
-	mpicc -o a.out $(MPIO) $(CFLAGS) $(LIBS)
+	mpicc -o mpi.exe $(MPIO) $(CFLAGS) $(LIBS)
 	echo "/* #define MPIMODE */" > header.buf
 	cat header.h | grep -v "define MPIMODE" >> header.buf
 	mv header.buf header.h

@@ -2,6 +2,7 @@
 #include "header.h"
 
 /* functions */
+void mannneri_initialize(void);
 int search_is_done(int type);
 void set_parameter_data(int num_of_all_proc, int process_number, int name_length, char * process_name);
 int get_num_of_all_proc(void);
@@ -22,6 +23,7 @@ void set_parallel_mode(void);
 void set_pole_mode(void);
 void set_tozaki_mode(void);
 void set_tabu_mode(int type);
+void set_middle_mannneri(int on_or_off);
 int get_tabu_mode(void);
 void set_ga_mode(int type);
 int get_ga_mode(void);
@@ -139,6 +141,7 @@ void set_mode(void)
     modep->only2opt_mode = ON;
     modep->visual_mode = OFF;
     modep->realtime_visual_mode = OFF;
+    modep->middle_manneri = OFF;
 }
 
 void set_parameter_data(int num_of_all_proc, int process_number, int name_length, char * process_name)
@@ -294,13 +297,14 @@ void initial_parameter(int tsp_size)
     parameterp->all_MPI_group = 0;
     set_2opt_loop();
 
+    /* initilize manneri-functions */
+    mannneri_initialize();
 
     create_historys();
     /* create tabu list for 2-opt (only first procedure) */
     if(modep->tabu2opt_mode == ON) {
         create_2opt_tabulist(get_tsp_size(), INIT);
     }
-
 }
 
 int turn_loop_times(int type)
@@ -395,6 +399,7 @@ int get_tabu_mode(void)
 {
     return modep->tabu_mode;
 }
+
 void set_ga_mode(int type)
 {
     if(type == ON) {
@@ -409,6 +414,19 @@ int get_ga_mode(void)
 {
     return modep->ga_mode;
 }
+
+void set_middle_mannneri(int on_or_off)
+{
+    switch(on_or_off) {
+        case ON:
+            modep->middle_manneri = ON;
+            break;
+        case OFF:
+            modep->middle_manneri = OFF;
+            break;
+    }
+}
+
 double get_worse_permit(void)
 {
     return parameterp->permit_worse;
