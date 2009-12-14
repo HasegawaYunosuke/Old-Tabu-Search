@@ -41,8 +41,8 @@
 #define DEFAULT_SAMEPERCENTAGE 25
 #define DEFAULT_NOTFOUNDLOOP 1000
 #define DEFAULT_MPIGROUPNUM 4
-#define GA_CROSS_POINT 25
-#define GA_COUNTER 100
+#define GA_CROSS_POINT 50
+#define GA_COUNTER 300
 
 /* grobal variable */
 struct mode {
