@@ -72,8 +72,7 @@ int * pole_search(int * solution_path)
                 if(modep->parallel_mode == ON){
                     solution_path_b = get_other_solution_path_data();
                     }
-                
-            printf("\nGA!!");
+                    
             solution_path = order_one_cross(solution_path, solution_path_b, graph_data); 
             }
         
