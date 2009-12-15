@@ -27,7 +27,7 @@ void search(void)
     }
     else {
         error_procedure("Un-define-search()-mode is choiced");
-        sleep(1);
     }
+
     set_solution_path(solution_path);
 }

@@ -8,8 +8,9 @@ void set_MPI_group_data(int group_num, int my_group);
 void set_same_group_list(int * list);
 void set_other_solution_path(void);
 void set_other_solution_path_data(int * solution_path);
-int * get_other_solution_path_data(void);
+void set_group_start_process(int group_start_process);
 void create_same_group_list(int group_num, int my_group);
+int * get_other_solution_path_data(void);
 int get_num_of_all_proc(void);
 int get_process_number(void);
 int get_tsp_size(void);
@@ -19,6 +20,7 @@ char * get_process_name(void);
 void best_MPI_send(void);
 void best_MPI_recv(int * recv_process_number);
 int * get_best_solution_path(void);
+void final_result_show(FILE * fp);
 /* DEL ST */
 void show_saved_other_sol(void);
 /* DEL EN */
@@ -59,6 +61,7 @@ void parallel_finalize(void)
     /* DEL EN */
     MPI_Barrier(MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Barrier(MPI_COMM_WORLD);
     MPI_Finalize();
     free(get_other_solution_path_data());
     free(get_same_group_list());
@@ -96,6 +99,7 @@ void create_same_group_list(int group_num, int my_group)
     }
 
     set_same_group_list(same_group_list);
+    set_group_start_process(group_start_process);
 }
 
 #define BEST_SOLUTION 101
@@ -109,9 +113,13 @@ void best_MPI_send(void)
     int i;
     MPI_Status stat;
 
-    for(i = 0; i < get_all_MPI_group_data() - 1; i++) {
-        MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[i], BEST_SOLUTION, MPI_COMM_WORLD);
+    #ifdef MPIMODE
+    if(check_manneri(MIDDLEMODE) == YES) {
+        for(i = 0; i < get_all_MPI_group_data() - 1; i++) {
+            MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[i], BEST_SOLUTION, MPI_COMM_WORLD);
+        }
     }
+    #endif
 }
 
 

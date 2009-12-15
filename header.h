@@ -1,3 +1,6 @@
+/* #define MPIMODE */
+//#define LINUXUSER
+
 /* include files */
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,6 +13,9 @@
 #include <pthread.h>
 #include <float.h>
 #include <limits.h>
+#ifdef MPIMODE
+#include <mpi.h>
+#endif
 
 /* macro variable */
 #define INIT 0
@@ -41,12 +47,14 @@
 #define DEFAULT_SAMEPERCENTAGE 25
 #define DEFAULT_NOTFOUNDLOOP 1000
 #define DEFAULT_MPIGROUPNUM 4
-#define GA_CROSS_POINT 50
-#define GA_COUNTER 300
+#define DEFAULT_MIDDLEMANNNERI 100
+#define GA_CROSS_POINT 25
+#define GA_COUNTER 100
 
 /* grobal variable */
 struct mode {
     int visual_mode;
+    int realtime_visual_mode;
     int graph_mode;
     int euclid_mode;
     int parallel_mode;
@@ -57,7 +65,9 @@ struct mode {
     int tabu2opt_mode;
     int only2opt_mode;
     int ga_mode;
+    int middle_manneri;
 };
 
 struct mode * modep;
 pthread_mutex_t mutex;
+pthread_t visual_thread;
