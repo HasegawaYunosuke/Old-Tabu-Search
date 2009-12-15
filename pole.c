@@ -76,9 +76,9 @@ int * pole_search(int * solution_path)
             solution_path = order_one_cross(solution_path, solution_path_b, graph_data); 
             }
         
-              
+         }     
         solution_path = two_opt(solution_path);
-        }
+        
     
     }                      
                
