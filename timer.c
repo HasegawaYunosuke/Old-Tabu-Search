@@ -4,6 +4,7 @@
 /* functions */
 void set_time(int mode, int parametor);
 double get_time(void);
+void set_start_time(time_t start_time);
 
 /* grobal variable */
 double search_time = DEFAULT_SEARCHTIME;
@@ -32,6 +33,7 @@ int timer(int sign)
     /* when the timer Start */
     if(sign == ON) {
         start_time = now_time;
+        set_start_time(time(NULL));
     }
     /* if "now_time" is larger than "search_time", send "OFF" mean stop program */
     else if(sign == CHECK) {

@@ -9,6 +9,7 @@ double * get_graph_data(void);
 int * get_main_base_data(void);
 struct parameter * get_parameterp(void);
 void output_log(void);
+time_t get_start_time(void);
 void error_procedure(char * message);
 
 #ifdef MPIMODE
@@ -47,7 +48,8 @@ void output_log(void)
     struct tm * date;
     FILE * fp;
 
-    timer = time(NULL);
+//    timer = time(NULL);
+    timer = get_start_time();
     date = localtime(&timer);
     strftime(time_data, 63, "log_data/%Y%m%d_%H:%M:%S",date);
     sprintf(logfilename, "%s.node:%d.log",time_data,get_process_number());

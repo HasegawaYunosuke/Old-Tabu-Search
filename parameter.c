@@ -69,6 +69,8 @@ void set_counter(void);
 int * get_ga_solution_path(void);
 void set_ga_solution_path(int * solution_path);
 int get_ga_mode(void);
+void set_start_time(time_t start_time);
+time_t get_start_time(void);
 
 #ifdef MPIMODE
 int * get_same_group_list(void);
@@ -109,6 +111,7 @@ struct parameter {
     int name_length;
     char * process_name;
     int * ga_solution_path;
+    time_t start_time;
 };
 
 struct parameter * parameterp;
@@ -653,4 +656,14 @@ int get_y(int city_index)
 
     main_base_data = get_main_base_data();
     return main_base_data[city_index * 2 + 1];
+}
+
+void set_start_time(time_t start_time)
+{
+    parameterp->start_time = start_time;
+}
+
+time_t get_start_time(void)
+{
+    return parameterp->start_time;
 }
