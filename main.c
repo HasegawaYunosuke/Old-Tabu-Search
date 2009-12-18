@@ -23,7 +23,6 @@ void initial_path(void);
 void search(void);
 void finalize(void);
 void set_MPI_group(void);
-void show_saved_other_sol(void);
 
 int main(int argc, char ** argv)
 {
@@ -43,10 +42,6 @@ int main(int argc, char ** argv)
             search();
 
             realtime_result();
-
-            #ifdef MPIMODE
-            show_saved_other_sol();
-            #endif
 
             /* search-turn terminate */
             if(loop_terminate() == YES) {break;}
