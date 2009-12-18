@@ -33,13 +33,13 @@ void realtime_result(void)
         }
         printf("mannneri(S,M,L) == (");
         if(check_manneri(SHORTMODE) == YES) {
-            printf("ON,");
+            printf(" ON,");
         }
         else {
             printf("OFF,");
         }
         if(check_manneri(MIDDLEMODE) == YES) {
-            printf("ON,");
+            printf(" ON,");
         }
         else {
             printf("OFF,");

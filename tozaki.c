@@ -9,6 +9,7 @@
 #ifdef LINUXUSER
 #include <linux/unistd.h>
 #endif
+#define THREAD_NUM 2
 #define TOTAL_SOLUTION_NUM 16
 #define CPU_ZERO
 #define CPU_SET
@@ -152,8 +153,8 @@ int * copy_two_opt_tabu(int * solution_path)
         else {
             cpu_num = sysconf(_SC_NPROCESSORS_CONF);
 
-			pthread_t parallel_thread[cpu_num];
-			thread_arg_t targ[cpu_num];
+			pthread_t parallel_thread[THREAD_NUM];
+			thread_arg_t targ[THREAD_NUM];
 
             /* mutex init */
             pthread_mutex_init(&parallel_mutex, NULL);
@@ -162,7 +163,7 @@ int * copy_two_opt_tabu(int * solution_path)
             thread_loop_counter = 0;
   
             /* go to thread_two_opt_tabu() */
-            for(i = 0; i < cpu_num; i++) {
+            for(i = 0; i < THREAD_NUM; i++) {
                 targ[i].core_num = i % cpu_num;
                 targ[i].thread_no = i;
                 targ[i].path = mallocer_ip(tsp_size + 1);
@@ -175,10 +176,10 @@ int * copy_two_opt_tabu(int * solution_path)
                                (void *) &targ[i]);
             }
             /* wait to end thread_two_opt_tabu() */
-            for(i = 0; i < cpu_num; i++) {
+            for(i = 0; i < THREAD_NUM; i++) {
                 pthread_join(parallel_thread[i], NULL);
             }
-            for(i = 0; i < cpu_num; i++) {
+            for(i = 0; i < THREAD_NUM; i++) {
                 free(targ[i].path);
             }
             /* mutex destroy */

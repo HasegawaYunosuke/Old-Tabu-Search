@@ -45,12 +45,13 @@ int get_ga_mode(void);
 void set_counter(void);
 void create_2opt_tabulist(int tsp_size, int mode);
 int * get_ga_solution_path(void);
+int * get_other_solution_path_data(void);
 
 /* global variable */
 int create_mode;
 
 int * pole_search(int * solution_path)
-{
+{ 
     double * graph_data = get_graph_data();
          
     /* Search Graph-Data */
@@ -58,21 +59,27 @@ int * pole_search(int * solution_path)
         
         if(check_manneri(SHORTMODE) == YES) {            
         set_tabu_mode(ON);
-               
-            
+        
             if(check_manneri(MIDDLEMODE) == YES){
-            int *solution_path_b;
-            set_ga_mode(ON);
-            set_counter();
-            //create_2opt_tabulist(get_tsp_size(), CLEAR);
-            solution_path_b = get_ga_solution_path();
-            set_ga_solution_path(solution_path);
-            //printf("\nGA!!");
+                int *solution_path_b;
+                set_ga_mode(ON);            
+                set_counter();
+            
+                if(modep->parallel_mode == OFF){
+                    solution_path_b = get_ga_solution_path();
+                    set_ga_solution_path(solution_path);
+                    }
+                if(modep->parallel_mode == ON){
+                    solution_path_b = get_other_solution_path_data();
+                    }
+                
+            printf("\nGA!!");
             solution_path = order_one_cross(solution_path, solution_path_b, graph_data); 
             }
-        }
+        
               
         solution_path = two_opt(solution_path);
+        }
     
     }                      
                
