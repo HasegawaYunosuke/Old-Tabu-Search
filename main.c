@@ -23,6 +23,7 @@ void initial_path(void);
 void search(void);
 void finalize(void);
 void set_MPI_group(void);
+
 int main(int argc, char ** argv)
 {
     /* all in one initialize */
