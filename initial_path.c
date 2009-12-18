@@ -139,30 +139,36 @@ int * create_graph_path(int * return_data, double * graph_data, int create_mode)
     double distance = DBL_MAX;
     double min_distance = DBL_MAX;
 
-    first_point = random_num(tsp_size);
 
-    now_city = first_point;
-    is_choiced[first_point] = YES;
-    return_data[1] = first_point;
+    switch (create_mode) {
+        case DEFAULT:
+            first_point = random_num(tsp_size);
+            now_city = first_point;
+            is_choiced[first_point] = YES;
+            return_data[1] = first_point;
 
-    for(i = 2; i <= tsp_size; i++) {
-        for(j =1; j <= tsp_size; j++) {
-            if(is_choiced[j] == NO) {
-                next_city = j;
-                distance = graph_data[now_city + tsp_size * next_city];
-                if(min_distance > distance) {
-                    mini_index = next_city;
-                    min_distance = distance;
+            for(i = 2; i <= tsp_size; i++) {
+                for(j =1; j <= tsp_size; j++) {
+                    if(is_choiced[j] == NO) {
+                        next_city = j;
+                        distance = graph_data[now_city + tsp_size * next_city];
+                        if(min_distance > distance) {
+                            mini_index = next_city;
+                            min_distance = distance;
+                        }
+                    }
+                    else {
+                        continue;
+                    }
                 }
+                return_data[i] = mini_index;
+                is_choiced[mini_index] = YES;
+                min_distance = DBL_MAX;
+                now_city = mini_index;
             }
-            else {
-                continue;
-            }
-        }
-        return_data[i] = mini_index;
-        is_choiced[mini_index] = YES;
-        min_distance = DBL_MAX;
-        now_city = mini_index;
+            break;
+        case MERGECREATE:
+            break;
     }
 
     return return_data;

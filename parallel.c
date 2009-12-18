@@ -20,7 +20,7 @@ char * get_process_name(void);
 void best_MPI_send(void);
 void best_MPI_recv(int * recv_process_number);
 int * get_best_solution_path(void);
-void final_result_show(FILE * fp);
+int * get_merge_route(void);
 /* DEL ST */
 void show_saved_other_sol(void);
 /* DEL EN */
@@ -149,6 +149,17 @@ void best_MPI_recv(int * recv_process_number)
 
 int * get_merge_route(void)
 {
+    int * other_sol_path = get_other_solution_path_data();
+    int tsp_size = get_tsp_size();
+    int element_num = tsp_size + DEFAULT_SENDPARAMETERNUM;
+    int all_group_num = get_all_MPI_group_data();
+
+    if(all_group_num < 2) {
+        error_procedure("Can't merge from best-routes: parallel.c");
+    }
+    else {
+        printf("all_group_num == %d\n",all_group_num);
+    }
 }
 
 /* DEL ST */
@@ -156,7 +167,7 @@ void show_saved_other_sol(void)
 {
     int * other_sol_path = get_other_solution_path_data();
     int tsp_size = get_tsp_size();
-    int element_num = tsp_size + 10;
+    int element_num = tsp_size + DEFAULT_SENDPARAMETERNUM;
     int i,j;
 
     for(i = 0; i < (get_all_MPI_group_data() - 1); i++) {
