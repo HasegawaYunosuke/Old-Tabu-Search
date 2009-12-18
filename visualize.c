@@ -16,8 +16,8 @@ int * get_main_base_data(void);
 double get_all_cost_by_graph(int * cities);
 int get_solution_data_flag(void);
 int turn_loop_times(int type);
-//int get_process_number(void);
-//int get_group_start_process(void);
+int get_process_number(void);
+int get_group_start_process(void);
 
 
 int clntSock(void)
@@ -85,8 +85,8 @@ void visualizer(int * visual_arg)
 
     socket = clntSock();
 
-    //start_para_num = get_process_number();
-    //my_para_num = get_group_start_process();
+    start_para_num = get_process_number();
+    my_para_num = get_group_start_process();
 
     nt_city_coordinate = get_main_base_data();
     mainX_min = nt_city_coordinate[2];
@@ -115,7 +115,7 @@ void visualizer(int * visual_arg)
         x = mainX_max / 470;
         for(i = 0; i < nt_city_coordinate[0]; i++){
             nt_city_coordinate[a] = nt_city_coordinate[a] / x;
-            printf("X[%d]:%d\n", a,nt_city_coordinate[a]);
+            //printf("X[%d]:%d\n", a,nt_city_coordinate[a]);
             a += 2;
         }
     }
@@ -124,10 +124,10 @@ void visualizer(int * visual_arg)
 
     if(mainY_max > 300){
         y = mainY_max / 300;
-        printf("%d\n",y);
+        //printf("%d\n",y);
         for(i = 0; i < nt_city_coordinate[0]; i++){
             nt_city_coordinate[b] = nt_city_coordinate[b] / y;
-            printf("Y[%d]:%d\n",b,nt_city_coordinate[b]);
+            //printf("Y[%d]:%d\n",b,nt_city_coordinate[b]);
             b += 2;
         }
     }
@@ -141,6 +141,7 @@ void visualizer(int * visual_arg)
     //printf("maxX:%d\nminX:%d\nmaxY:%d\nminY:%d\n",mainX_max,mainX_min,mainY_max,mainY_min);
 
     solu_path[tsp_size+1] = (int)get_all_cost_by_graph(get_solution_path());
+    solu_path[tsp_size+2] = my_para_num;
 
     for(;;){
         for(;;) {
@@ -150,15 +151,19 @@ void visualizer(int * visual_arg)
             }
         }
 
-        send(socket, solu_path, (solu_path[0]+2)*4,0);                  //ノード名送ってない
+        //send(socket, solu_path, (solu_path[0]+2)*4,0);                  //ノード名送ってない
+	send(socket, solu_path, (solu_path[0]+3)*4,0);
+
         solu_path = NULL;
         solu_path = get_solution_path();
         solu_path[tsp_size+1] = (int)get_all_cost_by_graph(get_solution_path());
+	solu_path[tsp_size+2] = my_para_num;
         
         if(search_is_done(READONLY) == YES) {
             printf("visualize.c:All Search is Done...\n");
-            solu_path[0] = 0;
-            send(socket, solu_path, (solu_path[0]+2)*4,0);
+            solu_path[0] = -1;
+            //send(socket, solu_path, (solu_path[0]+2)*4,0);
+	    send(socket, solu_path, (solu_path[0]+3)*4,0);
             break;
         }
     }
