@@ -1,4 +1,4 @@
-//#define MPIMODE
+/* #define MPIMODE */
 #define LINUXUSER
 
 /* include files */
@@ -48,7 +48,7 @@
 #define DEFAULT_NOTFOUNDLOOP 1000
 #define DEFAULT_MPIGROUPNUM 4
 #define DEFAULT_MIDDLEMANNNERI 100
-#define GA_CROSS_POINT 20
+#define GA_CROSS_POINT 15
 #define GA_COUNTER 300
 
 /* grobal variable */
