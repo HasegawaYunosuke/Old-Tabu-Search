@@ -58,7 +58,6 @@ void parallel_finalize(void)
 {
     MPI_Barrier(MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD);
-    MPI_Barrier(MPI_COMM_WORLD);
     MPI_Finalize();
     free(get_other_solution_path_data());
     free(get_same_group_list());
@@ -111,11 +110,11 @@ void best_MPI_send(void)
     MPI_Status stat;
 
     #ifdef MPIMODE
-    if(check_manneri(MIDDLEMODE) == YES) {
+//    if(check_manneri(MIDDLEMODE) == YES) {
         for(i = 0; i < get_all_MPI_group_data() - 1; i++) {
             MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[i], BEST_SOLUTION, MPI_COMM_WORLD);
         }
-    }
+//    }
     #endif
 }
 
@@ -146,6 +145,10 @@ void best_MPI_recv(int * recv_process_number)
         pthread_mutex_unlock(&recv_sol_lock);
         break;
     }
+}
+
+int * get_merge_route(void)
+{
 }
 
 /* DEL ST */
