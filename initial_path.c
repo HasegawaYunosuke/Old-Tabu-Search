@@ -19,6 +19,10 @@ int search_loop_times(int type);
 int * mallocer_ip(int size);
 double * mallocer_dp(int size);
 
+#ifdef MPIMODE
+int * get_merge_route(void);
+#endif
+
 void set_ga_solution_path(int * solution_path);
 
 void initial_path(void)
@@ -29,7 +33,7 @@ void initial_path(void)
     }
     else {
         set_solution_path(initial_graph_path(get_graph_data()));
-        
+
         if(modep->pole_mode == ON)
             set_ga_solution_path(initial_graph_path(get_graph_data()));
     }
@@ -167,8 +171,12 @@ int * create_graph_path(int * return_data, double * graph_data, int create_mode)
                 now_city = mini_index;
             }
             break;
+
+    #ifdef MPIMODE
         case MERGECREATE:
+            get_merge_route();
             break;
+    #endif
     }
 
     return return_data;

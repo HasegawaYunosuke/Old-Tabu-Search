@@ -159,6 +159,7 @@ int * get_merge_route(void)
     }
     else {
         printf("all_group_num == %d\n",all_group_num);
+        sleep(1);
     }
 }
 
