@@ -114,7 +114,7 @@ void visualizer(int * visual_arg)
         x = mainX_max / 470;
         for(i = 0; i < nt_city_coordinate[0]; i++){
             nt_city_coordinate[a] = nt_city_coordinate[a] / x;
-            printf("X[%d]:%d\n", a,nt_city_coordinate[a]);
+            //printf("X[%d]:%d\n", a,nt_city_coordinate[a]);
             a += 2;
         }
     }
@@ -123,10 +123,10 @@ void visualizer(int * visual_arg)
 
     if(mainY_max > 300){
         y = mainY_max / 300;
-        printf("%d\n",y);
+        //printf("%d\n",y);
         for(i = 0; i < nt_city_coordinate[0]; i++){
             nt_city_coordinate[b] = nt_city_coordinate[b] / y;
-            printf("Y[%d]:%d\n",b,nt_city_coordinate[b]);
+            //printf("Y[%d]:%d\n",b,nt_city_coordinate[b]);
             b += 2;
         }
     }
@@ -160,7 +160,7 @@ void visualizer(int * visual_arg)
         
         if(search_is_done(READONLY) == YES) {
             printf("visualize.c:All Search is Done...\n");
-            solu_path[0] = 0;
+            solu_path[0] = -1;
             //send(socket, solu_path, (solu_path[0]+2)*4,0);                //ノード名送ってない
             send(socket, solu_path, (solu_path[0]+3)*4,0);
             break;
