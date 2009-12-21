@@ -262,7 +262,6 @@ void set_pole_mode(void)
     modep->only2opt_mode = OFF;
     modep->tabu2opt_mode = ON;
     modep->ga_mode = OFF;
-    set_counter();
 }
 
 void set_tozaki_mode(void)
