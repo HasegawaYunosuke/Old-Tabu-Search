@@ -19,6 +19,7 @@ void set_search_time(double search_time);
 void set_tabu2opt_mode(void);
 void set_euclid_mode(void);
 void set_visual_mode(int mode);
+int get_realtime_visual_mode(void);
 void set_parallel_mode(void);
 void set_pole_mode(void);
 void set_tozaki_mode(void);
@@ -250,6 +251,11 @@ void set_visual_mode(int mode)
     if(mode == 1) {
         modep->realtime_visual_mode = ON;
     }
+}
+
+int get_realtime_visual_mode(void)
+{
+    return modep->realtime_visual_mode;
 }
 
 void set_parallel_mode(void)
