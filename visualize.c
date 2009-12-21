@@ -81,7 +81,7 @@ void visualizer(int * visual_arg)
     int start_para_num;
     int my_para_num;
 
-    //modep->realtime_visual_mode;
+    modep->realtime_visual_mode;
 
     socket = clntSock();
 
