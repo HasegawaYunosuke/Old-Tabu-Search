@@ -17,9 +17,14 @@ double get_all_cost_by_graph(int * cities);
 int get_solution_data_flag(void);
 int turn_loop_times(int type);
 int get_process_number(void);
+<<<<<<< HEAD:visualize.c
 #ifdef MPIMODE
 int get_group_start_process(void);
 #endif
+=======
+//int get_group_start_process(void);
+
+>>>>>>> 8d3422206ff7b25806f3991aa024b49b82aabf2c:visualize.c
 
 int clntSock(void)
 {
@@ -45,7 +50,7 @@ int clntSock(void)
 
     memset(&ServAddr, 0, sizeof(ServAddr));
     ServAddr.sin_family = AF_INET;
-    ServAddr.sin_addr.s_addr = inet_addr("192.168.11.10");
+    ServAddr.sin_addr.s_addr = inet_addr("192.168.1.10");
     ServAddr.sin_port = htons(10001);
 
     if(connect(sock, (struct sockaddr *)&ServAddr, sizeof(ServAddr)) == -1) {
@@ -82,10 +87,20 @@ void visualizer(int * visual_arg)
     int start_para_num;
     int my_para_num;
 
+<<<<<<< HEAD:visualize.c
     socket = clntSock();
 
     my_para_num = get_process_number();
     //start_para_num = get_group_start_process();
+=======
+    modep->realtime_visual_mode;
+
+    socket = clntSock();
+
+    //start_para_num = get_process_number();
+    //my_para_num = get_group_start_process();
+    my_para_num = get_process_number();
+>>>>>>> 8d3422206ff7b25806f3991aa024b49b82aabf2c:visualize.c
 
     nt_city_coordinate = get_main_base_data();
     mainX_min = nt_city_coordinate[2];

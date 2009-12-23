@@ -20,7 +20,7 @@ char * get_process_name(void);
 void best_MPI_send(void);
 void best_MPI_recv(int * recv_process_number);
 int * get_best_solution_path(void);
-void final_result_show(FILE * fp);
+int * get_merge_route(void);
 /* DEL ST */
 void show_saved_other_sol(void);
 /* DEL EN */
@@ -56,12 +56,8 @@ void set_other_solution_path(void)
 
 void parallel_finalize(void)
 {
-    /* DEL ST */
-    //show_saved_other_sol();
-    /* DEL EN */
     MPI_Barrier(MPI_COMM_WORLD);
-    MPI_Barrier(MPI_COMM_WORLD);
-    MPI_Barrier(MPI_COMM_WORLD);
+//    MPI_Barrier(MPI_COMM_WORLD);
     MPI_Finalize();
     free(get_other_solution_path_data());
     free(get_same_group_list());
@@ -114,11 +110,11 @@ void best_MPI_send(void)
     MPI_Status stat;
 
     #ifdef MPIMODE
-    if(check_manneri(MIDDLEMODE) == YES) {
+//    if(check_manneri(MIDDLEMODE) == YES) {
         for(i = 0; i < get_all_MPI_group_data() - 1; i++) {
             MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[i], BEST_SOLUTION, MPI_COMM_WORLD);
         }
-    }
+//    }
     #endif
 }
 
@@ -151,12 +147,27 @@ void best_MPI_recv(int * recv_process_number)
     }
 }
 
+int * get_merge_route(void)
+{
+    int * other_sol_path = get_other_solution_path_data();
+    int tsp_size = get_tsp_size();
+    int element_num = tsp_size + DEFAULT_SENDPARAMETERNUM;
+    int all_group_num = get_all_MPI_group_data();
+
+    if(all_group_num < 2) {
+        error_procedure("Can't merge from best-routes: parallel.c");
+    }
+    else {
+        printf("all_group_num == %d\n",all_group_num);
+    }
+}
+
 /* DEL ST */
 void show_saved_other_sol(void)
 {
     int * other_sol_path = get_other_solution_path_data();
     int tsp_size = get_tsp_size();
-    int element_num = tsp_size + 10;
+    int element_num = tsp_size + DEFAULT_SENDPARAMETERNUM;
     int i,j;
 
     for(i = 0; i < (get_all_MPI_group_data() - 1); i++) {
