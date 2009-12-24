@@ -59,9 +59,9 @@ void parallel_finalize(void)
     /* DEL ST */
     //show_saved_other_sol();
     /* DEL EN */
+    /*MPI_Barrier(MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD);
-    MPI_Barrier(MPI_COMM_WORLD);
-    MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Barrier(MPI_COMM_WORLD);*/
     MPI_Finalize();
     free(get_other_solution_path_data());
     free(get_same_group_list());
