@@ -83,6 +83,8 @@ void visualizer(int * visual_arg)
     int my_para_num;
 
     socket = clntSock();
+
+    my_para_num = get_process_number();
     //start_para_num = get_group_start_process();
 
     nt_city_coordinate = get_main_base_data();
