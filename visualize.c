@@ -132,6 +132,8 @@ void visualizer(int * visual_arg)
         printf("FUCK:\n");
     }
 
+    my_para_num = get_process_number();
+
     solu_path[tsp_size+1] = (int)get_all_cost_by_graph(get_solution_path());
     solu_path[tsp_size+2] = my_para_num;
 
