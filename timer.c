@@ -6,6 +6,10 @@ void set_time(int mode, int parametor);
 double get_time(void);
 void set_start_time(time_t start_time);
 
+#ifdef MPIMODE
+int get_process_number(void);
+#endif
+
 /* grobal variable */
 double search_time = DEFAULT_SEARCHTIME;
 double start_time;
@@ -33,6 +37,24 @@ int timer(int sign)
     /* when the timer Start */
     if(sign == ON) {
         start_time = now_time;
+
+        #ifdef MPIMODE
+        /* temporaly data defines */
+        MPI_Status stat;
+        int element_num = 1;
+        int root_process_number = 1;
+        int buffer = (int)start_time;
+        int ierror;
+
+        if(get_process_number() != root_process_number) {
+            MPI_Recv((void *)buffer, element_num, MPI_INT, &root_process_number, LOGFILENAME, MPI_COMM_WORLD, &stat);
+            start_time = (time_t)buffer;
+        }
+        else {
+            MPI_Bcast((void *)buffer, element_num, MPI_INT, root_process_number, MPI_COMM_WORLD, ierror);
+        }
+        #endif
+
         set_start_time(time(NULL));
     }
     /* if "now_time" is larger than "search_time", send "OFF" mean stop program */

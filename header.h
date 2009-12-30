@@ -15,6 +15,8 @@
 #include <limits.h>
 #ifdef MPIMODE
 #include <mpi.h>
+#define BEST_SOLUTION 101
+#define LOGFILENAME 102
 #endif
 
 /* macro variable */

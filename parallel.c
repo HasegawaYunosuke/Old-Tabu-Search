@@ -103,7 +103,6 @@ void create_same_group_list(int group_num, int my_group)
     set_group_start_process(group_start_process);
 }
 
-#define BEST_SOLUTION 101
 
 void best_MPI_send(void)
 {

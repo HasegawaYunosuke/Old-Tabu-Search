@@ -48,7 +48,6 @@ void output_log(void)
     struct tm * date;
     FILE * fp;
 
-//    timer = time(NULL);
     timer = get_start_time();
     date = localtime(&timer);
     strftime(time_data, 63, "log_data/%Y%m%d_%H:%M:%S",date);
