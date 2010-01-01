@@ -21,6 +21,8 @@ void best_MPI_send(void);
 void best_MPI_recv(int * recv_process_number);
 int * get_best_solution_path(void);
 int * get_merge_route(void);
+int decide_create_mode(void);
+int check_other_data_satisfactory(void);
 /* DEL ST */
 void show_saved_other_sol(void);
 /* DEL EN */
@@ -66,6 +68,28 @@ void parallel_finalize(void)
     MPI_Finalize();
     free(get_other_solution_path_data());
     free(get_same_group_list());
+}
+
+int decide_create_mode(void)
+{
+    int initialize_path_create_mode = DEFAULT;
+
+    if(check_other_data_satisfactory() == YES) {
+        initialize_path_create_mode = MERGECREATE;
+    }
+
+    return initialize_path_create_mode;
+}
+
+int check_other_data_satisfactory(void)
+{
+    int return_num = NO;
+    int * other_sol_path;
+
+    if((other_sol_path = get_other_solution_path_data()) == NULL) {
+    }
+
+    return return_num;
 }
 
 void set_MPI_group(void)
@@ -153,10 +177,12 @@ void best_MPI_recv(int * recv_process_number)
 
 int * get_merge_route(void)
 {
-    int * other_sol_path = get_other_solution_path_data();
+    int * other_sol_path;
     int tsp_size = get_tsp_size();
     int element_num = tsp_size + DEFAULT_SENDPARAMETERNUM;
     int all_group_num = get_all_MPI_group_data();
+
+    other_sol_path = get_other_solution_path_data();
 
     if(all_group_num < 2) {
         error_procedure("Can't merge from best-routes: parallel.c");

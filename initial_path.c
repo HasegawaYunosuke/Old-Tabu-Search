@@ -16,6 +16,7 @@ int random_num(int maximum);
 double make_distance(int x1, int y1, int x2, int y2);
 int already_visited(int * return_data, int city_num);
 int search_loop_times(int type);
+int decide_create_mode(void);
 int * mallocer_ip(int size);
 double * mallocer_dp(int size);
 
@@ -74,6 +75,9 @@ int * initial_graph_path(double * graph_data)
         return_data[0] = (int)graph_data[0];
     }
 
+#ifdef MPIMODE
+    create_mode = decide_create_mode();
+#endif
     /* create the initial path */
     return_data = create_graph_path(return_data, graph_data, create_mode);
 
