@@ -149,6 +149,12 @@ int * create_graph_path(int * return_data, double * graph_data, int create_mode)
 
 
     switch (create_mode) {
+    #ifdef MPIMODE
+        case MERGECREATE:
+            /*get_merge_route();
+            break;*/
+            mergecreate_test++;
+    #endif
         case DEFAULT:
             first_point = random_num(tsp_size);
             now_city = first_point;
@@ -176,11 +182,6 @@ int * create_graph_path(int * return_data, double * graph_data, int create_mode)
             }
             break;
 
-    #ifdef MPIMODE
-        case MERGECREATE:
-            get_merge_route();
-            break;
-    #endif
     }
 
     return return_data;
