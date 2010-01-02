@@ -1,5 +1,9 @@
 #include "header.h"
 
+/*DEL ST*/
+void increase_test(void);
+/*DEL EN*/
+
 /* functions */
 void realtime_result(void);
 void turn_terminated_show(void);
