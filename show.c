@@ -116,3 +116,10 @@ void show_on_off(FILE * fp, int on_off, char * buffer)
         fprintf(fp, "\t%s ON\n", buffer);
     }
 }
+
+#ifdef DEBUG
+void show_initial_path(void)
+{
+    
+}
+#endif
