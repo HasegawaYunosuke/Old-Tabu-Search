@@ -138,5 +138,12 @@ void open_loging_initial_path(void)
 
 void loging_initial_path(int * path)
 {
+    int i;
+
+    fprintf(debug_fp, "*** initial_path debug START ***\n");
+    for(i = 0; i < get_tsp_size(); i++) {
+        fprintf(debug_fp, "No.%3d> city(%3d)\n",i, path[i]);
+    }
+    fprintf(debug_fp, "*** initial_path debug END ***\n");
 }
 #endif

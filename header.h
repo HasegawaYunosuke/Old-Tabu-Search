@@ -1,6 +1,6 @@
 /* #define MPIMODE */
 #define LINUXUSER
-//#define DEBUG
+#define DEBUG
 
 /* include files */
 #include <stdio.h>
