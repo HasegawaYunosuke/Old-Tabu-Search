@@ -11,6 +11,7 @@
 
     If compile is terminated by something error, please complain to writer.
 */
+//test
 
 /* header files */
 #include "header.h"
@@ -23,6 +24,7 @@ void initial_path(void);
 void search(void);
 void finalize(void);
 void set_MPI_group(void);
+
 int main(int argc, char ** argv)
 {
     /* all in one initialize */

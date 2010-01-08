@@ -45,7 +45,7 @@ int clntSock(void)
 
     memset(&ServAddr, 0, sizeof(ServAddr));
     ServAddr.sin_family = AF_INET;
-    ServAddr.sin_addr.s_addr = inet_addr("192.168.11.10");
+    ServAddr.sin_addr.s_addr = inet_addr("192.168.1.10");
     ServAddr.sin_port = htons(10001);
 
     if(connect(sock, (struct sockaddr *)&ServAddr, sizeof(ServAddr)) == -1) {
@@ -131,6 +131,8 @@ void visualizer(int * visual_arg)
     while((solu_path = get_solution_path()) == NULL) {
         printf("FUCK:\n");
     }
+
+    my_para_num = get_process_number();
 
     solu_path[tsp_size+1] = (int)get_all_cost_by_graph(get_solution_path());
     solu_path[tsp_size+2] = my_para_num;

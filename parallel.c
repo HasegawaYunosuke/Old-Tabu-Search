@@ -20,7 +20,26 @@ char * get_process_name(void);
 void best_MPI_send(void);
 void best_MPI_recv(int * recv_process_number);
 int * get_best_solution_path(void);
-void final_result_show(FILE * fp);
+int * get_merge_route(void);
+int decide_create_mode(void);
+int check_other_data_satisfactory(void);
+int random_num(int maximum);
+int * get_solution_path(void);
+void set_merge_branchs(void);
+void merge_route(int * sol_path, int * other_sol, int choice);
+int * get_branchA(void);
+int * get_branchB(void);
+int * get_temp_path(void);
+void adjust_branchs(int * branchs, int * other_sol, int * temp_path, int choice);
+void set_branch_data(int * branchs, int * path);
+void sort_branch_data(int * branchs);
+void check_matching(int * branchsA, int * branchsB);
+void initialize_matched(int * matched);
+int * get_matchedA(void);
+int * get_matchedB(void);
+void get_route_by_matched(int * sol_path, int * matchedB, int * temp_path);
+void initialize_leftovers_path(int * sol_path, int maximum, int * used_cities);
+double * get_graph_data(void);
 /* DEL ST */
 void show_saved_other_sol(void);
 /* DEL EN */
@@ -43,6 +62,7 @@ void set_MPI_parameter(void)
     set_parameter_data(num_of_all_proc, process_number, name_length, process_name);
     set_MPI_group();
     set_other_solution_path();
+    set_merge_branchs();
 }
 
 void set_other_solution_path(void)
@@ -50,7 +70,7 @@ void set_other_solution_path(void)
     int create_num = get_all_MPI_group_data() - 1;
     int * save_pointer;
 
-    save_pointer = mallocer_ip((get_tsp_size() + 10) * create_num);
+    save_pointer = mallocer_ip((get_tsp_size() + DEFAULT_SENDPARAMETERNUM) * create_num);
     set_other_solution_path_data(save_pointer);
 }
 
@@ -61,10 +81,44 @@ void parallel_finalize(void)
     /* DEL EN */
     /*MPI_Barrier(MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Barrier(MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD);*/
     MPI_Finalize();
     free(get_other_solution_path_data());
     free(get_same_group_list());
+}
+
+int decide_create_mode(void)
+{
+    int initialize_path_create_mode = DEFAULT;
+
+    if(check_other_data_satisfactory() == YES) {
+        initialize_path_create_mode = MERGECREATE;
+    }
+
+    return initialize_path_create_mode;
+}
+
+int check_other_data_satisfactory(void)
+{
+    int i;
+    int return_num = NO;
+    int * other_sol_path;
+    int group_num = get_num_of_all_proc() / DEFAULT_MPIGROUPNUM - 1;
+
+    if((other_sol_path = get_other_solution_path_data()) == NULL) {
+        return return_num;
+    }
+    else {
+        for(i = 0; i < group_num; i++) {
+            if(other_sol_path[0] == 0) {
+                return return_num;
+            }
+        }
+        return_num = YES;
+    }
+
+    return return_num;
 }
 
 void set_MPI_group(void)
@@ -101,8 +155,6 @@ void create_same_group_list(int group_num, int my_group)
     set_same_group_list(same_group_list);
     set_group_start_process(group_start_process);
 }
-
-#define BEST_SOLUTION 101
 
 void best_MPI_send(void)
 {
@@ -151,12 +203,186 @@ void best_MPI_recv(int * recv_process_number)
     }
 }
 
+int * get_merge_route(void)
+{
+    int * other_sol_path;
+    int tsp_size = get_tsp_size();
+    int element_num = tsp_size + DEFAULT_SENDPARAMETERNUM;
+    int all_group_num = get_all_MPI_group_data();
+    int choiced;
+    int * return_data = get_solution_path();
+
+    other_sol_path = get_other_solution_path_data();
+
+    if(all_group_num < 2) {
+        error_procedure("Can't merge from best-routes: parallel.c");
+    }
+    else {
+        choiced = random_num(all_group_num - 1) - 1;
+        merge_route(return_data, other_sol_path, choiced);
+    }
+}
+
+void merge_route(int * sol_path, int * other_sol, int choice)
+{
+    int * branchsA = get_branchA();
+    int * branchsB = get_branchB();
+    int * temp_path = get_temp_path();
+
+    adjust_branchs(branchsB, other_sol, temp_path, choice);
+
+    set_branch_data(branchsA, sol_path); set_branch_data(branchsB, temp_path);
+    sort_branch_data(branchsA); sort_branch_data(branchsB);
+    check_matching(branchsA, branchsB);
+    get_route_by_matched(sol_path, get_matchedB(), temp_path);
+}
+
+void get_route_by_matched(int * sol_path, int * matchedB, int * temp_path)
+{
+    int i, start_i;
+    int counter = 0;
+    int maximum = 0;
+    int max_i = 0;
+    int size = get_tsp_size();
+    int * used_cities;
+
+    used_cities = mallocer_ip(size + 1);
+
+    for(i = 0; i < size; i++) {
+        if(matchedB[i] == ON) {
+            counter++;
+        }
+        else {
+            if(maximum < counter) {
+                maximum = counter;
+                max_i = i;
+            }
+            counter = 0;
+        }
+    }
+
+    start_i = max_i + 1 - maximum;
+    used_cities[0] = maximum;
+
+    for(i = 0; i <= maximum; i++) {
+        sol_path[i + 1] = temp_path[i + start_i];
+        used_cities[sol_path[i + 1]] = ON;
+    }
+
+    initialize_leftovers_path(sol_path, maximum, used_cities);
+
+    free(used_cities);
+}
+
+void initialize_leftovers_path(int * sol_path, int maximum, int * used_cities)
+{
+    int i;
+    int size = get_tsp_size();
+    int mode = DEFAULT;
+    int now_city;
+    int next_city;
+    int best_city;
+    double * graph_data = get_graph_data();
+    double distance = DBL_MAX;
+    double min_distance = DBL_MAX;
+
+    switch(mode) {
+        case DEFAULT:
+            for(i = maximum; i < size; i++) {
+                for(next_city = 1; next_city <= size; next_city++) {
+                    if(used_cities[next_city] == OFF) {
+                        if((distance = graph_data[now_city + size * next_city]) < min_distance) {
+                            min_distance = distance;
+                            best_city = next_city;
+                        }
+                    }
+                }
+                sol_path[i + 1] = best_city;
+                used_cities[best_city] = ON;
+                distance = DBL_MAX; min_distance = DBL_MAX;
+            }
+            break;
+    }
+}
+
+void check_matching(int * branchsA, int * branchsB)
+{
+    int index1, index2;
+    int size = get_tsp_size();
+    int * matchedA = get_matchedA();
+    int * matchedB = get_matchedB();
+
+    initialize_matched(matchedA); initialize_matched(matchedB);
+
+    for(index1 = 0; index1 < size; index1++) {
+        for(index2 = 0; index2 < size; index2++) {
+            if(branchsA[index1 * 2] == branchsB[index2 * 2]) {
+                if(branchsA[index1 * 2 + 1] == branchsB[index2 * 2 + 1]) {
+                    matchedA[index1] = ON; matchedB[index2] = ON;
+                }
+            }
+        }
+    }
+}
+
+void set_branch_data(int * branchs, int * path)
+{
+    int i;
+    int size = get_tsp_size();
+
+    for(i = 0; i < size; i++) {
+        branchs[2 * i] = path[i + 1];
+        if(i != (size - 1)) {
+            branchs[2 * i + 1] = path[i + 2];
+        }
+        else {
+            branchs[2 * i + 1] = path[1];
+        }
+    }
+}
+
+void initialize_matched(int * matched)
+{
+    int i;
+    int size = get_tsp_size();
+
+    for(i = 0; i < size; i++) {
+        matched[i] = OFF;
+    }
+}
+
+void adjust_branchs(int * branchs, int * other_sol, int * temp_path, int choice)
+{
+    int i;
+    int size = get_tsp_size();
+    int start = (size + DEFAULT_SENDPARAMETERNUM) * choice;
+
+    temp_path[0] = size;
+    for(i = 1; i <= size; i++) {
+        temp_path[i] = other_sol[start + i];
+    }
+}
+
+void sort_branch_data(int * branchs)
+{
+    int i, buf;
+    int size = get_tsp_size();
+
+    for(i = 0; i < size; i++) {
+        if(branchs[2 * i] > branchs[2 * i + 1]) {
+            buf = branchs[2 * i];
+            branchs[2 * i] = branchs[2 * i + 1];
+            branchs[2 * i + 1] = buf;
+        }
+    }
+}
+
 /* DEL ST */
 void show_saved_other_sol(void)
 {
     int * other_sol_path = get_other_solution_path_data();
     int tsp_size = get_tsp_size();
-    int element_num = tsp_size + 10;
+    int element_num = tsp_size + DEFAULT_SENDPARAMETERNUM;
     int i,j;
 
     for(i = 0; i < (get_all_MPI_group_data() - 1); i++) {

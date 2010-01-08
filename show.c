@@ -1,5 +1,9 @@
 #include "header.h"
 
+/*DEL ST*/
+void increase_test(void);
+/*DEL EN*/
+
 /* functions */
 void realtime_result(void);
 void turn_terminated_show(void);
@@ -112,3 +116,10 @@ void show_on_off(FILE * fp, int on_off, char * buffer)
         fprintf(fp, "\t%s ON\n", buffer);
     }
 }
+
+#ifdef DEBUG
+void show_initial_path(void)
+{
+    
+}
+#endif
