@@ -16,8 +16,9 @@ int * mallocer_ip(int size);
 #ifdef MPIMODE
 void parallel_finalize(void);
 void set_logfile_name(int * buffer, int element_num);
-int * lnp;
 #endif
+
+int * lnp;
 
 void finalize(void)
 {
