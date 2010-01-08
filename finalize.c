@@ -19,6 +19,8 @@ void set_logfile_name(int * buffer, int element_num);
 #endif
 int * lnp;
 
+int * lnp;
+
 void finalize(void)
 {
     final_result_show(stdout);
