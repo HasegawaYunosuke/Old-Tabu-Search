@@ -23,6 +23,16 @@ double get_best_cost(void);
 double get_time(void);
 int check_manneri(int type);
 
+#ifdef DEBUG
+/* grobal variable */
+FILE * debug_fp;
+char * debug_log_name[128];
+
+/* functions */
+void open_loging_initial_path(void);
+void loging_initial_path(int * path);
+#endif
+
 void realtime_result(void)
 {
     /* DEL ST */
@@ -118,8 +128,15 @@ void show_on_off(FILE * fp, int on_off, char * buffer)
 }
 
 #ifdef DEBUG
-void show_initial_path(void)
+void open_loging_initial_path(void)
 {
-    
+    sprintf(debug_log_name, "debug_log/initial_path.%d.log",get_process_number());
+    if((debug_fp = fopen(debug_log_name, "w")) == NULL) {
+        error_procedure("can\'t find \"debug_log\" directory");
+    }
+}
+
+void loging_initial_path(int * path)
+{
 }
 #endif

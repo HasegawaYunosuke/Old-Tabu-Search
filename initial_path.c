@@ -153,7 +153,7 @@ int * create_graph_path(int * return_data, double * graph_data, int create_mode)
         case MERGECREATE:
             return_data = get_merge_route();
             #ifdef DEBUG
-
+            loging_initial_path(return_data);
             #endif
             break;
     #endif
