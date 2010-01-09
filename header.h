@@ -39,7 +39,8 @@
 #define MIDDLEMODE 50
 #define LONGMODE 60
 #define MERGECREATE 100
-
+#define MPI_SENDADD 301
+#define MPI_RECVADD 302
 
 /* macro parameter */
 #define TSPMAXSIZE 2000

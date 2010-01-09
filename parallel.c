@@ -44,6 +44,10 @@ double * get_graph_data(void);
 void show_saved_other_sol(void);
 /* DEL EN */
 
+#ifdef DEBUG
+void mpi_comunication_log_manage(int type);
+#endif
+
 /* grobal variable */
 pthread_mutex_t recv_sol_lock;
 
@@ -63,6 +67,9 @@ void set_MPI_parameter(void)
     set_MPI_group();
     set_other_solution_path();
     set_merge_branchs();
+    #ifdef DEBUG
+    mpi_comunication_log_manage(INIT);
+    #endif
 }
 
 void set_other_solution_path(void)
@@ -170,6 +177,9 @@ void best_MPI_send(void)
         for(i = 0; i < get_all_MPI_group_data() - 1; i++) {
             MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[i], BEST_SOLUTION, MPI_COMM_WORLD);
         }
+        #ifdef DEBUG
+        mpi_comunication_log_manage(MPI_SENDADD);
+        #endif
     }
     #endif
 }
@@ -201,6 +211,10 @@ void best_MPI_recv(int * recv_process_number)
         pthread_mutex_unlock(&recv_sol_lock);
         break;
     }
+
+    #ifdef DEBUG
+    mpi_comunication_log_manage(MPI_RECVADD);
+    #endif
 }
 
 int * get_merge_route(void)

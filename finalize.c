@@ -20,6 +20,9 @@ void set_logfile_name(int * buffer, int element_num);
 #endif
 #ifdef DEBUG
 void close_loging_initial_path(void);
+#ifdef MPIMODE
+void mpi_comunication_log_manage(int type);
+#endif
 #endif
 
 /* global variable */
@@ -71,11 +74,13 @@ void output_log(void)
 
     timer = get_start_time();
     date = localtime(&timer);
-#ifdef MPIMODE
+
+    #ifdef MPIMODE
     sprintf(time_data,"log_data/%d.%d.%d_%d:%d:%d",lnp[0], lnp[1], lnp[2], lnp[3], lnp[4], lnp[5]);
-#else
+    #else
     strftime(time_data, 63, "log_data/%Y.%m.%d_%H:%M:%S",date);
-#endif
+    #endif
+
     if(get_process_number() < 10) {
         sprintf(logfilename, "%s.node:0%d.log",time_data,get_process_number());
     }
@@ -87,4 +92,8 @@ void output_log(void)
     }
     final_result_show(fp);
     fclose(fp);
+
+    #ifdef DEBUG
+    mpi_comunication_log_manage(CHECK);
+    #endif
 }
