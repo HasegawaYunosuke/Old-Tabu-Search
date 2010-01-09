@@ -22,15 +22,17 @@ double get_all_cost_by_graph(int * cities);
 double get_best_cost(void);
 double get_time(void);
 int check_manneri(int type);
+int search_loop_times(int type);
 
 #ifdef DEBUG
 /* grobal variable */
 FILE * debug_fp;
-char * debug_log_name[128];
+char debug_log_name[128];
 
 /* functions */
 void open_loging_initial_path(void);
-void loging_initial_path(int * path);
+void close_loging_initial_path(void);
+void loging_initial_path(int * path, int create_mode);
 #endif
 
 void realtime_result(void)
@@ -100,6 +102,7 @@ void final_result_show(FILE * fp)
     fprintf(fp, "MPI Group:%2d\n",get_MPI_group_data());
     fprintf(fp, "Running Time:%f\n",get_time());
     fprintf(fp, "Best Cost:%.2f\n",get_best_cost());
+    fprintf(fp, "Loop Times:%d\n",search_loop_times(READONLY));
     fprintf(fp, "\nActive Modes--->\n");
     show_mode(fp);
     fprintf(fp, "<---Active Modes\n");
@@ -130,20 +133,38 @@ void show_on_off(FILE * fp, int on_off, char * buffer)
 #ifdef DEBUG
 void open_loging_initial_path(void)
 {
-    sprintf(debug_log_name, "debug_log/initial_path.%d.log",get_process_number());
-    if((debug_fp = fopen(debug_log_name, "w")) == NULL) {
+    if(get_process_number() < 10) {
+         sprintf(debug_log_name, "debug_log/initial_path.0%d.log",get_process_number());
+    }
+    else {
+         sprintf(debug_log_name, "debug_log/initial_path.%d.log",get_process_number());
+    }
+
+    if((debug_fp = fopen(debug_log_name, "a")) == NULL) {
         error_procedure("can\'t find \"debug_log\" directory");
     }
 }
 
-void loging_initial_path(int * path)
+void loging_initial_path(int * path, int create_mode)
 {
     int i;
 
     fprintf(debug_fp, "*** initial_path debug START ***\n");
+    if(create_mode == DEFAULT) {
+        fprintf(debug_fp, "=== DEFAULT MODE ===\n");
+    }
+    else {
+        fprintf(debug_fp, "=== MERGECREATE MODE ===\n");
+    }
     for(i = 0; i < get_tsp_size(); i++) {
         fprintf(debug_fp, "No.%3d> city(%3d)\n",i, path[i]);
     }
     fprintf(debug_fp, "*** initial_path debug END ***\n");
 }
+
+void close_loging_initial_path(void)
+{
+    fclose(debug_fp);
+}
+
 #endif
