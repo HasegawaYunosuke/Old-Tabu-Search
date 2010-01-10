@@ -1,8 +1,7 @@
-#ifdef DEBUG
-
 /* header files */
 #include "header.h"
 
+#ifdef DEBUG
 /* global variable */
 char debug_log_name[128];
 FILE * debug_fp;
@@ -82,25 +81,27 @@ void mpi_comunication_log_manage(int type)
 void loging_mpi_com(void)
 {
     fprintf(debug_fp, "*** MPI send/recv communication debug START ***\n");
-    fprintf(debug_fp, "Number of MPI_Send:%d\n", mpi_com_log->mpi_send_num);
-    fprintf(debug_fp, "Number of MPI_Recv:%d\n", mpi_com_log->mpi_recv_num);
+    fprintf(debug_fp, "Number of MPI_Send:%d\n", mpi_com_log.mpi_send_num);
+    fprintf(debug_fp, "Number of MPI_Recv:%d\n", mpi_com_log.mpi_recv_num);
     fprintf(debug_fp, "*** MPI send/recv communication debug END ***\n");
 }
 
 void mpi_comunication_log_init(void)
 {
-    mpi_com_log->mpi_send_num = 0;
-    mpi_com_log->mpi_recv_num = 0;
+    mpi_com_log.mpi_send_num = 0;
+    mpi_com_log.mpi_recv_num = 0;
 }
 
 void mpi_send_num_add(void)
 {
-    mpi_com_log->mpi_send_num++;
+    mpi_com_log.mpi_send_num++;
+    fprintf(debug_fp, "*** MPI send !!! ***\n");
 }
 
 void mpi_recv_num_add(void)
 {
-    mpi_com_log->mpi_recv_num++;
+    mpi_com_log.mpi_recv_num++;
+    fprintf(debug_fp, "*** MPI recv !!! ***\n");
 }
 #endif
 
