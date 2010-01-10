@@ -109,12 +109,7 @@ void mpi_recv_num_add(void)
 
 void test_debug_log(char message[128], int num)
 {
-    if(num == YES) {
-        fprintf(debug_fp, "%s, YES\n", message, num);
-    }
-    else if(num == NO) {
-        fprintf(debug_fp, "%s, NO\n", message, num);
-    }
+    fprintf(debug_fp, "%s, YES\n", message, num);
 }
 
 void close_loging_initial_path(void)

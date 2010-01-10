@@ -176,10 +176,12 @@ void best_MPI_send(void)
 
 #ifdef MPIMODE
     if(check_manneri(FIRST_MIDDLEMODED) == YES) {
+        test_debug_log("*** other_list ST ***", -1);
         for(i = 0; i < get_all_MPI_group_data() - 1; i++) {
-            error_procedure("KOKODESU");
-            MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[i], BEST_SOLUTION, MPI_COMM_WORLD);
+            test_debug_log("other_list->", other_list[i]);
+            //MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[i], BEST_SOLUTION, MPI_COMM_WORLD);
         }
+        test_debug_log("*** other_list EN***", -1);
 #ifdef DEBUG
         mpi_comunication_log_manage(MPI_SENDADD);
 #endif
