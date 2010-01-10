@@ -172,16 +172,16 @@ void best_MPI_send(void)
     int i;
     MPI_Status stat;
 
-    #ifdef MPIMODE
+#ifdef MPIMODE
     if(check_manneri(MIDDLEMODE) == YES) {
         for(i = 0; i < get_all_MPI_group_data() - 1; i++) {
             MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[i], BEST_SOLUTION, MPI_COMM_WORLD);
         }
-        #ifdef DEBUG
+//#ifdef DEBUG
         mpi_comunication_log_manage(MPI_SENDADD);
-        #endif
+//#endif
     }
-    #endif
+#endif
 }
 
 
@@ -212,9 +212,9 @@ void best_MPI_recv(int * recv_process_number)
         break;
     }
 
-    #ifdef DEBUG
+#ifdef DEBUG
     mpi_comunication_log_manage(MPI_RECVADD);
-    #endif
+#endif
 }
 
 int * get_merge_route(void)
