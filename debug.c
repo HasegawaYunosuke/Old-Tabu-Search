@@ -19,6 +19,8 @@ struct mpi_comunication_log mpi_com_log;
 void open_loging_initial_path(void);
 void close_loging_initial_path(void);
 void loging_initial_path(int * path, int create_mode);
+void test_debug_log(char message[128], int num);
+int get_counter(void);
 
 #ifdef MPIMODE
 void mpi_comunication_log_manage(int type);
@@ -104,6 +106,16 @@ void mpi_recv_num_add(void)
     fprintf(debug_fp, "*** MPI recv !!! ***\n");
 }
 #endif
+
+void test_debug_log(char message[128], int num)
+{
+    if(num == YES) {
+        fprintf(debug_fp, "%s, YES\n", message, num);
+    }
+    else if(num == NO) {
+        fprintf(debug_fp, "%s, NO\n", message, num);
+    }
+}
 
 void close_loging_initial_path(void)
 {

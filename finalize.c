@@ -93,7 +93,9 @@ void output_log(void)
     final_result_show(fp);
     fclose(fp);
 
+    #ifdef MPIMODE
     #ifdef DEBUG
     mpi_comunication_log_manage(CHECK);
+    #endif
     #endif
 }

@@ -40,12 +40,14 @@ int * get_matchedB(void);
 void get_route_by_matched(int * sol_path, int * matchedB, int * temp_path);
 void initialize_leftovers_path(int * sol_path, int maximum, int * used_cities);
 double * get_graph_data(void);
+int check_manneri(int type);
 /* DEL ST */
 void show_saved_other_sol(void);
 /* DEL EN */
 
 #ifdef DEBUG
 void mpi_comunication_log_manage(int type);
+void test_debug_log(char message[128], int num);
 #endif
 
 /* grobal variable */
@@ -173,13 +175,14 @@ void best_MPI_send(void)
     MPI_Status stat;
 
 #ifdef MPIMODE
-    if(check_manneri(MIDDLEMODE) == YES) {
+    if(check_manneri(FIRST_MIDDLEMODED) == YES) {
         for(i = 0; i < get_all_MPI_group_data() - 1; i++) {
+            error_procedure("KOKODESU");
             MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[i], BEST_SOLUTION, MPI_COMM_WORLD);
         }
-//#ifdef DEBUG
+#ifdef DEBUG
         mpi_comunication_log_manage(MPI_SENDADD);
-//#endif
+#endif
     }
 #endif
 }
