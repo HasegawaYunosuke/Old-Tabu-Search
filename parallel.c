@@ -41,6 +41,7 @@ void get_route_by_matched(int * sol_path, int * matchedB, int * temp_path);
 void initialize_leftovers_path(int * sol_path, int maximum, int * used_cities);
 double * get_graph_data(void);
 int check_manneri(int type);
+int is_this_ok_same_group_list(int * list, int all_process);
 /* DEL ST */
 void show_saved_other_sol(void);
 /* DEL EN */
@@ -175,17 +176,19 @@ void best_MPI_send(void)
     MPI_Status stat;
 
 #ifdef MPIMODE
-    if(check_manneri(FIRST_MIDDLEMODED) == YES) {
-        for(i = 0; i < get_all_MPI_group_data() - 1; i++) {
-            MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[i], BEST_SOLUTION, MPI_COMM_WORLD);
-        }
+    if(is_this_ok_same_group_list(other_list, get_num_of_all_proc()) == YES) {
+
+        if(check_manneri(FIRST_MIDDLEMODED) == YES) {
+            for(i = 0; i < get_all_MPI_group_data() - 1; i++) {
+                MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[i], BEST_SOLUTION, MPI_COMM_WORLD);
+            }
 #ifdef DEBUG
-        mpi_comunication_log_manage(MPI_SENDADD);
+            mpi_comunication_log_manage(MPI_SENDADD);
 #endif
+        }
     }
 #endif
 }
-
 
 void best_MPI_recv(int * recv_process_number)
 {
@@ -394,6 +397,24 @@ void sort_branch_data(int * branchs)
             branchs[2 * i + 1] = buf;
         }
     }
+}
+
+/* return YES or NO */
+int is_this_ok_same_group_list(int * list, int all_process)
+{
+    int i;
+    int return_num = YES;
+    int group_num = all_process / DEFAULT_MPIGROUPNUM - 1;
+
+    for(i = 0; i < group_num; i++) {
+        if(list[i] > all_process) {
+            test_debug_log("!!!is_this_ok_same_group_list() error!!!", -1);
+            return_num = NO;
+            break;
+        }
+    }
+
+    return return_num;
 }
 
 /* DEL ST */

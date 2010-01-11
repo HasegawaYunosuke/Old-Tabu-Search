@@ -1,4 +1,4 @@
-/* #define MPIMODE */
+#define MPIMODE
 #define LINUXUSER
 #define DEBUG
 
