@@ -176,16 +176,13 @@ void best_MPI_send(void)
     MPI_Status stat;
 
 #ifdef MPIMODE
-    if(is_this_ok_same_group_list(other_list, get_num_of_all_proc()) == YES) {
-
-        if(check_manneri(FIRST_MIDDLEMODED) == YES) {
-            for(i = 0; i < get_all_MPI_group_data() - 1; i++) {
-                MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[i], BEST_SOLUTION, MPI_COMM_WORLD);
-            }
-#ifdef DEBUG
-            mpi_comunication_log_manage(MPI_SENDADD);
-#endif
+    if(check_manneri(FIRST_MIDDLEMODED) == YES) {
+        for(i = 0; i < get_all_MPI_group_data() - 1; i++) {
+	    MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[i], BEST_SOLUTION, MPI_COMM_WORLD);
         }
+#ifdef DEBUG
+        mpi_comunication_log_manage(MPI_SENDADD);
+#endif
     }
 #endif
 }
@@ -217,12 +214,12 @@ void best_MPI_recv(int * recv_process_number)
             other_sol_path[this_threads_index + i] = buffer[i];
         }
         pthread_mutex_unlock(&recv_sol_lock);
-        break;
+        //break;
+#ifdef DEBUG
+        mpi_comunication_log_manage(MPI_RECVADD);
+#endif
     }
 
-#ifdef DEBUG
-    mpi_comunication_log_manage(MPI_RECVADD);
-#endif
 }
 
 int * get_merge_route(void)
@@ -243,6 +240,8 @@ int * get_merge_route(void)
         choiced = random_num(all_group_num - 1) - 1;
         merge_route(return_data, other_sol_path, choiced);
     }
+
+    return return_data;
 }
 
 void merge_route(int * sol_path, int * other_sol, int choice)
