@@ -42,6 +42,7 @@ void initialize_leftovers_path(int * sol_path, int maximum, int * used_cities);
 double * get_graph_data(void);
 int check_manneri(int type);
 int is_this_ok_same_group_list(int * list, int all_process);
+void how_long_matched(int * maximum, int * max_i, int * matchedB, int size);
 /* DEL ST */
 void show_saved_other_sol(void);
 /* DEL EN */
@@ -49,6 +50,7 @@ void show_saved_other_sol(void);
 #ifdef DEBUG
 void mpi_comunication_log_manage(int type);
 void test_debug_log(char message[128], int num);
+void ave_of_match_num(int matched_num);
 #endif
 
 /* grobal variable */
@@ -244,24 +246,47 @@ int * get_merge_route(void)
     return return_data;
 }
 
+/* "sol_path" is practically return data */
 void merge_route(int * sol_path, int * other_sol, int choice)
 {
     int * branchsA = get_branchA();
     int * branchsB = get_branchB();
     int * temp_path = get_temp_path();
 
+    /* Adjust the basic-data (other_sol) to merge-formatted-data (temp_path) */
     adjust_branchs(branchsB, other_sol, temp_path, choice);
-
+    /* Substitute city-num of basic-data ([sol|temp]_path)
+       into branchs-formatted-array (branchs[A|B]) */
     set_branch_data(branchsA, sol_path); set_branch_data(branchsB, temp_path);
     sort_branch_data(branchsA); sort_branch_data(branchsB);
+    /* Check each branches-formatted-data wheater Match or Not-Match */
     check_matching(branchsA, branchsB);
+    /* Substitute merged data into "sol_path" mainly based other_sol,
+       and make initial-path by something method (now, NB) */
     get_route_by_matched(sol_path, get_matchedB(), temp_path);
+}
+
+void how_long_matched(int * maximum, int * max_i, int * matchedB, int size)
+{
+    int i, counter = 0;
+
+    for(i = 0; i < size; i++) {
+        if(matchedB[i] == ON) {
+            counter++;
+        }
+        else {
+            if(*maximum < counter) {
+                *maximum = counter;
+                *max_i = i;
+            }
+            counter = 0;
+        }
+    }
 }
 
 void get_route_by_matched(int * sol_path, int * matchedB, int * temp_path)
 {
     int i, start_i;
-    int counter = 0;
     int maximum = 0;
     int max_i = 0;
     int size = get_tsp_size();
@@ -269,27 +294,21 @@ void get_route_by_matched(int * sol_path, int * matchedB, int * temp_path)
 
     used_cities = mallocer_ip(size + 1);
 
-    for(i = 0; i < size; i++) {
-        if(matchedB[i] == ON) {
-            counter++;
-        }
-        else {
-            if(maximum < counter) {
-                maximum = counter;
-                max_i = i;
-            }
-            counter = 0;
-        }
-    }
+    /* Get the maximum-num of the part of match-array */
+    how_long_matched(&maximum, &max_i, matchedB, size);
 
-    start_i = max_i + 1 - maximum;
-    used_cities[0] = maximum;
+#ifdef DEBUG
+    ave_of_match_num(maximum);
+#endif
+
+    start_i = max_i + 1 - maximum; used_cities[0] = maximum;
 
     for(i = 0; i <= maximum; i++) {
         sol_path[i + 1] = temp_path[i + start_i];
         used_cities[sol_path[i + 1]] = ON;
     }
 
+    /* create the leftover-path by Nearby Branch */
     initialize_leftovers_path(sol_path, maximum, used_cities);
 
     free(used_cities);
