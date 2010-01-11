@@ -180,7 +180,7 @@ void best_MPI_send(void)
 #ifdef MPIMODE
     if(check_manneri(FIRST_MIDDLEMODED) == YES) {
         for(i = 0; i < get_all_MPI_group_data() - 1; i++) {
-	    //MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[i], BEST_SOLUTION, MPI_COMM_WORLD);
+            MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[i], BEST_SOLUTION, MPI_COMM_WORLD);
         }
 #ifdef DEBUG
         mpi_comunication_log_manage(MPI_SENDADD);
@@ -210,11 +210,7 @@ void best_MPI_recv(int * recv_process_number)
     test_debug_log("RECV:get_all_MPI_group_data", get_all_MPI_group_data());
 
     for(;;) {
-        /* This sleep is DEL */
-        sleep(3);
-        /* This sleep is DEL */
-
-        /*MPI_Recv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, BEST_SOLUTION, MPI_COMM_WORLD, &stat);
+        MPI_Recv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, BEST_SOLUTION, MPI_COMM_WORLD, &stat);
         pthread_mutex_lock(&recv_sol_lock);
         for(i = 0; i < element_num; i++) {
             other_sol_path[this_threads_index + i] = buffer[i];
@@ -222,7 +218,7 @@ void best_MPI_recv(int * recv_process_number)
         pthread_mutex_unlock(&recv_sol_lock);
 #ifdef DEBUG
         mpi_comunication_log_manage(MPI_RECVADD);
-#endif*/
+#endif
     }
 
 }
