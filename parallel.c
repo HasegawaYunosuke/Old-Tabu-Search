@@ -177,14 +177,9 @@ void best_MPI_send(void)
 #ifdef MPIMODE
     if(check_manneri(FIRST_MIDDLEMODED) == YES) {
         for(i = 0; i < get_all_MPI_group_data() - 1; i++) {
-            //MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[i], BEST_SOLUTION, MPI_COMM_WORLD);
+            MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[i], BEST_SOLUTION, MPI_COMM_WORLD);
         }
 #ifdef DEBUG
-        test_debug_log("*** Would Send Data ST ***", -1);
-        for(i = 0; i < element_num; i++) {
-            test_debug_log("my_best_sol:", my_best_sol[i]);
-        }
-        test_debug_log("*** Would Send Data EN ***", -1);
         mpi_comunication_log_manage(MPI_SENDADD);
 #endif
     }
