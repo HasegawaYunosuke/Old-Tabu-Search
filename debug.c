@@ -97,19 +97,22 @@ void mpi_comunication_log_init(void)
 void mpi_send_num_add(void)
 {
     mpi_com_log.mpi_send_num++;
-    fprintf(debug_fp, "*** MPI send !!! ***\n");
 }
 
 void mpi_recv_num_add(void)
 {
     mpi_com_log.mpi_recv_num++;
-    fprintf(debug_fp, "*** MPI recv !!! ***\n");
 }
 #endif
 
 void test_debug_log(char message[128], int num)
 {
-    fprintf(debug_fp, "%s, YES\n", message, num);
+    if(num < 0) {
+        fprintf(debug_fp, "%s\n", message);
+    }
+    else {
+        fprintf(debug_fp, "%s%d\n", message, num);
+    }
 }
 
 void close_loging_initial_path(void)
