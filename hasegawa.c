@@ -305,13 +305,6 @@ void exchange_branch(int * solution_path, int * indexs)
     int * copy;
     int cities[4];
 
-    for(i = 0; i < 4; i++) {
-        if(indexs[i] > tsp_size) {
-            printf("indexs[%d] == %d\n",i,indexs[i]);
-            error_procedure("exchange_branch()");
-        }
-    }
-
     copy = mallocer_ip(tsp_size + 1);
 
     for(i = 0; i <= tsp_size; i++) {
