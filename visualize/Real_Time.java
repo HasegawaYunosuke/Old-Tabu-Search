@@ -100,17 +100,12 @@ class Real_Time extends JPanel implements Runnable{
 
             city_index = new int[city_point[0]+3];
 
+            DataInputStream ir2 = null;
+            ir2 = new DataInputStream(in);
+
+            while(in.available() == 0);
+
             do{
-                DataInputStream ir2 = null;
-                ir2 = new DataInputStream(in);
-
-                if(city_index[0] == -1){
-                    flag = 2;
-                    i = false;
-                    this.judge = 0;
-                }
-
-                while(in.available() == 0);
                 
                 for(r=0; r<(city_point[0]+1); r++){
                     b4 = ir2.read();
@@ -149,6 +144,11 @@ class Real_Time extends JPanel implements Runnable{
                   flag = 2;
                   i = false;
                   this.judge = 0;
+                  frame.dispose();
+                  ir1.close();
+                  ir2.close(); 
+                  in.close();
+                  break;
               }
               
               if(flag == 0){
