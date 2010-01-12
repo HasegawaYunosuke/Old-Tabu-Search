@@ -10,9 +10,7 @@ FILE * debug_fp;
 struct mpi_comunication_log {
     int mpi_send_num;
     int mpi_recv_num;
-    int ave_of_match_num;
-    int sum_of_match_num;
-    double ave_of_match_num_count;
+    int max_num_of_match_num;
 };
 
 struct mpi_comunication_log mpi_com_log;
@@ -26,7 +24,7 @@ void test_debug_log(char message[128], int num);
 int get_counter(void);
 
 #ifdef MPIMODE
-void ave_of_match_num(int matched_num);
+void figure_of_match_num(int matched_num);
 void mpi_comunication_log_manage(int type);
 void mpi_comunication_log_init(void); /* local function */
 void mpi_send_num_add(void); /* local function */
@@ -89,7 +87,7 @@ void loging_mpi_com(void)
     fprintf(debug_fp, "*** MPI send/recv communication debug START ***\n");
     fprintf(debug_fp, "Number of MPI_Send:%d\n", mpi_com_log.mpi_send_num);
     fprintf(debug_fp, "Number of MPI_Recv:%d\n", mpi_com_log.mpi_recv_num);
-    fprintf(debug_fp, "Average Number of Merge-Matched:%f.1\n", mpi_com_log.ave_of_match_num);
+    fprintf(debug_fp, "Maximum Number of Merge-Matched:%d/%d\n", mpi_com_log.max_num_of_match_num, get_tsp_size());
     fprintf(debug_fp, "*** MPI send/recv communication debug END ***\n");
 }
 
@@ -97,9 +95,7 @@ void mpi_comunication_log_init(void)
 {
     mpi_com_log.mpi_send_num = 0;
     mpi_com_log.mpi_recv_num = 0;
-    mpi_com_log.ave_of_match_num = 0;
-    mpi_com_log.sum_of_match_num = 0;
-    mpi_com_log.ave_of_match_num_count = 0;
+    mpi_com_log.max_num_of_match_num = 0;
 }
 
 void mpi_send_num_add(void)
@@ -112,11 +108,11 @@ void mpi_recv_num_add(void)
     mpi_com_log.mpi_recv_num++;
 }
 
-void ave_of_match_num(int matched_num)
+void figure_of_match_num(int matched_num)
 {
-    mpi_com_log.ave_of_match_num_count++;
-    mpi_com_log.sum_of_match_num += matched_num;
-    mpi_com_log.ave_of_match_num = mpi_com_log.sum_of_match_num / mpi_com_log.ave_of_match_num_count;
+    if(matched_num > mpi_com_log.max_num_of_match_num) {
+        mpi_com_log.max_num_of_match_num = matched_num;
+    }
 }
 #endif
 

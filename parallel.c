@@ -50,7 +50,7 @@ void show_saved_other_sol(void);
 #ifdef DEBUG
 void mpi_comunication_log_manage(int type);
 void test_debug_log(char message[128], int num);
-void ave_of_match_num(int matched_num);
+void figure_of_match_num(int matched_num);
 #endif
 
 /* grobal variable */
@@ -180,7 +180,7 @@ void best_MPI_send(void)
 #ifdef MPIMODE
     if(check_manneri(FIRST_MIDDLEMODED) == YES) {
         for(i = 0; i < get_all_MPI_group_data() - 1; i++) {
-	    MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[i], BEST_SOLUTION, MPI_COMM_WORLD);
+	    //MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[i], BEST_SOLUTION, MPI_COMM_WORLD);
         }
 #ifdef DEBUG
         mpi_comunication_log_manage(MPI_SENDADD);
@@ -210,16 +210,19 @@ void best_MPI_recv(int * recv_process_number)
     test_debug_log("RECV:get_all_MPI_group_data", get_all_MPI_group_data());
 
     for(;;) {
-        MPI_Recv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, BEST_SOLUTION, MPI_COMM_WORLD, &stat);
+        /* This sleep is DEL */
+        sleep(3);
+        /* This sleep is DEL */
+
+        /*MPI_Recv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, BEST_SOLUTION, MPI_COMM_WORLD, &stat);
         pthread_mutex_lock(&recv_sol_lock);
         for(i = 0; i < element_num; i++) {
             other_sol_path[this_threads_index + i] = buffer[i];
         }
         pthread_mutex_unlock(&recv_sol_lock);
-        //break;
 #ifdef DEBUG
         mpi_comunication_log_manage(MPI_RECVADD);
-#endif
+#endif*/
     }
 
 }
@@ -298,7 +301,7 @@ void get_route_by_matched(int * sol_path, int * matchedB, int * temp_path)
     how_long_matched(&maximum, &max_i, matchedB, size);
 
 #ifdef DEBUG
-    ave_of_match_num(maximum);
+    figure_of_match_num(maximum);
 #endif
 
     start_i = max_i + 1 - maximum; used_cities[0] = maximum;
