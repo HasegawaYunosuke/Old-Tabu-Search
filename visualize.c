@@ -84,7 +84,6 @@ void visualizer(int * visual_arg)
 
     socket = clntSock();
 
-    my_para_num = get_process_number();
     //start_para_num = get_group_start_process();
 
     nt_city_coordinate = get_main_base_data();
@@ -133,6 +132,9 @@ void visualizer(int * visual_arg)
     }
 
     my_para_num = get_process_number();
+#ifdef MPIMODE
+    start_para_num = get_group_start_process();
+#endif
 
     solu_path[tsp_size+1] = (int)get_all_cost_by_graph(get_solution_path());
     solu_path[tsp_size+2] = my_para_num;
@@ -144,12 +146,25 @@ void visualizer(int * visual_arg)
                 break;
             }
         }
+#ifdef MPIMODE
+        if(my_para_num == start_para_num) {
+            for(;;){
+                if(search_is_done(READONLY) == YES) {
+                    printf("visualize.c:All Search is Done...\n");
+                    solu_path[0] = -1;
+                    break;
+                }
+            }
+            break;
+        }
+#endif
 
-	send(socket, solu_path, (solu_path[0]+3)*4,0);
+	    send(socket, solu_path, (solu_path[0]+3)*4,0);
+        
         solu_path = NULL;
         solu_path = get_solution_path();
         solu_path[tsp_size+1] = (int)get_all_cost_by_graph(get_solution_path());
-	solu_path[tsp_size+2] = my_para_num;
+	    solu_path[tsp_size+2] = my_para_num;
         
         if(search_is_done(READONLY) == YES) {
             printf("visualize.c:All Search is Done...\n");
