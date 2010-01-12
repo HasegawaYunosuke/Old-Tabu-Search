@@ -25,7 +25,7 @@ void search(void);
 void finalize(void);
 #ifdef MPIMODE
 void set_MPI_group(void);
-void best_MPI_send(void)
+void best_MPI_send(void);
 #endif
 
 int main(int argc, char ** argv)
@@ -53,7 +53,7 @@ int main(int argc, char ** argv)
 
         #ifdef MPIMODE
         /* send data other node */
-        //best_MPI_send();
+        best_MPI_send();
         #endif
 
         /* whole-search-terminate */
