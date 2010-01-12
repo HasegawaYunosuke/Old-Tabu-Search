@@ -1,4 +1,4 @@
-/* #define MPIMODE */
+#define MPIMODE
 #define LINUXUSER
 #define DEBUG
 
@@ -37,9 +37,11 @@
 #define TABU2OPT 30
 #define SHORTMODE 40
 #define MIDDLEMODE 50
+#define FIRST_MIDDLEMODED 55
 #define LONGMODE 60
 #define MERGECREATE 100
-
+#define MPI_SENDADD 301
+#define MPI_RECVADD 302
 
 /* macro parameter */
 #define TSPMAXSIZE 2000

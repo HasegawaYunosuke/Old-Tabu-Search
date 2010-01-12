@@ -55,7 +55,7 @@ int timer(int sign)
         else {
             (void)time(&tmm); tms = gmtime(&tmm);
             buffer[0] = 1900 + tms->tm_year;
-            buffer[1] = tms->tm_mon;
+            buffer[1] = tms->tm_mon + 1;
             buffer[2] = tms->tm_mday;
             buffer[3] = tms->tm_hour;
             buffer[4] = tms->tm_min;

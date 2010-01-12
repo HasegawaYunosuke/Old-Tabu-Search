@@ -23,6 +23,9 @@ double * mallocer_dp(int size);
 #ifdef MPIMODE
 int * get_merge_route(void);
 #endif
+#ifdef DEBUG
+void loging_initial_path(int * path, int create_mode);
+#endif
 
 void set_ga_solution_path(int * solution_path);
 
@@ -153,7 +156,7 @@ int * create_graph_path(int * return_data, double * graph_data, int create_mode)
         case MERGECREATE:
             return_data = get_merge_route();
             #ifdef DEBUG
-
+            loging_initial_path(return_data, create_mode);
             #endif
             break;
     #endif
@@ -182,8 +185,10 @@ int * create_graph_path(int * return_data, double * graph_data, int create_mode)
                 min_distance = DBL_MAX;
                 now_city = mini_index;
             }
+            #ifdef DEBUG
+            loging_initial_path(return_data, create_mode);
+            #endif
             break;
-
     }
 
     return return_data;

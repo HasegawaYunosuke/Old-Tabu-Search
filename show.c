@@ -22,6 +22,7 @@ double get_all_cost_by_graph(int * cities);
 double get_best_cost(void);
 double get_time(void);
 int check_manneri(int type);
+int search_loop_times(int type);
 
 void realtime_result(void)
 {
@@ -116,10 +117,3 @@ void show_on_off(FILE * fp, int on_off, char * buffer)
         fprintf(fp, "\t%s ON\n", buffer);
     }
 }
-
-#ifdef DEBUG
-void show_initial_path(void)
-{
-    
-}
-#endif
