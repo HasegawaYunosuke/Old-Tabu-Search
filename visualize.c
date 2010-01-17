@@ -71,6 +71,7 @@ void visualizer(int * visual_arg)
     int * nt_city_coordinate;
     int * solu_path;
     int socket;
+    int flag = -1;
     int i;
     int prev_loop = turn_loop_times(READONLY);
     int mainX_max = 0;
@@ -82,9 +83,7 @@ void visualizer(int * visual_arg)
     int start_para_num;
     int my_para_num;
 
-    socket = clntSock();
-
-    //start_para_num = get_group_start_process();
+    socket = -100;
 
     nt_city_coordinate = get_main_base_data();
     mainX_min = nt_city_coordinate[2];
@@ -125,16 +124,39 @@ void visualizer(int * visual_arg)
         }
     }
 
-    send(socket, nt_city_coordinate, (nt_city_coordinate[0]+1)*2*4,0);
+    if(tsp_size == 51){
+        for(i = 0; i < nt_city_coordinate[0]; i++){
+	    nt_city_coordinate[a] = nt_city_coordinate[a] * 2;
+	    a += 2;
+	}
+    	for(i = 0; i < nt_city_coordinate[0]; i++){
+	    nt_city_coordinate[b] = nt_city_coordinate[b] * 2;
+	    b += 2;
+	}
+    }
 
     while((solu_path = get_solution_path()) == NULL) {
-        printf("FUCK:\n");
     }
 
     my_para_num = get_process_number();
 #ifdef MPIMODE
     start_para_num = get_group_start_process();
+    if(my_para_num == start_para_num){
+	socket = clntSock();
+    }
+    else{
+	flag = 10;
+    }
 #endif
+    if(socket == -100){
+	if(flag == -1){
+	    socket = clntSock();
+	}
+    }
+
+    if(socket != -100){
+        send(socket, nt_city_coordinate, (nt_city_coordinate[0]+1)*2*4,0);
+    }
 
     solu_path[tsp_size+1] = (int)get_all_cost_by_graph(get_solution_path());
     solu_path[tsp_size+2] = my_para_num;
@@ -147,7 +169,7 @@ void visualizer(int * visual_arg)
             }
         }
 #ifdef MPIMODE
-        if(my_para_num == start_para_num) {
+        if(my_para_num != start_para_num) {
             for(;;){
                 if(search_is_done(READONLY) == YES) {
                     printf("visualize.c:All Search is Done...\n");
@@ -159,7 +181,7 @@ void visualizer(int * visual_arg)
         }
 #endif
 
-	    send(socket, solu_path, (solu_path[0]+3)*4,0);
+	send(socket, solu_path, (solu_path[0]+3)*4,0);
         
         solu_path = NULL;
         solu_path = get_solution_path();
