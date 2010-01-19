@@ -7,7 +7,7 @@
 
 /* functions */
 int * pole_search(int *);
-int *order_one_cross(int *, int *,double *);
+int *order_one_cross(int *, int *);
 void path_to_order(int *, double *);
 void order_to_path(int *, double *);
 double path_dinstance (int *, double *);
@@ -47,40 +47,42 @@ void create_2opt_tabulist(int tsp_size, int mode);
 int * get_ga_solution_path(void);
 int * get_other_solution_path_data(void);
 
+void initialize_history(void);
+
 /* global variable */
 int create_mode;
 
 int * pole_search(int * solution_path)
 { 
-    double * graph_data = get_graph_data();
-         
+    int *solution_path_b;
+    solution_path_b = get_ga_solution_path(); 
     /* Search Graph-Data */
     if(modep->graph_mode == ON) {   
-        
+   
         if(check_manneri(SHORTMODE) == YES) {            
+
         set_tabu_mode(ON);
         
+        
             if(check_manneri(MIDDLEMODE) == YES){
-                int *solution_path_b;
-                set_ga_mode(ON);            
+
+                set_ga_mode(ON); 
                 set_counter();
             
-                if(modep->parallel_mode == OFF){
-                    solution_path_b = get_ga_solution_path();
-                    set_ga_solution_path(solution_path);
-                    }
                 if(modep->parallel_mode == ON){
                     solution_path_b = get_other_solution_path_data();
                     }
-                    
-            solution_path = order_one_cross(solution_path, solution_path_b, graph_data); 
-            }
-        
-         }     
+            order_one_cross(solution_path, solution_path_b);
+            create_2opt_tabulist(get_tsp_size(), CLEAR);
+            set_tabu_mode(OFF);
+            initialize_history();
+             }
+        }     
+                
         solution_path = two_opt(solution_path);
-        
-    
-    }                      
+        solution_path_b = two_opt(solution_path_b);
+        set_ga_solution_path(solution_path_b);
+}                      
                
     /* Search Euclid-Data (non-available) */
     else if(modep->euclid_mode == ON) {
@@ -313,18 +315,19 @@ int permit_worse_distance(double bef_aft_distance)
     return return_num;
 }
 /* one point crossover of ordinal representation  */
-int *order_one_cross(int * init_path_a, int * init_path_b, double * graph_data)
+int *order_one_cross(int * init_path_a, int * init_path_b)
 {
+    double * graph_data = get_graph_data();
     int i, j;
     int tsp_size = graph_data[0];    
-    int *child;
+//    int *child;
     int path_a[tsp_size];
     int path_b[tsp_size];
     int path_c[tsp_size];
     int path_d[tsp_size];
     
-    child = mallocer_ip(tsp_size + 1);
-    child[0] = tsp_size;
+//    child = mallocer_ip(tsp_size + 1);
+//    child[0] = tsp_size;
 
     int start_point = rand() % (tsp_size - 1);
     
@@ -343,8 +346,8 @@ int *order_one_cross(int * init_path_a, int * init_path_b, double * graph_data)
     for(i = 0; i< tsp_size; i++) 
         path_b[i] = init_path_b[i + 1];		
      
-    for(i = 0; i< tsp_size; i++) 
-        child[i + 1] = path_a[i];
+//    for(i = 0; i< tsp_size; i++) 
+//        child[i + 1] = path_a[i];
     
     path_to_order(path_a, graph_data);
     path_to_order(path_b, graph_data);  
@@ -365,6 +368,12 @@ int *order_one_cross(int * init_path_a, int * init_path_b, double * graph_data)
     order_to_path(path_c, graph_data);
     order_to_path(path_d, graph_data);
     
+    for(i = 0; i< tsp_size; i++) 
+          init_path_a[i + 1] = path_c[i];
+ 
+    for(i = 0; i< tsp_size; i++) 
+          init_path_b[i + 1] = path_d[i];
+    /*
     if(path_dinstance(path_c, graph_data) < path_dinstance(path_d, graph_data))
     {
         for(i = 0; i< tsp_size; i++) 
@@ -378,6 +387,8 @@ int *order_one_cross(int * init_path_a, int * init_path_b, double * graph_data)
     }
 
     return (child);
+*/    
+    
 }
 
 /* transform from path representation to ordinal representation  */

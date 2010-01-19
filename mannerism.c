@@ -65,10 +65,11 @@ int short_manneri(void)
 /* return YES or NO */
 int middle_manneri(void)
 {
-    if(modep->ga_mode == ON || modep->pole_mode == ON) {
+    if(modep->pole_mode == ON) {
+     if(check_manneri(SHORTMODE) == YES){
         if(get_counter() > GA_COUNTER) {
             return YES;
-        }
+        }}
         else {
             return NO;
         }

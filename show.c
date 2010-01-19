@@ -49,7 +49,14 @@ void realtime_result(void)
         else {
             printf("OFF,");
         }
-        printf("OFF)\n");
+        printf("OFF)");
+        
+        if(get_ga_mode() == ON){
+        printf(" GA");
+        set_ga_mode(OFF); 
+        }
+        
+        printf("\n");
     }
     /* DEL EN */
 }

@@ -564,7 +564,7 @@ void set_best_solution_path_data(void)
     }
 }
 
-void set_other_solution_path_data(int * other_solution_path)
+void set_other_solution_path_data(int *other_solution_path)
 {
     parameterp->other_solution_path = other_solution_path;
 }
