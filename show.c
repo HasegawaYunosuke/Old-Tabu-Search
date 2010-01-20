@@ -1,5 +1,9 @@
 #include "header.h"
 
+/*DEL ST*/
+void increase_test(void);
+/*DEL EN*/
+
 /* functions */
 void realtime_result(void);
 void turn_terminated_show(void);
@@ -18,6 +22,7 @@ double get_all_cost_by_graph(int * cities);
 double get_best_cost(void);
 double get_time(void);
 int check_manneri(int type);
+int search_loop_times(int type);
 
 void realtime_result(void)
 {
@@ -44,7 +49,14 @@ void realtime_result(void)
         else {
             printf("OFF,");
         }
-        printf("OFF)\n");
+        printf("OFF)");
+        
+        if(get_ga_mode() == ON){
+        printf(" GA");
+        set_ga_mode(OFF); 
+        }
+        
+        printf("\n");
     }
     /* DEL EN */
 }

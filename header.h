@@ -1,5 +1,6 @@
 /* #define MPIMODE */
 #define LINUXUSER
+#define DEBUG
 
 /* include files */
 #include <stdio.h>
@@ -15,6 +16,8 @@
 #include <limits.h>
 #ifdef MPIMODE
 #include <mpi.h>
+#define BEST_SOLUTION 101
+#define LOGFILENAME 102
 #endif
 
 /* macro variable */
@@ -34,7 +37,11 @@
 #define TABU2OPT 30
 #define SHORTMODE 40
 #define MIDDLEMODE 50
+#define FIRST_MIDDLEMODED 55
 #define LONGMODE 60
+#define MERGECREATE 100
+#define MPI_SENDADD 301
+#define MPI_RECVADD 302
 
 /* macro parameter */
 #define TSPMAXSIZE 2000
@@ -44,12 +51,13 @@
 #define DEFAULT_CITYPOINT 5
 #define DEFAULT_2OPTLOOP 100
 #define DEFAULT_HISTORYSIZE 20
-#define DEFAULT_SAMEPERCENTAGE 25
+#define DEFAULT_SAMEPERCENTAGE 20
 #define DEFAULT_NOTFOUNDLOOP 1000
 #define DEFAULT_MPIGROUPNUM 4
 #define DEFAULT_MIDDLEMANNNERI 100
-#define GA_CROSS_POINT 15
-#define GA_COUNTER 300
+#define DEFAULT_SENDPARAMETERNUM 10
+#define GA_CROSS_POINT 50
+#define GA_COUNTER 1000
 
 /* grobal variable */
 struct mode {

@@ -11,6 +11,7 @@
 
     If compile is terminated by something error, please complain to writer.
 */
+//test
 
 /* header files */
 #include "header.h"
@@ -22,7 +23,11 @@ int search_terminate(void);
 void initial_path(void);
 void search(void);
 void finalize(void);
+#ifdef MPIMODE
 void set_MPI_group(void);
+void best_MPI_send(void);
+#endif
+
 int main(int argc, char ** argv)
 {
     /* all in one initialize */
@@ -45,6 +50,12 @@ int main(int argc, char ** argv)
             /* search-turn terminate */
             if(loop_terminate() == YES) {break;}
         }
+
+        #ifdef MPIMODE
+        /* send data other node */
+        best_MPI_send();
+        #endif
+
         /* whole-search-terminate */
         if(search_terminate() == YES) {break;}
     }

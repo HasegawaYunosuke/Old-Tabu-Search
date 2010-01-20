@@ -11,11 +11,14 @@ int get_counter(void);
 void error_procedure(char * message);
 void set_counter(void);
 double get_best_cost(void);
+int get_have_been_mid_mode(void);
+void set_have_been_mid_mode(void);
 
 /* global variable */
 struct mid_manneri_parameter {
     int solution_count;
     double best_distance;
+    int have_been_mid_mode;
 };
 
 struct mid_manneri_parameter * mid_parameterp;
@@ -28,6 +31,7 @@ void mannneri_initialize(void)
     set_counter();
 }
 
+/* return YES or NO */
 int check_manneri(int type)
 {
     int return_num = NO;
@@ -38,6 +42,9 @@ int check_manneri(int type)
             break;
         case MIDDLEMODE:
             return_num = middle_manneri();
+            break;
+        case FIRST_MIDDLEMODED:
+            return_num = get_have_been_mid_mode();
             break;
         case LONGMODE:
             break;
@@ -55,18 +62,23 @@ int short_manneri(void)
     return check_historical_similar();
 }
 
+/* return YES or NO */
 int middle_manneri(void)
 {
-    if(modep->ga_mode == ON || modep->pole_mode == ON) {
+    if(modep->pole_mode == ON) {
+     if(check_manneri(SHORTMODE) == YES){
         if(get_counter() > GA_COUNTER) {
             return YES;
-        }
+        }}
         else {
             return NO;
         }
     }
     else {
         if(get_counter() > DEFAULT_MIDDLEMANNNERI) {
+            if(get_have_been_mid_mode() == NO) {
+                set_have_been_mid_mode();
+            }
             return YES;
         }
         else {
@@ -75,10 +87,21 @@ int middle_manneri(void)
     }
 }
 
+int get_have_been_mid_mode(void)
+{
+    return mid_parameterp->have_been_mid_mode;
+}
+
+void set_have_been_mid_mode(void)
+{
+    mid_parameterp->have_been_mid_mode = YES;
+}
+
 void set_counter(void)
 {
     mid_parameterp->solution_count = 0;
     mid_parameterp->best_distance = 0;
+    mid_parameterp->have_been_mid_mode = NO;
 }
 
 int get_counter(void)

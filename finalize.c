@@ -9,18 +9,29 @@ double * get_graph_data(void);
 int * get_main_base_data(void);
 struct parameter * get_parameterp(void);
 void output_log(void);
+time_t get_start_time(void);
 void error_procedure(char * message);
+int * mallocer_ip(int size);
+int search_loop_times(int type);
 
 #ifdef MPIMODE
 void parallel_finalize(void);
+void set_logfile_name(int * buffer, int element_num);
 #endif
+#ifdef DEBUG
+void close_loging_initial_path(void);
+#ifdef MPIMODE
+void mpi_comunication_log_manage(int type);
+#endif
+#endif
+
+/* global variable */
+int * lnp;
 
 void finalize(void)
 {
     final_result_show(stdout);
-    //#ifdef MPIMODE
     output_log();
-    //#endif
 
     #ifdef MPIMODE
     if(modep->parallel_mode) {
@@ -36,7 +47,21 @@ void finalize(void)
     free(get_main_base_data());
     free(get_parameterp());
     mannneri_finalize();
+
+    #ifdef DEBUG
+    close_loging_initial_path();
+    #endif
     printf("Program is normally terminated.....\n");
+}
+
+void set_logfile_name(int * buffer, int element_num)
+{
+    int i;
+
+    lnp = mallocer_ip(element_num);
+    for(i = 0; i < element_num; i++) {
+        lnp[i] = buffer[i];
+    }
 }
 
 void output_log(void)
@@ -47,13 +72,30 @@ void output_log(void)
     struct tm * date;
     FILE * fp;
 
-    timer = time(NULL);
+    timer = get_start_time();
     date = localtime(&timer);
-    strftime(time_data, 63, "log_data/%Y%m%d_%H:%M:%S",date);
-    sprintf(logfilename, "%s.node:%d.log",time_data,get_process_number());
+
+    #ifdef MPIMODE
+    sprintf(time_data,"log_data/%d.%d.%d_%d:%d:%d",lnp[0], lnp[1], lnp[2], lnp[3], lnp[4], lnp[5]);
+    #else
+    strftime(time_data, 63, "log_data/%Y.%m.%d_%H:%M:%S",date);
+    #endif
+
+    if(get_process_number() < 10) {
+        sprintf(logfilename, "%s.node:0%d.log",time_data,get_process_number());
+    }
+    else {
+        sprintf(logfilename, "%s.node:%d.log",time_data,get_process_number());
+    }
     if((fp = fopen(logfilename, "w")) == NULL) {
         error_procedure("can\'t find \"log_data\" directory");
     }
     final_result_show(fp);
     fclose(fp);
+
+    #ifdef MPIMODE
+    #ifdef DEBUG
+    mpi_comunication_log_manage(CHECK);
+    #endif
+    #endif
 }

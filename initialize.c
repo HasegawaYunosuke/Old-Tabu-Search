@@ -17,6 +17,9 @@ void best_MPI_recv(int * recv_process_number);
 int * get_same_group_list(void);
 int get_all_MPI_group_data(void);
 #endif
+#ifdef DEBUG
+void open_loging_initial_path(void);
+#endif
 
 void initialize(int argc, char ** argv)
 {
@@ -69,6 +72,9 @@ void initialize(int argc, char ** argv)
                             (void *)&other_list[i]);
         }
     }
+    #endif
+    #ifdef DEBUG
+    open_loging_initial_path();
     #endif
 }
 

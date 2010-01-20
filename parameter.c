@@ -19,6 +19,7 @@ void set_search_time(double search_time);
 void set_tabu2opt_mode(void);
 void set_euclid_mode(void);
 void set_visual_mode(int mode);
+int get_realtime_visual_mode(void);
 void set_parallel_mode(void);
 void set_pole_mode(void);
 void set_tozaki_mode(void);
@@ -64,17 +65,27 @@ double get_all_cost_by_graph(int * solution_path);
 double get_all_cost_by_euclid(int * solution_path);
 double get_best_cost(void);
 int now_index(int target, int maximum);
+int * mallocer_ip(int size);
 
 void set_counter(void);
 int * get_ga_solution_path(void);
 void set_ga_solution_path(int * solution_path);
 int get_ga_mode(void);
+void set_start_time(time_t start_time);
+time_t get_start_time(void);
 
 #ifdef MPIMODE
 int * get_same_group_list(void);
 void set_group_start_process(int group_start_process);
 int get_group_start_process(void);
 void best_MPI_send(void);
+void set_merge_branchs(void);
+void free_merge_branchs(void);
+int * get_branchA(void);
+int * get_branchB(void);
+int * get_temp_path(void);
+int * get_matchedA(void);
+int * get_matchedB(void);
 #endif
 
 /* grobal variable */
@@ -109,6 +120,12 @@ struct parameter {
     int name_length;
     char * process_name;
     int * ga_solution_path;
+    time_t start_time;
+    int * branchsA;
+    int * branchsB;
+    int * temp_path;
+    int * matchedA;
+    int * matchedB;
 };
 
 struct parameter * parameterp;
@@ -208,13 +225,57 @@ void set_group_start_process(int group_start_process)
 {
     parameterp->group_start_process = group_start_process;
 }
-#endif
-#ifdef MPIMODE
+
 int get_group_start_process(void)
 {
     return parameterp->group_start_process;
 }
 #endif
+
+void set_merge_branchs(void)
+{
+    int tsp_size = get_tsp_size();
+
+    parameterp->branchsA = mallocer_ip(tsp_size * 2);
+    parameterp->branchsB = mallocer_ip(tsp_size * 2);
+    parameterp->temp_path = mallocer_ip(tsp_size + 1);
+    parameterp->matchedA= mallocer_ip(tsp_size);
+    parameterp->matchedB= mallocer_ip(tsp_size);
+}
+
+int * get_branchA(void)
+{
+    return parameterp->branchsA;
+}
+
+int * get_branchB(void)
+{
+    return parameterp->branchsB;
+}
+
+int * get_temp_path(void)
+{
+    return parameterp->temp_path;
+}
+
+int * get_matchedA(void)
+{
+    return parameterp->matchedA;
+}
+
+int * get_matchedB(void)
+{
+    return parameterp->matchedB;
+}
+
+void free_merge_branchs(void)
+{
+    free(get_branchA());
+    free(get_branchB());
+    free(get_temp_path());
+    free(get_matchedA());
+    free(get_matchedB());
+}
 
 int search_is_done(int type)
 {
@@ -247,6 +308,11 @@ void set_visual_mode(int mode)
     if(mode == 1) {
         modep->realtime_visual_mode = ON;
     }
+}
+
+int get_realtime_visual_mode(void)
+{
+    return modep->realtime_visual_mode;
 }
 
 void set_parallel_mode(void)
@@ -498,7 +564,7 @@ void set_best_solution_path_data(void)
     }
 }
 
-void set_other_solution_path_data(int * other_solution_path)
+void set_other_solution_path_data(int *other_solution_path)
 {
     parameterp->other_solution_path = other_solution_path;
 }
@@ -601,7 +667,7 @@ void set_all_cost(void)
         parameterp->best_cost = all_cost;
         set_best_solution_path_data();
         #ifdef MPIMODE
-        best_MPI_send();
+        //best_MPI_send();
         #endif
     }
 }
@@ -653,4 +719,14 @@ int get_y(int city_index)
 
     main_base_data = get_main_base_data();
     return main_base_data[city_index * 2 + 1];
+}
+
+void set_start_time(time_t start_time)
+{
+    parameterp->start_time = start_time;
+}
+
+time_t get_start_time(void)
+{
+    return parameterp->start_time;
 }

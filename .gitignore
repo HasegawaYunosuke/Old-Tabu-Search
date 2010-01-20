@@ -5,3 +5,4 @@ tags
 *.exe
 test.repo/*
 log_data/*
+debug_log/*

@@ -16,8 +16,16 @@ int random_num(int maximum);
 double make_distance(int x1, int y1, int x2, int y2);
 int already_visited(int * return_data, int city_num);
 int search_loop_times(int type);
+int decide_create_mode(void);
 int * mallocer_ip(int size);
 double * mallocer_dp(int size);
+
+#ifdef MPIMODE
+int * get_merge_route(void);
+#endif
+#ifdef DEBUG
+void loging_initial_path(int * path, int create_mode);
+#endif
 
 void set_ga_solution_path(int * solution_path);
 
@@ -29,7 +37,7 @@ void initial_path(void)
     }
     else {
         set_solution_path(initial_graph_path(get_graph_data()));
-        
+
         if(modep->pole_mode == ON)
             set_ga_solution_path(initial_graph_path(get_graph_data()));
     }
@@ -70,6 +78,9 @@ int * initial_graph_path(double * graph_data)
         return_data[0] = (int)graph_data[0];
     }
 
+#ifdef MPIMODE
+    create_mode = decide_create_mode();
+#endif
     /* create the initial path */
     return_data = create_graph_path(return_data, graph_data, create_mode);
 
@@ -139,30 +150,45 @@ int * create_graph_path(int * return_data, double * graph_data, int create_mode)
     double distance = DBL_MAX;
     double min_distance = DBL_MAX;
 
-    first_point = random_num(tsp_size);
 
-    now_city = first_point;
-    is_choiced[first_point] = YES;
-    return_data[1] = first_point;
+    switch (create_mode) {
+    #ifdef MPIMODE
+        case MERGECREATE:
+            return_data = get_merge_route();
+            #ifdef DEBUG
+            loging_initial_path(return_data, create_mode);
+            #endif
+            break;
+    #endif
+        case DEFAULT:
+            first_point = random_num(tsp_size);
+            now_city = first_point;
+            is_choiced[first_point] = YES;
+            return_data[1] = first_point;
 
-    for(i = 2; i <= tsp_size; i++) {
-        for(j =1; j <= tsp_size; j++) {
-            if(is_choiced[j] == NO) {
-                next_city = j;
-                distance = graph_data[now_city + tsp_size * next_city];
-                if(min_distance > distance) {
-                    mini_index = next_city;
-                    min_distance = distance;
+            for(i = 2; i <= tsp_size; i++) {
+                for(j =1; j <= tsp_size; j++) {
+                    if(is_choiced[j] == NO) {
+                        next_city = j;
+                        distance = graph_data[now_city + tsp_size * next_city];
+                        if(min_distance > distance) {
+                            mini_index = next_city;
+                            min_distance = distance;
+                        }
+                    }
+                    else {
+                        continue;
+                    }
                 }
+                return_data[i] = mini_index;
+                is_choiced[mini_index] = YES;
+                min_distance = DBL_MAX;
+                now_city = mini_index;
             }
-            else {
-                continue;
-            }
-        }
-        return_data[i] = mini_index;
-        is_choiced[mini_index] = YES;
-        min_distance = DBL_MAX;
-        now_city = mini_index;
+            #ifdef DEBUG
+            loging_initial_path(return_data, create_mode);
+            #endif
+            break;
     }
 
     return return_data;
