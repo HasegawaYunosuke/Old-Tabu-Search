@@ -50,6 +50,8 @@ int * get_other_solution_path_data(void);
 
 void initialize_history(void);
 
+void best_MPI_send(void);
+
 /* global variable */
 int create_mode;
 
@@ -72,7 +74,10 @@ int * pole_search(int * solution_path)
                 set_counter();
             
                 if(modep->parallel_mode == ON){
-                    best_MPI_send();
+                    #ifdef MPIMODE
+                    /* send data other node */
+                  Å@best_MPI_send();
+                    #endif
                     solution_path_b = get_other_solution_path_data();
                     }
             pmx_one_cross(solution_path, solution_path_b);
