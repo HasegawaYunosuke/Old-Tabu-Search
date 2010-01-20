@@ -51,10 +51,10 @@ int main(int argc, char ** argv)
             if(loop_terminate() == YES) {break;}
         }
 
-        #ifdef MPIMODE
+        //#ifdef MPIMODE
         /* send data other node */
-        best_MPI_send();
-        #endif
+        //best_MPI_send();
+        //#endif
 
         /* whole-search-terminate */
         if(search_terminate() == YES) {break;}

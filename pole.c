@@ -72,6 +72,7 @@ int * pole_search(int * solution_path)
                 set_counter();
             
                 if(modep->parallel_mode == ON){
+                    best_MPI_send();
                     solution_path_b = get_other_solution_path_data();
                     }
             pmx_one_cross(solution_path, solution_path_b);
@@ -83,7 +84,7 @@ int * pole_search(int * solution_path)
                 
         solution_path = two_opt(solution_path);
         //solution_path_b = simple_two_opt(solution_path_b);
-        set_ga_solution_path(solution_path_b);
+        //set_ga_solution_path(solution_path_b);
 }                      
                
     /* Search Euclid-Data (non-available) */
