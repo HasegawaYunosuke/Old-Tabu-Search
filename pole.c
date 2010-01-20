@@ -8,6 +8,7 @@
 /* functions */
 int * pole_search(int *);
 int *order_one_cross(int *, int *);
+int *pmx_one_cross(int *, int *);
 void path_to_order(int *, double *);
 void order_to_path(int *, double *);
 double path_dinstance (int *, double *);
@@ -18,7 +19,7 @@ int * graph_search(int * solution_path);
 int check_manneri(int type);
 void error_procedure(char * message);
 
-
+int *simple_two_opt(int*);
 int *two_opt(int*);
 void set_now_parcentage(double before, double after);
 int nowindex(int target, int maximum);
@@ -56,6 +57,7 @@ int * pole_search(int * solution_path)
 { 
     int *solution_path_b;
     solution_path_b = get_ga_solution_path(); 
+   
     /* Search Graph-Data */
     if(modep->graph_mode == ON) {   
    
@@ -72,7 +74,7 @@ int * pole_search(int * solution_path)
                 if(modep->parallel_mode == ON){
                     solution_path_b = get_other_solution_path_data();
                     }
-            order_one_cross(solution_path, solution_path_b);
+            pmx_one_cross(solution_path, solution_path_b);
             create_2opt_tabulist(get_tsp_size(), CLEAR);
             set_tabu_mode(OFF);
             initialize_history();
@@ -80,7 +82,7 @@ int * pole_search(int * solution_path)
         }     
                 
         solution_path = two_opt(solution_path);
-        solution_path_b = two_opt(solution_path_b);
+        //solution_path_b = simple_two_opt(solution_path_b);
         set_ga_solution_path(solution_path_b);
 }                      
                
@@ -95,7 +97,45 @@ int * pole_search(int * solution_path)
     
     return solution_path;
                    
-}     
+}
+/*two opt only*/
+int *simple_two_opt(int * solution_path)
+{
+    int i, j, k, count;
+    int tsp_size = solution_path[0];
+    int cities[4];
+    int indexes[4];
+    int best_indexes[4];
+    double now_distance = DBL_MAX * (-1);
+    double maximum = DBL_MAX * (-1);
+
+        for(i = 1; i < tsp_size - 2; i++) {
+            indexes[0] = i; indexes[1] = i + 1;
+            for(j = i + 2; j < tsp_size; j++) {
+                indexes[2] = j; indexes[3] = j + 1;
+                get_cities_by_indexes(cities, indexes, solution_path);
+                now_distance = before_after_distance(cities);
+                if(now_distance > maximum) {
+                    maximum = now_distance;
+                    for(k = 0; k < 4; k++) {
+                        best_indexes[k] = indexes[k];
+                    }
+                }
+            }
+        }
+
+        for(i = 0; i < 4; i++) {
+            if(indexes[i] > tsp_size) {
+                printf("indexes[%d] == %d\n",i,best_indexes[i]);
+                error_procedure("two_opt()");
+            }
+        }
+
+        exchange_branches(solution_path, best_indexes);
+        
+
+    return solution_path;
+}   
 /*two opt search*/
 int *two_opt(int * solution_path)
 {
@@ -320,12 +360,12 @@ int *order_one_cross(int * init_path_a, int * init_path_b)
     double * graph_data = get_graph_data();
     int i, j;
     int tsp_size = graph_data[0];    
-//    int *child;
+
     int path_a[tsp_size];
     int path_b[tsp_size];
     int path_c[tsp_size];
     int path_d[tsp_size];
-    
+ //    int *child;   
 //    child = mallocer_ip(tsp_size + 1);
 //    child[0] = tsp_size;
 
@@ -465,3 +505,142 @@ double path_dinstance (int * solution_path, double * graph_data)
     return(distance);	
 }
 
+/* one point crossover of Partially Matched*/
+int *pmx_one_cross(int * init_path_a, int * init_path_b)
+{
+    double * graph_data = get_graph_data();
+    int i, j, k,l;
+    int tsp_size = graph_data[0];    
+    int frag;
+    int path_a[tsp_size];
+    int path_b[tsp_size];
+    int path_c[tsp_size];
+    int path_d[tsp_size];
+    
+    int start_point = rand() % (tsp_size - 1);
+            
+    j = 0;
+
+    for(i = start_point; i < tsp_size; i++) {
+        path_a[j] = init_path_a[i + 1];
+        j++;
+        }       
+
+    for(i = 0; i != start_point; i++) {
+        path_a[j] = init_path_a[i + 1];
+        j++;
+        }
+
+    for(i = 0; i< tsp_size; i++) 
+        path_b[i] = init_path_b[i + 1];
+    
+    int cross_point = (GA_CROSS_POINT);
+        
+    int *copy_a;   
+    copy_a = mallocer_ip(cross_point);
+    
+    int *copy_b;   
+    copy_b = mallocer_ip(cross_point);
+    
+    for(i = 0; i < cross_point; i++)
+        copy_a[i] = path_a[tsp_size - cross_point + i];
+    for(i = 0; i < cross_point; i++)
+        copy_b[i] = path_b[tsp_size - cross_point + i];
+    
+    k = 0;
+    
+    for (i = 0; i < tsp_size - cross_point; i++){
+        frag = 0;
+        for(j = 0; j < cross_point; j++){    
+            if(copy_b[j] == path_a[i] && frag == 0){
+                frag = 1;
+                path_c[k] = copy_a[j];
+             }
+        }
+        if(frag == 1){
+        do{
+            l = 0;
+            for(j = 0; j < cross_point; j++){
+                if(copy_b[j] == path_c[k])
+                path_c[k] = copy_a[j];
+                else l++;
+              }             
+        }while(l < cross_point);
+        }
+            if(frag == 0){
+            path_c[k] = path_a[i];
+            }
+            
+            k++;
+    }
+    
+    for(i = 0; i < cross_point; i++){
+        path_c[k] = copy_b[i];
+        k++;
+        }
+
+    k = 0;
+    for (i = 0; i < tsp_size - cross_point; i++){
+        frag = 0;
+        for(j = 0; j < cross_point; j++){    
+            if(copy_a[j] == path_b[i] && frag == 0){
+                frag = 1;
+                path_d[k] = copy_b[j];
+             }
+        }
+        if(frag == 1){
+        do{
+            l = 0;
+            for(j = 0; j < cross_point; j++){
+                if(copy_a[j] == path_d[k])
+                path_d[k] = copy_b[j];
+                else l++;
+              }             
+        }while(l < cross_point);
+        }
+            if(frag == 0){
+            path_d[k] = path_b[i];
+            }
+            
+            k++;
+    }
+    
+    for(i = 0; i < cross_point; i++){
+        path_d[k] = copy_a[i];
+        k++;
+        }
+        
+    for(i = 0; i< tsp_size; i++) 
+          init_path_a[i + 1] = path_c[i];
+ 
+    for(i = 0; i< tsp_size; i++) 
+          init_path_b[i + 1] = path_d[i];
+          /*
+                   printf("path_a:");
+	
+	            for(i = 0; i< tsp_size; i++) {
+                printf("%d -> ",path_a[i]);
+              }
+              printf("\n");
+              
+                        printf("path_b:");
+	
+	            for(i = 0; i< tsp_size; i++) {
+                printf("%d -> ",path_b[i]);
+              }
+                            printf("\n");
+                                      printf("path_c:");
+	
+	            for(i = 0; i< tsp_size; i++) {
+                printf("%d -> ",path_c[i]);
+              }
+                            printf("\n");
+                                      printf("path_d:");
+	
+	            for(i = 0; i< tsp_size; i++) {
+                printf("%d -> ",path_d[i]);
+              }
+              printf("\n");*/
+    free(copy_a);
+    free(copy_b);
+}

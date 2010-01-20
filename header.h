@@ -57,7 +57,7 @@
 #define DEFAULT_MIDDLEMANNNERI 100
 #define DEFAULT_SENDPARAMETERNUM 10
 #define GA_CROSS_POINT 50
-#define GA_COUNTER 500
+#define GA_COUNTER 1000
 
 /* grobal variable */
 struct mode {
