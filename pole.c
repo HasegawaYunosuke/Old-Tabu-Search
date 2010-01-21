@@ -53,7 +53,7 @@ void initialize_history(void);
 
 void best_MPI_send(void);
 void set_have_been_mid_mode(void);
-int check_other_solution_path_data(void);
+int check_other_solution_path_data(int *other_sol_path);
 
 /* global variable */
 int create_mode;
@@ -77,8 +77,9 @@ int * pole_search(int * solution_path)
                 set_counter();
             
                 if(modep->parallel_mode == ON){
-                    if(check_other_solution_path_data() == YES) {
-                        solution_path_b = get_other_solution_path_data();
+                solution_path_b = get_other_solution_path_data();
+                    if(check_other_solution_path_data(solution_path_b) == NO) {
+                        solution_path_b = get_ga_solution_path(); 
                     }
 		}
                     
