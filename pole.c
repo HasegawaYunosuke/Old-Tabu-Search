@@ -78,6 +78,7 @@ int * pole_search(int * solution_path)
                     if(check_other_data_satisfactory() == YES) {
                         solution_path_b = get_other_solution_path_data();
                     }
+		}
                     
                 pmx_one_cross(solution_path, solution_path_b);
                 create_2opt_tabulist(get_tsp_size(), CLEAR);
