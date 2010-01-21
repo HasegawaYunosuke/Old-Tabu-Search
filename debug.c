@@ -4,7 +4,9 @@
 #ifdef DEBUG
 /* global variable */
 char debug_log_name[128];
+char debug_other_sol_log_name[128];
 FILE * debug_fp;
+FILE * debug_other_sol_fp;
 
 #ifdef MPIMODE
 struct mpi_comunication_log {
@@ -17,6 +19,7 @@ struct mpi_comunication_log mpi_com_log;
 #endif
 
 /* functions */
+int get_tsp_size(void);
 void open_loging_initial_path(void);
 void close_loging_initial_path(void);
 void loging_initial_path(int * path, int create_mode);
@@ -30,6 +33,13 @@ void mpi_comunication_log_init(void); /* local function */
 void mpi_send_num_add(void); /* local function */
 void mpi_recv_num_add(void); /* local function */
 void loging_mpi_com(void); /* local function */
+int get_num_of_all_proc(void);
+#endif
+#ifdef POLEDEBUG
+void open_loging_other_sol_path(void);
+void output_other_sol_path(void);
+int * get_other_solution_path_data(void);
+void close_loging_other_sol_path(void);
 #endif
 
 void open_loging_initial_path(void)
@@ -114,6 +124,43 @@ void figure_of_match_num(int matched_num)
         mpi_com_log.max_num_of_match_num = matched_num;
     }
 }
+#endif
+#ifdef POLEDEBUG
+void output_other_sol_path(void)
+{
+    int * other_sol = get_other_solution_path_data();
+    int data_cell_num = get_tsp_size() + DEFAULT_SENDPARAMETERNUM;
+    int group_num = get_num_of_all_proc() / DEFAULT_MPIGROUPNUM - 1;
+    int i, j;
+
+    fprintf(debug_other_sol_fp, "+++POLEDEBUG+++\n\n");
+    if(group_num == 3) {
+        for(i = 0; i < data_cell_num; i++) {
+            fprintf(debug_other_sol_fp, "(sol[1], sol[2], sol[3]) == (%3d, %3d, %3d)\n", other_sol[i], other_sol[i + data_cell_num], other_sol[i + 2 * data_cell_num]);
+        }
+    }
+    fprintf(debug_other_sol_fp, "\n\n+++++++++++++++\n");
+}
+
+void open_loging_other_sol_path(void)
+{
+    if(get_process_number() < 10) {
+         sprintf(debug_other_sol_log_name, "debug_log/other_sol_path.0%d.log",get_process_number());
+    }
+    else {
+         sprintf(debug_other_sol_log_name, "debug_log/other_sol_path.%d.log",get_process_number());
+    }
+
+    if((debug_other_sol_fp = fopen(debug_other_sol_log_name, "a")) == NULL) {
+        error_procedure("can\'t find \"debug_log\" directory");
+    }
+}
+
+void close_loging_other_sol_path(void)
+{
+    fclose(debug_other_sol_fp);
+}
+
 #endif
 
 void test_debug_log(char message[128], int num)
