@@ -52,8 +52,8 @@ void set_have_been_mid_mode(void);
 void initialize_history(void);
 
 void best_MPI_send(void);
-int check_other_data_satisfactory(void);
 void set_have_been_mid_mode(void);
+int check_other_solution_path_data(void);
 
 /* global variable */
 int create_mode;
@@ -70,18 +70,14 @@ int * pole_search(int * solution_path)
 
             set_tabu_mode(ON);
             set_have_been_mid_mode();
-<<<<<<< HEAD:pole.c
-=======
-        
->>>>>>> c423fbeb4455c097ad8f34d6af7c64aa1ff8c4c6:pole.c
-        
+      
             if(check_manneri(MIDDLEMODE) == YES){
 
                 set_ga_mode(ON); 
                 set_counter();
             
                 if(modep->parallel_mode == ON){
-                    if(check_other_data_satisfactory() == YES) {
+                    if(check_other_solution_path_data() == YES) {
                         solution_path_b = get_other_solution_path_data();
                     }
 		}
