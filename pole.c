@@ -79,7 +79,6 @@ int * pole_search(int * solution_path)
                 if(modep->parallel_mode == ON){
                     if(check_other_data_satisfactory() == YES) {
                         solution_path_b = get_other_solution_path_data();
-			printf("MPIGA!!\n");
                     }
 		}
                     
