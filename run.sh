@@ -1,4 +1,4 @@
 #!/bin/bash
 
 ln -s  /home/share/pole/tsp.repo machinefile
-scrun -group=pcc,network=sctp -nodes=8x1 ./mpi.exe -f tsp_data/eil51.tsp -l -m -t 60
+scrun -group=pcc,network=sctp -nodes=8x1 ./mpi.exe -f tsp_data/eil51.tsp -l -m -t 120

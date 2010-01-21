@@ -1,7 +1,7 @@
 /* #define MPIMODE */
 #define LINUXUSER
 #define DEBUG
-#define POLEDEBUG
+//#define POLEDEBUG
 
 /* include files */
 #include <stdio.h>
