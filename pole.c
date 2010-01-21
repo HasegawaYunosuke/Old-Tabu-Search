@@ -18,6 +18,7 @@ int * create_graph_path(int * path, double * graph_data, int create_mode);
 int * graph_search(int * solution_path);
 int check_manneri(int type);
 void error_procedure(char * message);
+int get_tsp_size(void);
 
 int *simple_two_opt(int*);
 int *two_opt(int*);
@@ -60,6 +61,8 @@ int create_mode;
 
 int * pole_search(int * solution_path)
 { 
+    int i;
+    int tsp_size = get_tsp_size();
     int *solution_path_b;
     solution_path_b = get_ga_solution_path(); 
    
@@ -79,17 +82,15 @@ int * pole_search(int * solution_path)
                 if(modep->parallel_mode == ON){
                 solution_path_b = get_other_solution_path_data();
                     if(check_other_solution_path_data(solution_path_b) == NO) {
-                        solution_path_b = get_ga_solution_path(); 
+                        solution_path_b = get_ga_solution_path();
                     }
-		}
-                    
+		}                  
                 pmx_one_cross(solution_path, solution_path_b);
                 create_2opt_tabulist(get_tsp_size(), CLEAR);
                 set_tabu_mode(OFF);
                 initialize_history();
              }
-        }     
-                
+        }                     
         solution_path = two_opt(solution_path);
         //solution_path_b = simple_two_opt(solution_path_b);
         set_ga_solution_path(solution_path_b);
