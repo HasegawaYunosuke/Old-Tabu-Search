@@ -65,7 +65,7 @@ int * pole_search(int * solution_path)
    
         if(check_manneri(SHORTMODE) == YES) {            
 
-        set_tabu_mode(ON);
+            set_tabu_mode(ON);
         
         
             if(check_manneri(MIDDLEMODE) == YES){
@@ -73,23 +73,19 @@ int * pole_search(int * solution_path)
                 set_ga_mode(ON); 
                 set_counter();
             
-                if(modep->parallel_mode == ON){
-                    #ifdef MPIMODE
-                    /* send data other node */
-                  @best_MPI_send();
-                    #endif
+                if(modep->parallel_mode == ON)
                     solution_path_b = get_other_solution_path_data();
-                    }
-            pmx_one_cross(solution_path, solution_path_b);
-            create_2opt_tabulist(get_tsp_size(), CLEAR);
-            set_tabu_mode(OFF);
-            initialize_history();
+                    
+                pmx_one_cross(solution_path, solution_path_b);
+                create_2opt_tabulist(get_tsp_size(), CLEAR);
+                set_tabu_mode(OFF);
+                initialize_history();
              }
         }     
                 
         solution_path = two_opt(solution_path);
         //solution_path_b = simple_two_opt(solution_path_b);
-        //set_ga_solution_path(solution_path_b);
+        set_ga_solution_path(solution_path_b);
 }                      
                
     /* Search Euclid-Data (non-available) */
