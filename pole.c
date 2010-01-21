@@ -53,6 +53,7 @@ void initialize_history(void);
 
 void best_MPI_send(void);
 int check_other_data_satisfactory(void);
+void set_have_been_mid_mode(void);
 
 /* global variable */
 int create_mode;
@@ -69,6 +70,10 @@ int * pole_search(int * solution_path)
 
             set_tabu_mode(ON);
             set_have_been_mid_mode();
+<<<<<<< HEAD:pole.c
+=======
+        
+>>>>>>> c423fbeb4455c097ad8f34d6af7c64aa1ff8c4c6:pole.c
         
             if(check_manneri(MIDDLEMODE) == YES){
 
@@ -79,6 +84,7 @@ int * pole_search(int * solution_path)
                     if(check_other_data_satisfactory() == YES) {
                         solution_path_b = get_other_solution_path_data();
                     }
+		}
                     
                 pmx_one_cross(solution_path, solution_path_b);
                 create_2opt_tabulist(get_tsp_size(), CLEAR);
