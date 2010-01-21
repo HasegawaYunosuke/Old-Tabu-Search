@@ -56,7 +56,6 @@ int copy_check_parcentage(double bef_aft_distance, double * worse);
 /* grobal variable */
 int grobal_indexs[4];
 double best_bef_aft_cost;
-int improved_checker;
 int thread_loop_counter;
 pthread_mutex_t parallel_mutex;
 
@@ -159,7 +158,6 @@ int * copy_two_opt_tabu(int * solution_path)
             /* mutex init */
             pthread_mutex_init(&parallel_mutex, NULL);
             best_bef_aft_cost = DBL_MAX * (-1);
-            improved_checker = OFF;
             thread_loop_counter = 0;
   
             /* go to thread_two_opt_tabu() */
@@ -222,12 +220,8 @@ void thread_two_opt_tabu(int * solution_path)
     int cities[4];
     double bef_aft_cost;
     double worse;
-    
-    do {
-        if(improved_checker == ON) {
-            return;
-        }
 
+    do {
         copy_choice_4indexs(DEFAULT, indexs, solution_path);
         copy_get_cities_by_indexs(cities, indexs, solution_path);
         
@@ -241,10 +235,6 @@ void thread_two_opt_tabu(int * solution_path)
 
     if(get_tabu_mode() == ON) {
         pthread_mutex_lock(&parallel_mutex);
-    }
-
-    if(bef_aft_cost > 0) {
-        improved_checker = ON;
     }
 
     if(best_bef_aft_cost < bef_aft_cost) {
