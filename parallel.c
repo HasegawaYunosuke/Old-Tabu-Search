@@ -207,8 +207,7 @@ void best_MPI_recv(int * recv_process_number)
         }
     }
 
-    sleep(1);
-    test_debug_log("RECV:get_all_MPI_group_data", get_all_MPI_group_data());
+    //sleep(1);
 
     for(;;) {
         MPI_Recv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, BEST_SOLUTION, MPI_COMM_WORLD, &stat);
@@ -277,7 +276,7 @@ void how_long_matched(int * maximum, int * max_i, int * matchedB, int size)
         else {
             if(*maximum < counter) {
                 *maximum = counter;
-                *max_i = i;
+                *max_i = i - 1;
             }
             counter = 0;
         }
@@ -398,6 +397,7 @@ void adjust_branchs(int * branchs, int * other_sol, int * temp_path, int choice)
     int start = (size + DEFAULT_SENDPARAMETERNUM) * choice;
 
     temp_path[0] = size;
+
     for(i = 1; i <= size; i++) {
         temp_path[i] = other_sol[start + i];
     }
