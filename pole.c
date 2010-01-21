@@ -617,7 +617,7 @@ int *pmx_one_cross(int * init_path_a, int * init_path_b)
  
     for(i = 0; i< tsp_size; i++) 
           init_path_b[i + 1] = path_d[i];
-          /*
+          
                    printf("path_a:");
 	
 	            for(i = 0; i< tsp_size; i++) {
@@ -642,7 +642,7 @@ int *pmx_one_cross(int * init_path_a, int * init_path_b)
 	            for(i = 0; i< tsp_size; i++) {
                 printf("%d -> ",path_d[i]);
               }
-              printf("\n");*/
+              printf("\n");
     free(copy_a);
     free(copy_b);
 }
