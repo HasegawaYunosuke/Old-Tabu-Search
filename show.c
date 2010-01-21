@@ -26,7 +26,7 @@ int search_loop_times(int type);
 
 void realtime_result(void)
 {
-    /* DEL ST */
+    /* DEL ST 
     if(modep->parallel_mode != YES) {
         printf("DEL:all_cost == %f,",get_all_cost_by_graph(get_solution_path()));
         printf("best == %.2f,",get_best_cost());
@@ -49,7 +49,14 @@ void realtime_result(void)
         else {
             printf("OFF,");
         }
-        printf("OFF)\n");
+        printf("OFF)");
+
+        if(get_ga_mode() == ON){
+        printf(" GA");
+        set_ga_mode(OFF); 
+        }
+
+        printf("\n");
     }
     /* DEL EN */
 }

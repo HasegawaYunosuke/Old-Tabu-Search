@@ -8,6 +8,11 @@ int * tozaki_search(int * solution_path);
 int * pole_search(int * solution_path);
 int * get_solution_path(void);
 void set_solution_path(int * solution_path);
+#ifdef POLEDEBUG
+#ifdef MPIMODE
+void output_other_sol_path(void);
+#endif
+#endif
 
 /* grobal variable */
 
@@ -24,6 +29,11 @@ void search(void)
     }
     else if(modep->pole_mode == ON) {
         solution_path = pole_search(solution_path);
+#ifdef POLEDEBUG
+#ifdef MPIMODE
+        output_other_sol_path();
+#endif
+#endif
     }
     else {
         error_procedure("Un-define-search()-mode is choiced");

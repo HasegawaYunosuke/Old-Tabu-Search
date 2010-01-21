@@ -20,6 +20,9 @@ int get_all_MPI_group_data(void);
 #ifdef DEBUG
 void open_loging_initial_path(void);
 #endif
+#ifdef POLEDEBUG
+void open_loging_other_sol_path(void);
+#endif
 
 void initialize(int argc, char ** argv)
 {
@@ -75,6 +78,9 @@ void initialize(int argc, char ** argv)
     #endif
     #ifdef DEBUG
     open_loging_initial_path();
+    #endif
+    #ifdef POLEDEBUG
+    open_loging_other_sol_path();
     #endif
 }
 

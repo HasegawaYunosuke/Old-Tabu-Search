@@ -564,7 +564,7 @@ void set_best_solution_path_data(void)
     }
 }
 
-void set_other_solution_path_data(int * other_solution_path)
+void set_other_solution_path_data(int *other_solution_path)
 {
     parameterp->other_solution_path = other_solution_path;
 }
@@ -667,7 +667,7 @@ void set_all_cost(void)
         parameterp->best_cost = all_cost;
         set_best_solution_path_data();
         #ifdef MPIMODE
-        //best_MPI_send();
+        best_MPI_send();
         #endif
     }
 }

@@ -1,6 +1,7 @@
 /* #define MPIMODE */
 #define LINUXUSER
 #define DEBUG
+#define POLEDEBUG
 
 /* include files */
 #include <stdio.h>
@@ -51,13 +52,13 @@
 #define DEFAULT_CITYPOINT 5
 #define DEFAULT_2OPTLOOP 100
 #define DEFAULT_HISTORYSIZE 20
-#define DEFAULT_SAMEPERCENTAGE 25
+#define DEFAULT_SAMEPERCENTAGE 20
 #define DEFAULT_NOTFOUNDLOOP 1000
 #define DEFAULT_MPIGROUPNUM 4
 #define DEFAULT_MIDDLEMANNNERI 100
 #define DEFAULT_SENDPARAMETERNUM 10
-#define GA_CROSS_POINT 15
-#define GA_COUNTER 300
+#define GA_CROSS_POINT 10
+#define GA_COUNTER 1000
 
 /* grobal variable */
 struct mode {
