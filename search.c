@@ -10,7 +10,7 @@ int * get_solution_path(void);
 void set_solution_path(int * solution_path);
 #ifdef POLEDEBUG
 #ifdef MPIMODE
-void output_other_sol_path(void)
+void output_other_sol_path(void);
 #endif
 #endif
 
