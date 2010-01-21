@@ -47,6 +47,7 @@ void set_counter(void);
 void create_2opt_tabulist(int tsp_size, int mode);
 int * get_ga_solution_path(void);
 int * get_other_solution_path_data(void);
+void set_have_been_mid_mode(void);
 
 void initialize_history(void);
 
@@ -67,7 +68,7 @@ int * pole_search(int * solution_path)
         if(check_manneri(SHORTMODE) == YES) {            
 
             set_tabu_mode(ON);
-        
+            set_have_been_mid_mode();
         
             if(check_manneri(MIDDLEMODE) == YES){
 
