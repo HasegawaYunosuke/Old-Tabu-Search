@@ -1,4 +1,4 @@
-/* #define MPIMODE */
+#define MPIMODE
 #define LINUXUSER
 #define DEBUG
 
@@ -56,7 +56,7 @@
 #define DEFAULT_MPIGROUPNUM 4
 #define DEFAULT_MIDDLEMANNNERI 100
 #define DEFAULT_SENDPARAMETERNUM 10
-#define GA_CROSS_POINT 50
+#define GA_CROSS_POINT 10
 #define GA_COUNTER 1000
 
 /* grobal variable */
