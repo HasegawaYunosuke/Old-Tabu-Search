@@ -50,12 +50,12 @@ void realtime_result(void)
             printf("OFF,");
         }
         printf("OFF)");
-        
+
         if(get_ga_mode() == ON){
         printf(" GA");
         set_ga_mode(OFF); 
         }
-        
+
         printf("\n");
     }
     /* DEL EN */

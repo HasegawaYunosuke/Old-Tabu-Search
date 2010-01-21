@@ -117,13 +117,14 @@ int check_other_data_satisfactory(void)
     int return_num = NO;
     int * other_sol_path;
     int group_num = get_num_of_all_proc() / DEFAULT_MPIGROUPNUM - 1;
+    int data_cell_num = get_tsp_size() + DEFAULT_SENDPARAMETERNUM;
 
     if((other_sol_path = get_other_solution_path_data()) == NULL) {
         return return_num;
     }
     else {
         for(i = 0; i < group_num; i++) {
-            if(other_sol_path[0] == 0) {
+            if(other_sol_path[i * data_cell_num] == 0) {
                 return return_num;
             }
         }

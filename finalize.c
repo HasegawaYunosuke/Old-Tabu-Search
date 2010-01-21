@@ -24,6 +24,9 @@ void close_loging_initial_path(void);
 void mpi_comunication_log_manage(int type);
 #endif
 #endif
+#ifdef POLEDEBUG
+void close_loging_other_sol_path(void);
+#endif
 
 /* global variable */
 int * lnp;
@@ -50,6 +53,9 @@ void finalize(void)
 
     #ifdef DEBUG
     close_loging_initial_path();
+    #endif
+    #ifdef POLEDEBUG
+    close_loging_other_sol_path();
     #endif
     printf("Program is normally terminated.....\n");
 }
