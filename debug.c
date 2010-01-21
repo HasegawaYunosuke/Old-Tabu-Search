@@ -134,10 +134,14 @@ void output_other_sol_path(void)
     int i, j;
 
     fprintf(debug_other_sol_fp, "+++POLEDEBUG+++\n\n");
+    fprintf(debug_other_sol_fp, "data_cell_num == %d, DEF == %d, group_num == %d\n\n", data_cell_num, DEFAULT_SENDPARAMETERNUM, group_num);
     if(group_num == 3) {
         for(i = 0; i < data_cell_num; i++) {
             fprintf(debug_other_sol_fp, "(sol[1], sol[2], sol[3]) == (%3d, %3d, %3d)\n", other_sol[i], other_sol[i + data_cell_num], other_sol[i + 2 * data_cell_num]);
         }
+    }
+    else {
+        fprintf(debug_other_sol_fp, "!!! group_num == %d !!!\n", group_num);
     }
     fprintf(debug_other_sol_fp, "\n\n+++++++++++++++\n");
 }
