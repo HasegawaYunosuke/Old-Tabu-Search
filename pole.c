@@ -50,6 +50,9 @@ int * get_other_solution_path_data(void);
 
 void initialize_history(void);
 
+void best_MPI_send(void);
+int check_other_data_satisfactory(void);
+
 /* global variable */
 int create_mode;
 
@@ -63,7 +66,7 @@ int * pole_search(int * solution_path)
    
         if(check_manneri(SHORTMODE) == YES) {            
 
-        set_tabu_mode(ON);
+            set_tabu_mode(ON);
         
         
             if(check_manneri(MIDDLEMODE) == YES){
@@ -72,12 +75,15 @@ int * pole_search(int * solution_path)
                 set_counter();
             
                 if(modep->parallel_mode == ON){
-                    solution_path_b = get_other_solution_path_data();
+                    if(check_other_data_satisfactory() == YES) {
+                        solution_path_b = get_other_solution_path_data();
                     }
-            pmx_one_cross(solution_path, solution_path_b);
-            create_2opt_tabulist(get_tsp_size(), CLEAR);
-            set_tabu_mode(OFF);
-            initialize_history();
+		}
+                    
+                pmx_one_cross(solution_path, solution_path_b);
+                create_2opt_tabulist(get_tsp_size(), CLEAR);
+                set_tabu_mode(OFF);
+                initialize_history();
              }
         }     
                 
@@ -615,7 +621,7 @@ int *pmx_one_cross(int * init_path_a, int * init_path_b)
  
     for(i = 0; i< tsp_size; i++) 
           init_path_b[i + 1] = path_d[i];
-          /*
+          
                    printf("path_a:");
 	
 	            for(i = 0; i< tsp_size; i++) {
@@ -640,7 +646,7 @@ int *pmx_one_cross(int * init_path_a, int * init_path_b)
 	            for(i = 0; i< tsp_size; i++) {
                 printf("%d -> ",path_d[i]);
               }
-              printf("\n");*/
+              printf("\n");
     free(copy_a);
     free(copy_b);
 }
