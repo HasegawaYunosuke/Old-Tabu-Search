@@ -584,7 +584,6 @@ int check_other_solution_path_data(int *other_sol_path)
     for(i = 0; i < tsp_size + 1; i++){
         if(other_sol_path[i] < 1 || tsp_size < other_sol_path[i])
             return_num = NO;
-            break;
             }    
     return return_num; 
 }
