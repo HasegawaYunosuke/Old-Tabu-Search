@@ -78,6 +78,9 @@ int * pole_search(int * solution_path)
 
                 set_ga_mode(ON); 
                 set_counter();
+                #ifdef MPIMODE
+                best_MPI_send();
+                #endif
                 
                 if(modep->parallel_mode == ON){
                 solution_path_b = get_other_solution_path_data();
