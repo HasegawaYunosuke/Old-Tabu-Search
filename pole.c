@@ -49,6 +49,7 @@ void create_2opt_tabulist(int tsp_size, int mode);
 int * get_ga_solution_path(void);
 int * get_other_solution_path_data(void);
 void set_have_been_mid_mode(void);
+void change_data_format(int * solution_path_pre_b,int * solution_path_b);
 
 void initialize_history(void);
 
@@ -64,6 +65,7 @@ int * pole_search(int * solution_path)
     int i;
     int tsp_size = get_tsp_size();
     int *solution_path_b;
+    int *solution_path_pre_b;
     solution_path_b = get_ga_solution_path(); 
    
     /* Search Graph-Data */
@@ -80,10 +82,16 @@ int * pole_search(int * solution_path)
                 set_counter();
                 
                 if(modep->parallel_mode == ON){
-                solution_path_b = get_other_solution_path_data();
-                    if(check_other_solution_path_data(solution_path_b) == NO) {
-                        solution_path_b = get_ga_solution_path();
-                    }
+
+
+                    //solution_path_b = get_other_solution_path_data();
+                    solution_path_pre_b = get_other_solution_path_data();
+                    change_data_format(solution_path_pre_b,solution_path_b);
+
+
+                if(check_other_solution_path_data(solution_path_b) == NO) {
+                    solution_path_b = get_ga_solution_path();
+                }
 		}                  
                 pmx_one_cross(solution_path, solution_path_b);
                 create_2opt_tabulist(get_tsp_size(), CLEAR);
@@ -94,7 +102,7 @@ int * pole_search(int * solution_path)
         solution_path = two_opt(solution_path);
         //solution_path_b = simple_two_opt(solution_path_b);
         //set_ga_solution_path(solution_path_b);
-}                      
+    }                      
                
     /* Search Euclid-Data (non-available) */
     else if(modep->euclid_mode == ON) {
@@ -107,6 +115,17 @@ int * pole_search(int * solution_path)
     
     return solution_path;
                    
+}
+
+void change_data_format(int * solution_path_pre_b,int * solution_path_b)
+{
+    int i, tsp_size = get_tsp_size();
+
+    solution_path_b[0] = tsp_size;
+
+    for(i = 1; i < tsp_size + 1; i++) {
+        solution_path_b[i] = solution_path_pre_b[i - 1];
+    }
 }
 /*two opt only*/
 int *simple_two_opt(int * solution_path)

@@ -262,7 +262,7 @@ void check_send_data(int * send_data, int send_num)
                 }
             }
         }
-    } while(zero_count <= 0);
+    } while(zero_count > 0);
 
     free(used_city_list);
 }
