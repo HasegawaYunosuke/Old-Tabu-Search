@@ -214,7 +214,7 @@ void best_MPI_recv(int * recv_process_number)
         MPI_Recv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, BEST_SOLUTION, MPI_COMM_WORLD, &stat);
         pthread_mutex_lock(&recv_sol_lock);
         for(i = 0; i < element_num; i++) {
-            [this_threads_index + i] = buffer[i];
+            other_sol_path[this_threads_index + i] = buffer[i];
         }
         set_other_solution_path_data(other_sol_path);   
         pthread_mutex_unlock(&recv_sol_lock);
