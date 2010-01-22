@@ -44,6 +44,7 @@ int check_manneri(int type);
 int is_this_ok_same_group_list(int * list, int all_process);
 void how_long_matched(int * maximum, int * max_i, int * matchedB, int size);
 /* DEL ST */
+void check_send_data(int * send_data, int send_num)
 void show_saved_other_sol(void);
 /* DEL EN */
 
@@ -178,9 +179,11 @@ void best_MPI_send(void)
     int i;
     MPI_Status stat;
 
-#ifdef MPIMODE
     if(check_manneri(FIRST_MIDDLEMODED) == YES) {
         for(i = 0; i < get_all_MPI_group_data() - 1; i++) {
+            /* DEL ST */
+            check_send_data(my_best_sol, element_num);
+            /* DEL EN */
             MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[i], BEST_SOLUTION, MPI_COMM_WORLD);
         }
 #ifdef DEBUG
@@ -195,7 +198,6 @@ void best_MPI_send(void)
         /* DEL EN */
 #endif
     }
-#endif
 }
 
 void best_MPI_recv(int * recv_process_number)
@@ -231,6 +233,38 @@ void best_MPI_recv(int * recv_process_number)
 #endif
     }
 
+}
+
+void check_send_data(int * send_data, int send_num)
+{
+    int i, tsp_size = get_tsp_size();
+    int * used_city_list = mallocer_ip(tsp_size + 1);
+    int zero_index = 0;
+    int zero_count = 0;
+
+    do {
+        for(i = 0; i < tsp_size; i++) {
+            if(send_data[i] == 0) {
+                zero_index = i;
+                zero_count++;
+            }
+            else {
+                used_city_list[send_data[i]] = YES;
+            }
+        }
+
+        if(zero_count != 0) {
+            for(i = 1; i <= tsp_size; i++) {
+                if(used_city_list[i] != YES) {
+                    send_data[zero_index] = i;
+                    zero_count--;
+                    break;
+                }
+            }
+        }
+    } while(zero_count <= 0);
+
+    free(used_city_list);
 }
 
 int * get_merge_route(void)
