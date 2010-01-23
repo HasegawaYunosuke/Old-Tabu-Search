@@ -38,13 +38,15 @@ void initial_path(void)
     else {
         set_solution_path(initial_graph_path(get_graph_data()));
 
-        if(modep->pole_mode == ON)
+        if(modep->pole_mode == ON){
             set_ga_solution_path(initial_graph_path(get_graph_data()));
-    }
+            set_other_solution_path_data(initial_graph_path(get_graph_data()));
+            } 
+   }
 }
-
 /* global variable */
 int create_mode = DEFAULT;
+
 
 int * initial_euclid_path(int * euclid_data)
 {
@@ -78,11 +80,8 @@ int * initial_graph_path(double * graph_data)
         return_data[0] = (int)graph_data[0];
     }
 
-#ifdef MPIMODE
-    create_mode = decide_create_mode();
-#endif
     /* create the initial path */
-    return_data = create_graph_path(return_data, graph_data, create_mode);
+    return_data = create_graph_path(return_data, graph_data, DEFAULT);
 
     return return_data;
 }
@@ -108,7 +107,6 @@ int * create_euclid_path(int * return_data, int * euclid_data, int create_mode)
         return_data[1] = first_point;
         now_x = euclid_data[first_point * 2];
         now_y = euclid_data[first_point * 2 + 1];
-
         for(return_data_index = 2; return_data_index <= tsp_size; return_data_index++) {
             for(next_city = 1; next_city <= tsp_size; next_city++) {
                 /* check already choiced cities */

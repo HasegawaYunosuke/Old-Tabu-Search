@@ -41,6 +41,7 @@ int * get_best_solution_path(void);
 void set_best_solution_path_data(void);
 void set_other_solution_path_data(int * solution_path);
 int * get_other_solution_path_data(void);
+int check_other_solution_path_data(int *other_sol_path);
 int * get_solution_path(void);
 void initial_parameter(int tsp_size);
 int turn_loop_times(int type);
@@ -574,6 +575,20 @@ int * get_other_solution_path_data(void)
     return parameterp->other_solution_path;
 }
 
+int check_other_solution_path_data(int *other_sol_path)
+{
+    int i;
+    int tsp_size = get_tsp_size();
+    int return_num = YES;
+    
+    for(i = 0; i < tsp_size + 1; i++){
+        if(other_sol_path[i] < 1 || tsp_size < other_sol_path[i]){
+            return_num = NO;
+            break;
+            }
+        }    
+    return return_num; 
+}
 void set_solution_data_flag(void)
 {
     parameterp->solution_data_flag = ON;
@@ -666,9 +681,10 @@ void set_all_cost(void)
     if(all_cost < parameterp->best_cost) {
         parameterp->best_cost = all_cost;
         set_best_solution_path_data();
-        #ifdef MPIMODE
-        //best_MPI_send();
-        #endif
+   
+    #ifdef MPIMODE
+    best_MPI_send();
+    #endif
     }
 }
 
