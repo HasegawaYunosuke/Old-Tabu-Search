@@ -3,6 +3,7 @@ machinefile
 tags
 *~
 *.exe
+nohup.*
 test.repo/*
 log_data/*
 debug_log/*
