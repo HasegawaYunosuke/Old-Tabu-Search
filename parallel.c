@@ -220,7 +220,6 @@ void best_MPI_recv(int * recv_process_number)
 #ifdef DEBUG
         mpi_comunication_log_manage(MPI_RECVADD);
 #endif
-        set_other_solution_path_data(other_sol_path); 
     }
 
 }

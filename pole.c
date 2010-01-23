@@ -78,16 +78,13 @@ int * pole_search(int * solution_path)
 
                 set_ga_mode(ON); 
                 set_counter();
-                #ifdef MPIMODE
-                best_MPI_send();
-                #endif
                 
                 if(modep->parallel_mode == ON){
                 solution_path_b = get_other_solution_path_data();
-                    if(check_other_solution_path_data(solution_path_b) == NO) {
+                   if(check_other_solution_path_data(solution_path_b) == NO) {
                         solution_path_b = get_ga_solution_path();
-                    }
-		}                  
+                        }
+                }                  
                 pmx_one_cross(solution_path, solution_path_b);
                 create_2opt_tabulist(get_tsp_size(), CLEAR);
                 set_tabu_mode(OFF);
