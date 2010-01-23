@@ -44,6 +44,7 @@ int check_manneri(int type);
 int is_this_ok_same_group_list(int * list, int all_process);
 void how_long_matched(int * maximum, int * max_i, int * matchedB, int size);
 /* DEL ST */
+void check_send_data(int * send_data, int send_num);
 void show_saved_other_sol(void);
 /* DEL EN */
 
@@ -116,13 +117,14 @@ int check_other_data_satisfactory(void)
     int return_num = NO;
     int * other_sol_path;
     int group_num = get_num_of_all_proc() / DEFAULT_MPIGROUPNUM - 1;
+    int data_cell_num = get_tsp_size() + DEFAULT_SENDPARAMETERNUM;
 
     if((other_sol_path = get_other_solution_path_data()) == NULL) {
         return return_num;
     }
     else {
         for(i = 0; i < group_num; i++) {
-            if(other_sol_path[0] == 0) {
+            if(other_sol_path[i * data_cell_num] == 0) {
                 return return_num;
             }
         }
@@ -176,16 +178,25 @@ void best_MPI_send(void)
     int i;
     MPI_Status stat;
 
-#ifdef MPIMODE
     if(check_manneri(FIRST_MIDDLEMODED) == YES) {
         for(i = 0; i < get_all_MPI_group_data() - 1; i++) {
+            /* DEL ST */
+            check_send_data(my_best_sol, element_num);
+            /* DEL EN */
             MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[i], BEST_SOLUTION, MPI_COMM_WORLD);
         }
 #ifdef DEBUG
         mpi_comunication_log_manage(MPI_SENDADD);
+
+        /* DEL ST */
+        test_debug_log("+++ best_MPI_send() +++", -1);
+        for(i = 0; i < element_num; i++) {
+            test_debug_log("send_sol == ", my_best_sol[i]);
+        }
+        test_debug_log("+++++++++++++++++++++++", -1);
+        /* DEL EN */
 #endif
     }
-#endif
 }
 
 void best_MPI_recv(int * recv_process_number)
@@ -207,16 +218,50 @@ void best_MPI_recv(int * recv_process_number)
 
     for(;;) {
         MPI_Recv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, BEST_SOLUTION, MPI_COMM_WORLD, &stat);
+
         pthread_mutex_lock(&recv_sol_lock);
         for(i = 0; i < element_num; i++) {
             other_sol_path[this_threads_index + i] = buffer[i];
         }
         pthread_mutex_unlock(&recv_sol_lock);
+
 #ifdef DEBUG
         mpi_comunication_log_manage(MPI_RECVADD);
 #endif
     }
 
+}
+
+void check_send_data(int * send_data, int send_num)
+{
+    int i, tsp_size = get_tsp_size();
+    int * used_city_list = mallocer_ip(tsp_size + 1);
+    int zero_index = 0;
+    int zero_count = 0;
+
+    do {
+        for(i = 0; i < tsp_size; i++) {
+            if(send_data[i] == 0) {
+                zero_index = i;
+                zero_count++;
+            }
+            else {
+                used_city_list[send_data[i]] = YES;
+            }
+        }
+
+        if(zero_count != 0) {
+            for(i = 1; i <= tsp_size; i++) {
+                if(used_city_list[i] != YES) {
+                    send_data[zero_index] = i;
+                    zero_count--;
+                    break;
+                }
+            }
+        }
+    } while(zero_count > 0);
+
+    free(used_city_list);
 }
 
 int * get_merge_route(void)
@@ -272,7 +317,7 @@ void how_long_matched(int * maximum, int * max_i, int * matchedB, int size)
         else {
             if(*maximum < counter) {
                 *maximum = counter;
-                *max_i = i;
+                *max_i = i - 1;
             }
             counter = 0;
         }
@@ -393,6 +438,7 @@ void adjust_branchs(int * branchs, int * other_sol, int * temp_path, int choice)
     int start = (size + DEFAULT_SENDPARAMETERNUM) * choice;
 
     temp_path[0] = size;
+
     for(i = 1; i <= size; i++) {
         temp_path[i] = other_sol[start + i];
     }

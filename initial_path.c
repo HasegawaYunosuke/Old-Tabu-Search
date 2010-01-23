@@ -78,11 +78,8 @@ int * initial_graph_path(double * graph_data)
         return_data[0] = (int)graph_data[0];
     }
 
-#ifdef MPIMODE
-    create_mode = decide_create_mode();
-#endif
     /* create the initial path */
-    return_data = create_graph_path(return_data, graph_data, create_mode);
+    return_data = create_graph_path(return_data, graph_data, DEFAULT);
 
     return return_data;
 }
@@ -108,7 +105,6 @@ int * create_euclid_path(int * return_data, int * euclid_data, int create_mode)
         return_data[1] = first_point;
         now_x = euclid_data[first_point * 2];
         now_y = euclid_data[first_point * 2 + 1];
-
         for(return_data_index = 2; return_data_index <= tsp_size; return_data_index++) {
             for(next_city = 1; next_city <= tsp_size; next_city++) {
                 /* check already choiced cities */
