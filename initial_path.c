@@ -79,7 +79,7 @@ int * initial_graph_path(double * graph_data)
     }
 
     /* create the initial path */
-    return_data = create_graph_path(return_data, graph_data, DEFAULT);
+    return_data = create_graph_path(return_data, graph_data, decide_create_mode());
 
     return return_data;
 }

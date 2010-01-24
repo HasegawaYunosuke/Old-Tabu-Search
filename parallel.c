@@ -51,6 +51,8 @@ void show_saved_other_sol(void);
 #ifdef DEBUG
 void mpi_comunication_log_manage(int type);
 void figure_of_match_num(int matched_num);
+void output_other_sol_path(void);
+void test_debug_log(char message[128], int num);
 #endif
 
 /* grobal variable */
@@ -227,6 +229,7 @@ void best_MPI_recv(int * recv_process_number)
 
 #ifdef DEBUG
         mpi_comunication_log_manage(MPI_RECVADD);
+        output_other_sol_path();
 #endif
     }
 
@@ -280,6 +283,9 @@ int * get_merge_route(void)
     }
     else {
         choiced = random_num(all_group_num - 1) - 1;
+
+        /* other_sol_path[]'s Data-Format is [0] == city1, [1] == city2, ... [N - 1] == cityN
+           return_data[]'s Data-Format is    [0] == N, [1] == city1, ... [N] == cityN */
         merge_route(return_data, other_sol_path, choiced);
     }
 
@@ -341,11 +347,12 @@ void get_route_by_matched(int * sol_path, int * matchedB, int * temp_path)
     figure_of_match_num(maximum);
 #endif
 
-    start_i = max_i + 1 - maximum; used_cities[0] = maximum;
+    start_i = max_i + 1 - maximum;
+    used_cities[0] = maximum;
 
-    for(i = 0; i <= maximum; i++) {
-        sol_path[i + 1] = temp_path[i + start_i];
-        used_cities[sol_path[i + 1]] = ON;
+    for(i = 1; i <= maximum; i++) {
+        sol_path[i] = temp_path[i + start_i];
+        used_cities[sol_path[i]] = ON;
     }
 
     /* create the leftover-path by Nearby Branch */
@@ -440,7 +447,7 @@ void adjust_branchs(int * branchs, int * other_sol, int * temp_path, int choice)
     temp_path[0] = size;
 
     for(i = 1; i <= size; i++) {
-        temp_path[i] = other_sol[start + i];
+        temp_path[i] = other_sol[start + i - 1];
     }
 }
 

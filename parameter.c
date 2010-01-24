@@ -681,7 +681,7 @@ void set_all_cost(void)
         parameterp->best_cost = all_cost;
         set_best_solution_path_data();
         #ifdef MPIMODE
-        best_MPI_send();
+        //best_MPI_send();
         #endif
     }
 }
