@@ -57,6 +57,7 @@ void test_debug_log(char message[128], int num);
 
 /* grobal variable */
 pthread_mutex_t recv_sol_lock;
+int before_send_process_index;
 
 /* if Using Score System */
 void set_MPI_parameter(void)
@@ -74,6 +75,7 @@ void set_MPI_parameter(void)
     set_MPI_group();
     set_other_solution_path();
     set_merge_branchs();
+    before_send_process_index = 0;
     #ifdef DEBUG
     mpi_comunication_log_manage(INIT);
     #endif
@@ -171,6 +173,7 @@ void create_same_group_list(int group_num, int my_group)
     set_group_start_process(group_start_process);
 }
 
+
 void best_MPI_send(void)
 {
     int my_process_num = get_process_number();
@@ -181,12 +184,20 @@ void best_MPI_send(void)
     MPI_Status stat;
 
     if(check_manneri(FIRST_MIDDLEMODED) == YES) {
-        for(i = 0; i < get_all_MPI_group_data() - 1; i++) {
-            /* DEL ST */
-            check_send_data(my_best_sol, element_num);
-            /* DEL EN */
-            MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[i], BEST_SOLUTION, MPI_COMM_WORLD);
+        /* DEL ST */
+        check_send_data(my_best_sol, element_num);
+        /* DEL EN */
+
+        if(before_send_process_index >= (get_all_MPI_group_data() - 2)) {
+            before_send_process_index = 0;
         }
+        /* Send it-self best-solution-path to All other processes (High-Cost)
+        for(i = 0; i < get_all_MPI_group_data() - 1; i++) {
+            MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[i], BEST_SOLUTION, MPI_COMM_WORLD);
+        }*/
+        /* Send it-self best-solution-path to Only-One process that chose by turn (Low-Cost)*/
+        MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[before_send_process_index], BEST_SOLUTION, MPI_COMM_WORLD);
+        before_send_process_index++;
 #ifdef DEBUG
         mpi_comunication_log_manage(MPI_SENDADD);
 
@@ -229,7 +240,7 @@ void best_MPI_recv(int * recv_process_number)
 
 #ifdef DEBUG
         mpi_comunication_log_manage(MPI_RECVADD);
-        output_other_sol_path();
+        //output_other_sol_path();
 #endif
     }
 
