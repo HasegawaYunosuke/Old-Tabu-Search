@@ -216,13 +216,10 @@ void best_MPI_recv(int * recv_process_number)
         for(i = 0; i < element_num; i++) {
             other_sol_path[this_threads_index + i] = buffer[i];
         }
+        pthread_mutex_unlock(&recv_sol_lock);
 #ifdef DEBUG
         mpi_comunication_log_manage(MPI_RECVADD);
 #endif
-        if(check_other_solution_path_data(other_sol_path) == YES) 
-        set_other_solution_path_data(other_sol_path); 
-    }
-
 }
 
 int * get_merge_route(void)
