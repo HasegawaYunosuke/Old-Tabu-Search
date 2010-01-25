@@ -231,8 +231,7 @@ void best_MPI_recv(int * recv_process_number)
         mpi_comunication_log_manage(MPI_RECVADD);
         //output_other_sol_path();
 #endif
-    }
-
+        }
 }
 
 void check_send_data(int * send_data, int send_num)
