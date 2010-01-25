@@ -229,7 +229,7 @@ void best_MPI_recv(int * recv_process_number)
 
 #ifdef DEBUG
         mpi_comunication_log_manage(MPI_RECVADD);
-        output_other_sol_path();
+        //output_other_sol_path();
 #endif
     }
 
