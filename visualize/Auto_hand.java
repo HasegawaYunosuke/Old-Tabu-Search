@@ -37,6 +37,7 @@ class Auto_hand extends JPanel implements Runnable ,ActionListener, AdjustmentLi
 	private boolean ngya2 = true;
 	private boolean flag = true;
 	private boolean flag2 = true;
+	private boolean flag3 = true;
 	private boolean action1 = false;
 	private boolean action2 = false;
 	private boolean action3 = false;
@@ -101,14 +102,14 @@ class Auto_hand extends JPanel implements Runnable ,ActionListener, AdjustmentLi
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setBounds(this.bx, this.by, 500, 500 );
-		frame.setTitle("描画");
+		frame.setTitle("描画:" + this.logname);
 
 		button1 = new JButton("UP");
 		button1.addActionListener(this);
 		button1.setBounds(this.bx/25*18, this.by/10*8, 70, 50);
 		button2 = new JButton("Down");
 		button2.addActionListener(this);
-		button2.setBounds(this.bx/25*5, this.by/10*8, 70, 50);
+		button2.setBounds(this.bx/25*5, this.by/10*8, 150, 50);
 		frame.add(button1);
 		frame.add(button2);
 
@@ -342,6 +343,8 @@ class Auto_hand extends JPanel implements Runnable ,ActionListener, AdjustmentLi
 					this.button1.setText("＋");
 					this.button2.setText("ー");
                     this.numnum = 0;
+					frame.setTitle("手動モード:" + this.logname);
+					button4.setEnabled(false);
                     button6.setEnabled(true);
                     button7.setEnabled(true);
 			}
@@ -354,6 +357,8 @@ class Auto_hand extends JPanel implements Runnable ,ActionListener, AdjustmentLi
 					this.button1.setText("UP");
 					this.button2.setText("Down");
                     this.numnum = 0;
+					frame.setTitle("自動モード:" + this.logname);
+					button4.setEnabled(true);
                     button6.setEnabled(false);
                     button7.setEnabled(false);
 			}
@@ -388,7 +393,7 @@ class Auto_hand extends JPanel implements Runnable ,ActionListener, AdjustmentLi
 			label.setText("解" + this.now_Line_num + "つ目");
 			g.setColor(Color.red);
 			button1.setBounds(this.bx/25*18, this.by/10*8, 70, 50);
-			button2.setBounds(this.bx/25*3, this.by/10*8, 70, 50);
+			button2.setBounds(this.bx/25*3, this.by/10*8, 80, 50);
 			button4.setBounds(this.bx/25*13,this.by/10*8,70,50);
 			button5.setBounds(this.bx/25*8,this.by/10*8,70,50);
             button6.setBounds(this.bx/25*18,this.by-30,50,40);
