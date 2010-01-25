@@ -49,7 +49,6 @@ void show_saved_other_sol(void);
 
 #ifdef DEBUG
 void mpi_comunication_log_manage(int type);
-void test_debug_log(char message[128], int num);
 void figure_of_match_num(int matched_num);
 #endif
 
@@ -206,9 +205,6 @@ void best_MPI_recv(int * recv_process_number)
             this_threads_index = i * element_num;
         }
     }
-
-    sleep(1);
-    test_debug_log("RECV:get_all_MPI_group_data", get_all_MPI_group_data());
 
     for(;;) {
         MPI_Recv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, BEST_SOLUTION, MPI_COMM_WORLD, &stat);
@@ -426,7 +422,6 @@ int is_this_ok_same_group_list(int * list, int all_process)
 
     for(i = 0; i < group_num; i++) {
         if(list[i] > all_process) {
-            test_debug_log("!!!is_this_ok_same_group_list() error!!!", -1);
             return_num = NO;
             break;
         }
