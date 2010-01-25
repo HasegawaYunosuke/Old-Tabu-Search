@@ -40,7 +40,6 @@ void initial_path(void)
 
         if(modep->pole_mode == ON){
             set_ga_solution_path(initial_graph_path(get_graph_data()));
-            set_other_solution_path_data(initial_graph_path(get_graph_data()));
             } 
    }
 }

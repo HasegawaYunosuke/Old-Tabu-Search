@@ -216,6 +216,7 @@ void best_MPI_recv(int * recv_process_number)
 #ifdef DEBUG
         mpi_comunication_log_manage(MPI_RECVADD);
 #endif
+        }
 }
 
 int * get_merge_route(void)

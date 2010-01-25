@@ -55,6 +55,7 @@ void initialize_history(void);
 void best_MPI_send(void);
 void set_have_been_mid_mode(void);
 int check_other_solution_path_data(int *other_sol_path);
+void transform_solution_path(int * other_solution_path, int *path_a, int *path_b, int *path_c);
 
 /* global variable */
 int create_mode;
@@ -64,7 +65,13 @@ int * pole_search(int * solution_path)
     int i;
     int tsp_size = get_tsp_size();
     int *solution_path_b;
+    int *solution_path_c;
+    int *solution_path_d;
+    int *solution_path_e;
+       
     solution_path_b = get_ga_solution_path(); 
+    
+    int *other_solution_path; 
    
     /* Search Graph-Data */
     if(modep->graph_mode == ON) {   
@@ -80,10 +87,12 @@ int * pole_search(int * solution_path)
                 set_counter();
                 
                 if(modep->parallel_mode == ON){
-                solution_path_b = get_other_solution_path_data();
-                   if(check_other_solution_path_data(solution_path_b) == NO) {
-                        solution_path_b = get_ga_solution_path();
+                other_solution_path = get_other_solution_path_data();
+                 transform_solution_path(other_solution_path, solution_path_c, solution_path_d, solution_path_e);
+                   if(check_other_solution_path_data(solution_path_c) == NO) {
+                        solution_path_c = get_ga_solution_path();
                         }
+                    else solution_path_b = solution_path_c;
                 }                  
                 pmx_one_cross(solution_path, solution_path_b);
                 create_2opt_tabulist(get_tsp_size(), CLEAR);
@@ -107,6 +116,21 @@ int * pole_search(int * solution_path)
     
     return solution_path;
                    
+}
+void transform_solution_path(int * other_solution_path, int *path_a, int *path_b, int *path_c)
+{
+    int tsp_size = get_tsp_size();
+    int i;
+    
+    path_a[0] = tsp_size;
+    path_b[0] = tsp_size;
+    path_c[0] = tsp_size;
+    
+    for(i = 1; i <= tsp_size; i++){
+        path_a[i] = other_solution_path[i];
+        path_b[i] = other_solution_path[i + DEFAULT_SENDPARAMETERNUM + tsp_size];
+        path_c[i] = other_solution_path[i + (DEFAULT_SENDPARAMETERNUM + tsp_size) * 2];
+       }
 }
 /*two opt only*/
 int *simple_two_opt(int * solution_path)
