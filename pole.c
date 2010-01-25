@@ -55,7 +55,7 @@ void initialize_history(void);
 void best_MPI_send(void);
 void set_have_been_mid_mode(void);
 int check_other_solution_path_data(int *other_sol_path);
-void transform_solution_path(int * other_solution_path, int *path_a, int *path_b, int *path_c);
+void transform_solution_path(int * other_solution_path, int * return_path);
 
 /* global variable */
 int create_mode;
@@ -66,14 +66,9 @@ int * pole_search(int * solution_path)
     int tsp_size = get_tsp_size();
     int *solution_path_b;
     int *solution_path_c;
-    int *solution_path_d;
-    int *solution_path_e;
        
     solution_path_b = get_ga_solution_path(); 
-
     solution_path_c = mallocer_ip(tsp_size + 1);    
-    solution_path_d = mallocer_ip(tsp_size + 1);
-    solution_path_e = mallocer_ip(tsp_size + 1);
 
     int *other_solution_path; 
    
@@ -92,7 +87,7 @@ int * pole_search(int * solution_path)
                 
                 if(modep->parallel_mode == ON){
                 other_solution_path = get_other_solution_path_data();
-                 transform_solution_path(other_solution_path, solution_path_c, solution_path_d, solution_path_e);
+                 transform_solution_path(other_solution_path, solution_path_c);
                    if(check_other_solution_path_data(solution_path_c) == YES) {
                         for(i = 0; i < tsp_size + 1; i++){
                             solution_path_b[i] = solution_path_c[i]; 
@@ -120,17 +115,22 @@ int * pole_search(int * solution_path)
     }
     
     free(solution_path_c);
-    free(solution_path_d);
-    free(solution_path_e);
     
     return solution_path;
                    
 }
-void transform_solution_path(int * other_solution_path, int *path_a, int *path_b, int *path_c)
+void transform_solution_path(int * other_solution_path, int * return_path)
 {
     int tsp_size = get_tsp_size();
     int i;
+    int *path_a;
+    int *path_b;
+    int *path_c;
     
+    path_a = mallocer_ip(tsp_size + 1);
+    path_b = mallocer_ip(tsp_size + 1);
+    path_c = mallocer_ip(tsp_size + 1);
+            
     path_a[0] = tsp_size;
     path_b[0] = tsp_size;
     path_c[0] = tsp_size;
@@ -140,6 +140,29 @@ void transform_solution_path(int * other_solution_path, int *path_a, int *path_b
         path_b[i + 1] = other_solution_path[i + DEFAULT_SENDPARAMETERNUM + tsp_size];
         path_c[i + 1] = other_solution_path[i + (DEFAULT_SENDPARAMETERNUM + tsp_size) * 2];
        }
+
+    int num = rand() % 3;
+    printf("%d\n",num);
+    
+    if(num == 1){    
+        for(i = 0; i < tsp_size + 1; i++){
+            return_path[i] = path_a[i]; 
+        }
+    } 
+    if(num == 2){    
+        for(i = 0; i < tsp_size + 1; i++){
+            return_path[i] = path_b[i]; 
+            }
+    }                 
+    if(num == 3){    
+        for(i = 0; i < tsp_size + 1; i++){
+            return_path[i] = path_c[i]; 
+            }  
+    }
+                                        
+    free(path_a);
+    free(path_b);
+    free(path_c);
 }
 /*two opt only*/
 int *simple_two_opt(int * solution_path)
