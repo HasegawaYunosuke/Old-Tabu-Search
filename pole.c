@@ -142,19 +142,18 @@ void transform_solution_path(int * other_solution_path, int * return_path)
        }
 
     int num = rand() % 3;
-    printf("%d\n",num);
     
-    if(num == 1){    
+    if(num == 0){    
         for(i = 0; i < tsp_size + 1; i++){
             return_path[i] = path_a[i]; 
         }
     } 
-    if(num == 2){    
+    if(num == 1){    
         for(i = 0; i < tsp_size + 1; i++){
             return_path[i] = path_b[i]; 
             }
     }                 
-    if(num == 3){    
+    if(num == 2){    
         for(i = 0; i < tsp_size + 1; i++){
             return_path[i] = path_c[i]; 
             }  
