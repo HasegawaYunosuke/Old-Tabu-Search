@@ -70,7 +70,11 @@ int * pole_search(int * solution_path)
     int *solution_path_e;
        
     solution_path_b = get_ga_solution_path(); 
-    
+
+    solution_path_c = mallocer_ip(tsp_size + 1);    
+    solution_path_d = mallocer_ip(tsp_size + 1);
+    solution_path_e = mallocer_ip(tsp_size + 1);
+
     int *other_solution_path; 
    
     /* Search Graph-Data */
@@ -89,10 +93,11 @@ int * pole_search(int * solution_path)
                 if(modep->parallel_mode == ON){
                 other_solution_path = get_other_solution_path_data();
                  transform_solution_path(other_solution_path, solution_path_c, solution_path_d, solution_path_e);
-                   if(check_other_solution_path_data(solution_path_c) == NO) {
-                        solution_path_c = get_ga_solution_path();
+                   if(check_other_solution_path_data(solution_path_c) == YES) {
+                        for(i = 0; i < tsp_size + 1; i++){
+                            solution_path_b[i] = solution_path_c[i]; 
                         }
-                    else solution_path_b = solution_path_c;
+                   }                   
                 }                  
                 pmx_one_cross(solution_path, solution_path_b);
                 create_2opt_tabulist(get_tsp_size(), CLEAR);
@@ -114,6 +119,10 @@ int * pole_search(int * solution_path)
         error_procedure("pole_search()");
     }
     
+    free(solution_path_c);
+    free(solution_path_d);
+    free(solution_path_e);
+    
     return solution_path;
                    
 }
@@ -126,10 +135,10 @@ void transform_solution_path(int * other_solution_path, int *path_a, int *path_b
     path_b[0] = tsp_size;
     path_c[0] = tsp_size;
     
-    for(i = 1; i <= tsp_size; i++){
-        path_a[i] = other_solution_path[i];
-        path_b[i] = other_solution_path[i + DEFAULT_SENDPARAMETERNUM + tsp_size];
-        path_c[i] = other_solution_path[i + (DEFAULT_SENDPARAMETERNUM + tsp_size) * 2];
+    for(i = 0; i <= tsp_size; i++){
+        path_a[i + 1] = other_solution_path[i];
+        path_b[i + 1] = other_solution_path[i + DEFAULT_SENDPARAMETERNUM + tsp_size];
+        path_c[i + 1] = other_solution_path[i + (DEFAULT_SENDPARAMETERNUM + tsp_size) * 2];
        }
 }
 /*two opt only*/
@@ -357,7 +366,7 @@ void exchange_branches(int * solution_path, int * indexes)
     for(i = 0; i <= count; i++) {
         solution_path[nowindex((indexes[2] - i), tsp_size)] = copy[nowindex((indexes[1] + i), tsp_size)];
     }
-    
+
     if(get_tabu_mode() == ON) {         
     get_cities_by_indexes(cities, indexes, solution_path);
     add_2opt_tabulist(cities);
@@ -558,6 +567,7 @@ int *pmx_one_cross(int * init_path_a, int * init_path_b)
     for(i = start_point; i < tsp_size; i++) {
         path_a[j] = init_path_a[i + 1];
         j++;
+
         }       
 
     for(i = 0; i != start_point; i++) {
