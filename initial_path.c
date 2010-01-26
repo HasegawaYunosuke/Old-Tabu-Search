@@ -38,13 +38,14 @@ void initial_path(void)
     else {
         set_solution_path(initial_graph_path(get_graph_data()));
 
-        if(modep->pole_mode == ON)
+        if(modep->pole_mode == ON){
             set_ga_solution_path(initial_graph_path(get_graph_data()));
-    }
+            } 
+   }
 }
-
 /* global variable */
 int create_mode = DEFAULT;
+
 
 int * initial_euclid_path(int * euclid_data)
 {

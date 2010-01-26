@@ -40,6 +40,7 @@ int main(int argc, char ** argv)
     for(;;) {
         /* create initial-path by each mode */
         initial_path();
+        
         /* search-turn loop */
         for(;;) {
             /* search */
@@ -65,3 +66,4 @@ int main(int argc, char ** argv)
 
     return 0;
 }
+

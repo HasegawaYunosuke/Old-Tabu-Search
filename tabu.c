@@ -21,10 +21,14 @@ pthread_mutex_t match_mutex;
 int is_2opt_tabu(int * cities1)
 {
     int i;
-    int cities[4][4] = {{cities1[0],cities1[1],cities1[2],cities1[3]},
-                        {cities1[2],cities1[3],cities1[0],cities1[1]},
-                        {cities1[1],cities1[0],cities1[3],cities1[2]},
-                        {cities1[3],cities1[2],cities1[1],cities1[0]}};
+    //int cities[4][4] = {{cities1[0],cities1[1],cities1[2],cities1[3]},  /* A, A', B, B' */
+    //                    {cities1[2],cities1[3],cities1[0],cities1[1]},  /* B, B', A, A' */
+    //                    {cities1[1],cities1[0],cities1[3],cities1[2]},  /* A', A, B', B */
+    //                    {cities1[3],cities1[2],cities1[1],cities1[0]}}; /* B', B ,A', A,*/
+    int cities[4][4] = {{cities1[0],cities1[2],cities1[1],cities1[3]},  /* A, B, A', B' */
+                        {cities1[1],cities1[3],cities1[0],cities1[2]},  /* A', B', A, B */
+                        {cities1[2],cities1[0],cities1[3],cities1[1]},  /* B, A, B', A' */
+                        {cities1[3],cities1[1],cities1[2],cities1[0]}}; /* B', A', B, A,*/
 
     pthread_t matching_thread[4];
 
@@ -71,11 +75,11 @@ void add_2opt_tabulist(int * cities)
     for(i = 0; i < 4; i++) {
         tabulist_2opt[i][tabulist_2opt_index] = cities[i];
     }
-    
+
     if(tabulist_2opt_index >= get_list_size(get_tsp_size())) {
         tabulist_2opt_index = 0;
     }
-    
+
     tabulist_2opt_index++;
 }
 
