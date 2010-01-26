@@ -64,6 +64,9 @@ void finalize(void)
     #ifdef CROSSOVER_BEF_AFT
     close_loging_x_sol_path();
     #endif
+    #ifdef DISTANCE_LOG
+    close_distance_log();
+    #endif
     //printf("Program is normally terminated.....\n");
 }
 

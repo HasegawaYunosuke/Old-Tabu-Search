@@ -16,6 +16,21 @@ char x_sol_log_name[128];
 FILE * x_sol_fp;
 #endif
 
+#ifdef DISTANCE_LOG
+int search_loop_times(int type);
+double get_all_cost_by_graph(int * cities);
+double get_best_cost(void);
+int * get_solution_path(void);
+
+void output_distance_log(void);
+void open_distance_log(void);
+void close_distance_log(void);
+
+/* global variable */
+char dis_log_name[128];
+FILE * dis_log_fp;
+#endif
+
 #ifdef CROSSOVER_BEF_AFT
 void output_x_sol_path(int *path_a, int *path_b, int before_after)
 {
@@ -72,4 +87,33 @@ void close_loging_x_sol_path(void)
 {
     fclose(x_sol_fp);
 }
+#endif
+
+
+#ifdef DISTANCE_LOG
+void output_distance_log(void)
+{
+    fprintf(dis_log_fp, "Search:     %d, All Cost:%f, Best Cost:%f\n", search_loop_times(READONLY), get_all_cost_by_graph(get_solution_path()), get_best_cost());
+}
+
+void open_distance_log(void)
+{
+    if(get_process_number() < 10) {
+         sprintf(dis_log_name, "result_log/distance_log.0%d.log",get_process_number());
+    }
+    else {
+         sprintf(dis_log_name, "result_log/distance_log.%d.log",get_process_number());
+    }
+    if((dis_log_fp = fopen(dis_log_name, "a")) == NULL) {
+        error_procedure("can't find \"result_log\" directory");
+    }
+    fprintf(dis_log_fp, "*** DISTANCE LOG START ***\n");
+}
+
+void close_distance_log(void)
+{
+    fprintf(dis_log_fp, "*** DISTANCE LOG END ***\n");
+    fclose(dis_log_fp);
+}
+
 #endif
