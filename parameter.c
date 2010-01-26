@@ -115,6 +115,7 @@ struct parameter {
     int process_number;
     int num_of_all_proc;
     int MPI_group;
+    int group_reader_process;
     int all_MPI_group;
     int * same_group_list;
     int group_start_process;
@@ -173,6 +174,7 @@ void set_parameter_data(int num_of_all_proc, int process_number, int name_length
     for(i = 0; i < name_length; i++) {
         parameterp->process_name[i] = process_name[i];
     }
+    parameterp->group_reader_process = (int)(process_number / (num_of_all_proc / DEFAULT_MPIGROUPNUM));
 }
 
 void set_MPI_group_data(int all_MPI_group, int MPI_group)
