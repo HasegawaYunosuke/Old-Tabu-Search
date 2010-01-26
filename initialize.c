@@ -19,6 +19,7 @@ int get_all_MPI_group_data(void);
 #endif
 #ifdef DEBUG
 void open_loging_initial_path(void);
+void tabu_matching_loging(int type);
 #endif
 #ifdef POLEDEBUG
 void open_loging_other_sol_path(void);
@@ -81,6 +82,9 @@ void initialize(int argc, char ** argv)
     #endif
     #ifdef POLEDEBUG
     open_loging_other_sol_path();
+    #endif
+    #ifdef DEBUG
+    tabu_matching_loging(INIT);
     #endif
 }
 
