@@ -21,37 +21,37 @@ void output_x_sol_path(int *path_a, int *path_b, int before_after)
 {
     int i;
 
-    fprintf(x_sol_fp, "*** CROSSOVER LOG START ***¥n");
+    fprintf(x_sol_fp, "*** CROSSOVER LOG START ***\n");
 
     if(before_after == 0) {
-        fprintf(x_sol_fp, "=== BEFORE CROSSOVER ===¥n¥n");
+        fprintf(x_sol_fp, "=== BEFORE CROSSOVER ===\n\n");
 
-        fprintf(x_sol_fp, "=== PARENT A ===¥n");
+        fprintf(x_sol_fp, "=== PARENT A ===\n");
         for(i = 0; i <= get_tsp_size(); i++) {
-            fprintf(x_sol_fp, "No.%3d> city(%3d)¥n",i, path_a[i]);
+            fprintf(x_sol_fp, "No.%3d> city(%3d)\n",i, path_a[i]);
         }
 
-        fprintf(x_sol_fp, "=== PARENT B ===¥n");
+        fprintf(x_sol_fp, "=== PARENT B ===\n");
         for(i = 0; i <= get_tsp_size(); i++) {
-            fprintf(x_sol_fp, "No.%3d> city(%3d)¥n",i, path_b[i]);
+            fprintf(x_sol_fp, "No.%3d> city(%3d)\n",i, path_b[i]);
         }
     }
 
     else {
-        fprintf(x_sol_fp, "=== AFTER CROSSOVER ===¥n¥n");
+        fprintf(x_sol_fp, "=== AFTER CROSSOVER ===\n\n");
 
-        fprintf(x_sol_fp, "=== CHILD A ===¥n");
+        fprintf(x_sol_fp, "=== CHILD A ===\n");
         for(i = 0; i <= get_tsp_size(); i++) {
-            fprintf(x_sol_fp, "No.%3d> city(%3d)¥n",i, path_a[i]);
+            fprintf(x_sol_fp, "No.%3d> city(%3d)\n",i, path_a[i]);
         }
 
-        fprintf(x_sol_fp, "=== CHILD B ===¥n");
+        fprintf(x_sol_fp, "=== CHILD B ===\n");
         for(i = 0; i <= get_tsp_size(); i++) {
-            fprintf(x_sol_fp, "No.%3d> city(%3d)¥n",i, path_b[i]);
+            fprintf(x_sol_fp, "No.%3d> city(%3d)\n",i, path_b[i]);
         }
     }
 
-    fprintf(x_sol_fp, "*** CROSSOVER LOG END ***¥n");
+    fprintf(x_sol_fp, "*** CROSSOVER LOG END ***\n");
 }
 
 void open_loging_x_sol_path(void)
