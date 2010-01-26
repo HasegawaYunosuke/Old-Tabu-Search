@@ -63,7 +63,7 @@ void open_loging_x_sol_path(void)
          sprintf(x_sol_log_name, "result_log/x_sol_path.%d.log",get_process_number());
     }
     if((x_sol_fp = fopen(x_sol_log_name, "a")) == NULL) {
-        error_procedure("can¥'t find ¥"result_log¥" directory");
+        error_procedure("can't find \"result_log\" directory");
     }
 
 }
