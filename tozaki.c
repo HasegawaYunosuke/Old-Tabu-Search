@@ -10,7 +10,7 @@
 #include <linux/unistd.h>
 #endif
 #define THREAD_NUM 2
-#define TOTAL_SOLUTION_NUM 16
+#define TOTAL_SOLUTION_NUM 4
 #define CPU_ZERO
 #define CPU_SET
 

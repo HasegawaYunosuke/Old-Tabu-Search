@@ -22,6 +22,7 @@ void set_logfile_name(int * buffer, int element_num);
 void close_loging_initial_path(void);
 #ifdef MPIMODE
 void mpi_comunication_log_manage(int type);
+void tabu_matching_loging(int type);
 #endif
 #endif
 #ifdef POLEDEBUG
@@ -102,6 +103,7 @@ void output_log(void)
     #ifdef MPIMODE
     #ifdef DEBUG
     mpi_comunication_log_manage(CHECK);
+    tabu_matching_loging(CHECK);
     #endif
     #endif
 }
