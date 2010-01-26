@@ -1,7 +1,9 @@
 /* #define MPIMODE */
-//#define LINUXUSER
+#define LINUXUSER
 #define DEBUG
-//#define POLEDEBUG
+#define POLEDEBUG
+#define CROSSOVER_BEF_AFT
+//#define DISTANCE_LOG
 
 /* include files */
 #include <stdio.h>
