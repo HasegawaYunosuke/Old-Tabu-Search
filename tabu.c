@@ -10,6 +10,9 @@ int get_list_size(int tsp_size);
 void flag_set(void);
 int * mallocer_ip(int list_size);
 int get_tsp_size(void);
+#ifdef DEBUG
+void tabu_matching_loging(int type);
+#endif
 
 /* grobal variable */
 int * tabulist_2opt[4];
@@ -21,16 +24,24 @@ pthread_mutex_t match_mutex;
 int is_2opt_tabu(int * cities1)
 {
     int i;
-    int cities[4][4] = {{cities1[0],cities1[1],cities1[2],cities1[3]},
-                        {cities1[2],cities1[3],cities1[0],cities1[1]},
-                        {cities1[1],cities1[0],cities1[3],cities1[2]},
-                        {cities1[3],cities1[2],cities1[1],cities1[0]}};
+    //int cities[4][4] = {{cities1[0],cities1[1],cities1[2],cities1[3]},  /* A, A', B, B' */
+    //                    {cities1[2],cities1[3],cities1[0],cities1[1]},  /* B, B', A, A' */
+    //                    {cities1[1],cities1[0],cities1[3],cities1[2]},  /* A', A, B', B */
+    //                    {cities1[3],cities1[2],cities1[1],cities1[0]}}; /* B', B ,A', A,*/
+    int cities[4][4] = {{cities1[0],cities1[2],cities1[1],cities1[3]},  /* A, B, A', B' */
+                        {cities1[1],cities1[3],cities1[0],cities1[2]},  /* A', B', A, B */
+                        {cities1[2],cities1[0],cities1[3],cities1[1]},  /* B, A, B', A' */
+                        {cities1[3],cities1[1],cities1[2],cities1[0]}}; /* B', A', B, A,*/
 
     pthread_t matching_thread[4];
 
     pthread_mutex_init(&match_mutex, NULL);
 
     flag_set();
+
+#ifdef DEBUG
+    tabu_matching_loging(WHOLE);
+#endif
 
     for(i = 0; i < 4; i++) {
         pthread_create(&matching_thread[i],
@@ -42,6 +53,12 @@ int is_2opt_tabu(int * cities1)
     for(i = 0; i < 4; i++) {
         pthread_join(matching_thread[i], NULL);
     }
+
+#ifdef DEBUG
+    if(find_out_flag == YES) {
+        tabu_matching_loging(MATCH);
+    }
+#endif
 
     return find_out_flag;
 }
@@ -71,11 +88,11 @@ void add_2opt_tabulist(int * cities)
     for(i = 0; i < 4; i++) {
         tabulist_2opt[i][tabulist_2opt_index] = cities[i];
     }
-    
+
     if(tabulist_2opt_index >= get_list_size(get_tsp_size())) {
         tabulist_2opt_index = 0;
     }
-    
+
     tabulist_2opt_index++;
 }
 
