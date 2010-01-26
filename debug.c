@@ -34,6 +34,7 @@ void mpi_send_num_add(void); /* local function */
 void mpi_recv_num_add(void); /* local function */
 void loging_mpi_com(void); /* local function */
 int get_num_of_all_proc(void);
+int * get_best_solution_path(void);
 #endif
 #ifdef POLEDEBUG
 void open_loging_other_sol_path(void);
@@ -67,7 +68,7 @@ void loging_initial_path(int * path, int create_mode)
     else {
         fprintf(debug_fp, "=== MERGECREATE MODE ===\n");
     }
-    for(i = 0; i < get_tsp_size(); i++) {
+    for(i = 0; i <= get_tsp_size(); i++) {
         fprintf(debug_fp, "No.%3d> city(%3d)\n",i, path[i]);
     }
     fprintf(debug_fp, "*** initial_path debug END ***\n");
@@ -129,15 +130,21 @@ void figure_of_match_num(int matched_num)
 void output_other_sol_path(void)
 {
     int * other_sol = get_other_solution_path_data();
+    int * my_best_sol = get_best_solution_path();
     int data_cell_num = get_tsp_size() + DEFAULT_SENDPARAMETERNUM;
     int group_num = get_num_of_all_proc() / DEFAULT_MPIGROUPNUM - 1;
     int i, j;
 
     fprintf(debug_other_sol_fp, "+++POLEDEBUG+++\n\n");
     fprintf(debug_other_sol_fp, "data_cell_num == %d, DEF == %d, group_num == %d\n\n", data_cell_num, DEFAULT_SENDPARAMETERNUM, group_num);
-    if(group_num == 3) {
+    if(group_num == 1) {
         for(i = 0; i < data_cell_num; i++) {
-            fprintf(debug_other_sol_fp, "(sol[1], sol[2], sol[3]) == (%3d, %3d, %3d)\n", other_sol[i], other_sol[i + data_cell_num], other_sol[i + 2 * data_cell_num]);
+            fprintf(debug_other_sol_fp, "%3d:(my, sol[1]) == (%3d, %3d)\n",i , my_best_sol[i], other_sol[i]);
+        }
+    }
+    else if(group_num == 3) {
+        for(i = 0; i < data_cell_num; i++) {
+            fprintf(debug_other_sol_fp, "%3d:(sol[1], sol[2], sol[3]) == (%3d, %3d, %3d)\n",i , other_sol[i], other_sol[i + data_cell_num], other_sol[i + 2 * data_cell_num]);
         }
     }
     else {

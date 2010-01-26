@@ -16,11 +16,11 @@ int random_num(int maximum);
 double make_distance(int x1, int y1, int x2, int y2);
 int already_visited(int * return_data, int city_num);
 int search_loop_times(int type);
-int decide_create_mode(void);
 int * mallocer_ip(int size);
 double * mallocer_dp(int size);
 
 #ifdef MPIMODE
+int decide_create_mode(void);
 int * get_merge_route(void);
 #endif
 #ifdef DEBUG
@@ -70,6 +70,8 @@ int * return_data;
 int * initial_graph_path(double * graph_data)
 {
     int malloc_size = (int)graph_data[0];
+    int create_mode = DEFAULT;
+
     /* first time procedure */
     if(search_loop_times(READONLY) == 0 && turn_loop_times(READONLY) == 0) {
         return_data = mallocer_ip(malloc_size + 10);
@@ -79,8 +81,12 @@ int * initial_graph_path(double * graph_data)
         return_data[0] = (int)graph_data[0];
     }
 
+#ifdef MPIMODE
+    create_mode = decide_create_mode();
+#endif
+
     /* create the initial path */
-    return_data = create_graph_path(return_data, graph_data, DEFAULT);
+    return_data = create_graph_path(return_data, graph_data, create_mode);
 
     return return_data;
 }
