@@ -43,6 +43,7 @@ double * get_graph_data(void);
 int check_manneri(int type);
 int is_this_ok_same_group_list(int * list, int all_process);
 void how_long_matched(int * maximum, int * max_i, int * matchedB, int size);
+void set_group_reader(void);
 /* DEL ST */
 void check_send_data(int * send_data, int send_num);
 void show_saved_other_sol(void);
@@ -75,10 +76,16 @@ void set_MPI_parameter(void)
     set_MPI_group();
     set_other_solution_path();
     set_merge_branchs();
+    set_group_reader();
     before_send_process_index = 0;
     #ifdef DEBUG
     mpi_comunication_log_manage(INIT);
     #endif
+}
+
+void set_group_reader(void)
+{
+
 }
 
 void set_other_solution_path(void)
