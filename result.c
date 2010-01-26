@@ -17,7 +17,7 @@ FILE * x_sol_fp;
 #endif
 
 #ifdef DISTANCE_LOG
-int search_loop_times(int type);
+int turn_loop_times(int type);
 double get_all_cost_by_graph(int * cities);
 double get_best_cost(void);
 int * get_solution_path(void);
@@ -93,7 +93,7 @@ void close_loging_x_sol_path(void)
 #ifdef DISTANCE_LOG
 void output_distance_log(void)
 {
-    fprintf(dis_log_fp, "Search:     %d, All Cost:%f, Best Cost:%f\n", search_loop_times(READONLY), get_all_cost_by_graph(get_solution_path()), get_best_cost());
+    fprintf(dis_log_fp, "Search:     %d, All Cost:%f, Best Cost:%f\n", turn_loop_times(READONLY), get_all_cost_by_graph(get_solution_path()), get_best_cost());
 }
 
 void open_distance_log(void)
