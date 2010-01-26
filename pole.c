@@ -88,8 +88,13 @@ int * pole_search(int * solution_path)
                         for(i = 0; i < tsp_size + 1; i++){
                             solution_path_b[i] = solution_path_c[i]; 
                         }
-                   }
-                }
+                   }                   
+                } 
+                //order_one_cross(solution_path, solution_path_b);
+                pmx_one_cross(solution_path, solution_path_b);
+                create_2opt_tabulist(get_tsp_size(), CLEAR);
+                set_tabu_mode(OFF);
+                initialize_history();
              }
         }
         solution_path = two_opt(solution_path);
