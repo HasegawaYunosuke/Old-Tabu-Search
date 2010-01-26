@@ -5,7 +5,11 @@
 int * get_ga_solution_path(void);
 int get_tsp_size(void);
 int get_process_number(void);
+void error_procedure(char * message);
 
+void output_x_sol_path(int *path_a, int *path_b, int before_after);
+void open_loging_x_sol_path(void);
+void close_loging_x_sol_path(void);
 
 /* global variable */
 char x_sol_log_name[128];
@@ -58,10 +62,10 @@ void open_loging_x_sol_path(void)
     else {
          sprintf(x_sol_log_name, "result_log/x_sol_path.%d.log",get_process_number());
     }
-
     if((x_sol_fp = fopen(x_sol_log_name, "a")) == NULL) {
         error_procedure("can¥'t find ¥"result_log¥" directory");
     }
+
 }
 
 void close_loging_x_sol_path(void)
