@@ -83,7 +83,7 @@ void initialize(int argc, char ** argv)
     #ifdef POLEDEBUG
     open_loging_other_sol_path();
     #endif
-    #ifdef
+    #ifdef DEBUG
     tabu_matching_loging(INIT);
     #endif
 }

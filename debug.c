@@ -86,7 +86,7 @@ void loging_initial_path(int * path, int create_mode)
     fprintf(debug_fp, "*** initial_path debug END ***\n");
 }
 
-void tabu_matching_loging(int type);
+void tabu_matching_loging(int type)
 {
     switch(type) {
         case INIT:

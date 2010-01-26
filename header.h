@@ -41,7 +41,7 @@
 #define FIRST_MIDDLEMODED 55
 #define LONGMODE 60
 #define WHOLE 70
-#define MATHC 80
+#define MATCH 80
 #define MERGECREATE 100
 #define MPI_SENDADD 301
 #define MPI_RECVADD 302
