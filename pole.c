@@ -84,7 +84,6 @@ int * pole_search(int * solution_path)
 
                 set_ga_mode(ON); 
                 set_counter();
-                
                 if(modep->parallel_mode == ON){
                 other_solution_path = get_other_solution_path_data();
                  transform_solution_path(other_solution_path, solution_path_c);
@@ -93,7 +92,8 @@ int * pole_search(int * solution_path)
                             solution_path_b[i] = solution_path_c[i]; 
                         }
                    }                   
-                }                  
+                } 
+                //order_one_cross(solution_path, solution_path_b);
                 pmx_one_cross(solution_path, solution_path_b);
                 create_2opt_tabulist(get_tsp_size(), CLEAR);
                 set_tabu_mode(OFF);

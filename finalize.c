@@ -57,7 +57,7 @@ void finalize(void)
     #ifdef POLEDEBUG
     close_loging_other_sol_path();
     #endif
-    printf("Program is normally terminated.....\n");
+    //printf("Program is normally terminated.....\n");
 }
 
 void set_logfile_name(int * buffer, int element_num)

@@ -45,8 +45,8 @@ int clntSock(void)
 
     memset(&ServAddr, 0, sizeof(ServAddr));
     ServAddr.sin_family = AF_INET;
-    ServAddr.sin_addr.s_addr = inet_addr("");
-    ServAddr.sin_port = htons(10001);
+    ServAddr.sin_addr.s_addr = inet_addr("192.168.1.10");
+    ServAddr.sin_port = htons(10003);
 
     if(connect(sock, (struct sockaddr *)&ServAddr, sizeof(ServAddr)) == -1) {
         printf("error connect failed\n");
