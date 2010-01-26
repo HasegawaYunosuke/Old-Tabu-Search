@@ -47,6 +47,7 @@ void mpi_recv_num_add(void); /* local function */
 void loging_mpi_com(void); /* local function */
 int get_num_of_all_proc(void);
 int * get_best_solution_path(void);
+int get_process_number(void);
 #endif
 #ifdef POLEDEBUG
 void open_loging_other_sol_path(void);
@@ -86,7 +87,7 @@ void loging_initial_path(int * path, int create_mode)
     fprintf(debug_fp, "*** initial_path debug END ***\n");
 }
 
-void tabu_matching_loging(int type);
+void tabu_matching_loging(int type)
 {
     switch(type) {
         case INIT:

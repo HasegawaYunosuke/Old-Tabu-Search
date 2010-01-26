@@ -24,7 +24,9 @@ void tabu_matching_loging(int type);
 #ifdef POLEDEBUG
 void open_loging_other_sol_path(void);
 #endif
-
+#ifdef CROSSOVER_BEF_AFT
+void open_loging_x_sol_path(void);
+#endif
 void initialize(int argc, char ** argv)
 {
     int i;
@@ -83,9 +85,13 @@ void initialize(int argc, char ** argv)
     #ifdef POLEDEBUG
     open_loging_other_sol_path();
     #endif
-    #ifdef
+    #ifdef DEBUG
     tabu_matching_loging(INIT);
     #endif
+    #ifdef CROSSOVER_BEF_AFT
+    open_loging_x_sol_path();
+    #endif
+    
 }
 
 double * make_graph(int * main_base_data)

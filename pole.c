@@ -58,6 +58,10 @@ void set_have_been_mid_mode(void);
 int check_other_solution_path_data(int *other_sol_path);
 void transform_solution_path(int * other_solution_path, int * return_path);
 
+#ifdef CROSSOVER_BEF_AFT
+void output_x_sol_path(int *path_a, int *path_b, int before_after);
+#endif
+
 /* global variable */
 int create_mode;
 
@@ -90,8 +94,11 @@ int * pole_search(int * solution_path)
                         }
                    }                   
                 } 
-                //order_one_cross(solution_path, solution_path_b);
+                
+                output_x_sol_path(solution_path, solution_path_b, 0);
+                //order_one_cross(solution_path, solution_path_b);                
                 pmx_one_cross(solution_path, solution_path_b);
+                output_x_sol_path(solution_path, solution_path_b, 1);
                 create_2opt_tabulist(get_tsp_size(), CLEAR);
                 set_tabu_mode(OFF);
                 initialize_history();
@@ -121,30 +128,31 @@ void transform_solution_path(int * other_solution_path, int * return_path)
     int tsp_size = get_tsp_size();
     int i;
     int *path_a;
-    int *path_b;
-    int *path_c;
+    //int *path_b;
+    //int *path_c;
 
     path_a = mallocer_ip(tsp_size + 1);
-    path_b = mallocer_ip(tsp_size + 1);
-    path_c = mallocer_ip(tsp_size + 1);
+    //path_b = mallocer_ip(tsp_size + 1);
+    //path_c = mallocer_ip(tsp_size + 1);
 
     path_a[0] = tsp_size;
-    path_b[0] = tsp_size;
-    path_c[0] = tsp_size;
+    //path_b[0] = tsp_size;
+    //path_c[0] = tsp_size;
 
     for(i = 0; i <= tsp_size; i++){
         path_a[i + 1] = other_solution_path[i];
-        path_b[i + 1] = other_solution_path[i + DEFAULT_SENDPARAMETERNUM + tsp_size];
-        path_c[i + 1] = other_solution_path[i + (DEFAULT_SENDPARAMETERNUM + tsp_size) * 2];
+        //path_b[i + 1] = other_solution_path[i + DEFAULT_SENDPARAMETERNUM + tsp_size];
+       // path_c[i + 1] = other_solution_path[i + (DEFAULT_SENDPARAMETERNUM + tsp_size) * 2];
        }
 
-    int num = rand() % 3;
+    //int num = rand() % 3;
 
-    if(num == 0){
+    //if(num == 0){
         for(i = 0; i < tsp_size + 1; i++){
             return_path[i] = path_a[i];
-        }
-    }
+            }
+   // }
+   /*
     if(num == 1){
         for(i = 0; i < tsp_size + 1; i++){
             return_path[i] = path_b[i];
@@ -154,11 +162,11 @@ void transform_solution_path(int * other_solution_path, int * return_path)
         for(i = 0; i < tsp_size + 1; i++){
             return_path[i] = path_c[i];
             }
-    }
+    }*/
 
     free(path_a);
-    free(path_b);
-    free(path_c);
+    //free(path_b);
+    //free(path_c);
 }
 
 /*two opt only*/
