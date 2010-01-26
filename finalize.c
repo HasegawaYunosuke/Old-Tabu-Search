@@ -28,6 +28,9 @@ void tabu_matching_loging(int type);
 #ifdef POLEDEBUG
 void close_loging_other_sol_path(void);
 #endif
+#ifdef CROSSOVER_BEF_AFT
+void close_loging_x_sol_path(void);
+#endif
 
 /* global variable */
 int * lnp;
@@ -57,6 +60,9 @@ void finalize(void)
     #endif
     #ifdef POLEDEBUG
     close_loging_other_sol_path();
+    #endif
+    #ifdef CROSSOVER_BEF_AFT
+    close_loging_x_sol_path();
     #endif
     //printf("Program is normally terminated.....\n");
 }
