@@ -10,6 +10,9 @@ int get_list_size(int tsp_size);
 void flag_set(void);
 int * mallocer_ip(int list_size);
 int get_tsp_size(void);
+#ifdef DEBUG
+void tabu_matching_loging(int type);
+#endif
 
 /* grobal variable */
 int * tabulist_2opt[4];
@@ -36,6 +39,10 @@ int is_2opt_tabu(int * cities1)
 
     flag_set();
 
+#ifdef DEBUG
+    tabu_matching_loging(WHOLE);
+#endif
+
     for(i = 0; i < 4; i++) {
         pthread_create(&matching_thread[i],
                         NULL,
@@ -46,6 +53,12 @@ int is_2opt_tabu(int * cities1)
     for(i = 0; i < 4; i++) {
         pthread_join(matching_thread[i], NULL);
     }
+
+#ifdef DEBUG
+    if(find_out_flag == YES) {
+        tabu_matching_loging(MATCH);
+    }
+#endif
 
     return find_out_flag;
 }

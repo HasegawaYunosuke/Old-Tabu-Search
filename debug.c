@@ -8,6 +8,13 @@ char debug_other_sol_log_name[128];
 FILE * debug_fp;
 FILE * debug_other_sol_fp;
 
+struct tabu_matching_log {
+    int all_check_num;
+    int matched_num;
+};
+
+struct tabu_matching_log tabu_matching_log;
+
 #ifdef MPIMODE
 struct mpi_comunication_log {
     int mpi_send_num;
@@ -25,6 +32,11 @@ void close_loging_initial_path(void);
 void loging_initial_path(int * path, int create_mode);
 void test_debug_log(char message[128], int num);
 int get_counter(void);
+void tabu_matching_loging(int type);
+void tabu_matching_init(void);
+void add_whole_check_num(void);
+void add_matched_num(void);
+void loging_tabu_matched(void);
 
 #ifdef MPIMODE
 void figure_of_match_num(int matched_num);
@@ -72,6 +84,48 @@ void loging_initial_path(int * path, int create_mode)
         fprintf(debug_fp, "No.%3d> city(%3d)\n",i, path[i]);
     }
     fprintf(debug_fp, "*** initial_path debug END ***\n");
+}
+
+void tabu_matching_loging(int type);
+{
+    switch(type) {
+        case INIT:
+            tabu_matching_init();
+            break;
+        case WHOLE:
+            add_whole_check_num();
+            break;
+        case MATCH:
+            add_matched_num();
+            break;
+        case CHECK:
+            loging_tabu_matched();
+    }
+}
+
+void tabu_matching_init(void)
+{
+    tabu_matching_log.all_check_num = 0;
+    tabu_matching_log.matched_num = 0;
+}
+
+void add_whole_check_num(void)
+{
+    tabu_matching_log.all_check_num++;
+}
+
+void add_matched_num(void)
+{
+    tabu_matching_log.matched_num++;
+}
+
+void loging_tabu_matched(void)
+{
+    fprintf(debug_fp, "*** TABU-LIST matched debug START ***\n");
+    fprintf(debug_fp, "tabu_matched / whole matched : %d/%d\n",tabu_matching_log.matched_num,tabu_matching_log.all_check_num);
+    tabu_matching_log.all_check_num = 0;
+    tabu_matching_log.matched_num = 0;
+    fprintf(debug_fp, "*** TABU-LIST matched debug END ***\n");
 }
 
 #ifdef MPIMODE
