@@ -1,8 +1,8 @@
 /* #define MPIMODE */
 #define LINUXUSER
 #define DEBUG
-//#define POLEDEBUG
-//#define CROSSOVER_BEF_AFT
+#define POLEDEBUG
+#define CROSSOVER_BEF_AFT
 //#define DISTANCE_LOG
 
 /* include files */
