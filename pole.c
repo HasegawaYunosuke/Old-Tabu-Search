@@ -58,6 +58,10 @@ void set_have_been_mid_mode(void);
 int check_other_solution_path_data(int *other_sol_path);
 void transform_solution_path(int * other_solution_path, int * return_path);
 
+#ifdef CROSSOVER_BEF_AFT
+void output_x_sol_path(int *path_a, int *path_b, int before_after);
+#endif
+
 /* global variable */
 int create_mode;
 
@@ -90,8 +94,11 @@ int * pole_search(int * solution_path)
                         }
                    }                   
                 } 
-                //order_one_cross(solution_path, solution_path_b);
+                
+                output_x_sol_path(solution_path, solution_path_b, 0);
+                //order_one_cross(solution_path, solution_path_b);                
                 pmx_one_cross(solution_path, solution_path_b);
+                output_x_sol_path(solution_path, solution_path_b, 1);
                 create_2opt_tabulist(get_tsp_size(), CLEAR);
                 set_tabu_mode(OFF);
                 initialize_history();
