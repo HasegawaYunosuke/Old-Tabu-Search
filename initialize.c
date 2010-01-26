@@ -91,6 +91,9 @@ void initialize(int argc, char ** argv)
     #ifdef CROSSOVER_BEF_AFT
     open_loging_x_sol_path();
     #endif
+    #ifdef DISTANCE_LOG
+    open_distance_log();
+    #endif
     
 }
 

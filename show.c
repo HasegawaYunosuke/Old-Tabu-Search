@@ -24,6 +24,10 @@ double get_time(void);
 int check_manneri(int type);
 int search_loop_times(int type);
 
+#ifdef DISTANCE_LOG
+void output_distance_log(void);
+#endif
+
 void realtime_result(void)
 {
     /* DEL ST 
@@ -59,6 +63,9 @@ void realtime_result(void)
         printf("\n");
     }
     /* DEL EN */
+#ifdef DISTANCE_LOG
+output_distance_log();
+#endif
 }
 
 void turn_terminated_show(void)
