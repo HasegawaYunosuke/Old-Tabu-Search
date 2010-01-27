@@ -1,9 +1,9 @@
 /* #define MPIMODE */
-//#define LINUXUSER
+#define LINUXUSER
 #define DEBUG
 #define POLEDEBUG
-#define CROSSOVER_BEF_AFT
-#define DISTANCE_LOG
+//#define CROSSOVER_BEF_AFT
+//#define DISTANCE_LOG
 #define SEND_AMONGGROUP
 
 /* include files */
@@ -23,6 +23,8 @@
 #define BEST_SOLUTION 101
 #define GROUP_SOLUTION 102
 #define LOGFILENAME 103
+#define SOL_PATH_SHARE 104
+#define TABU_LIST_SHARE 105
 #endif
 
 /* macro variable */

@@ -77,7 +77,7 @@ time_t get_start_time(void);
 
 #ifdef MPIMODE
 void create_readers_list(void);
-int * get_readers_list(void)
+int * get_readers_list(void);
 int get_group_reader(void);
 int * get_same_group_list(void);
 void set_group_start_process(int group_start_process);
