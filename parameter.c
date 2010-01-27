@@ -181,7 +181,7 @@ void set_MPI_group_data(int all_MPI_group, int MPI_group)
 {
     parameterp->MPI_group = MPI_group;
     parameterp->all_MPI_group = all_MPI_group;
-    parameterp->group_reader_process =  MPI_group * (num_of_all_proc() / DEFAULT_MPIGROUPNUM);
+    parameterp->group_reader_process =  MPI_group * (get_num_of_all_proc() / DEFAULT_MPIGROUPNUM);
 }
 
 int get_group_reader(void)
