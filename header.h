@@ -49,6 +49,7 @@
 #define WHOLE 70
 #define MATCH 80
 #define MERGECREATE 100
+#define GROUPCREATE 101
 #define MPI_SENDADD 301
 #define MPI_RECVADD 302
 

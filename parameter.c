@@ -252,7 +252,7 @@ void adjust_group_sol_to_return(int * all_path, int * return_data, int choice_in
     int i;
     int tsp_size = get_tsp_size();
     int element_num = tsp_size + DEFAULT_SENDPARAMETERNUM;
-    int start_point = element_num * random_num;
+    int start_point = element_num * choice_index;
 
     for(i = 0; i < element_num; i++) {
         if(i == 0) {
