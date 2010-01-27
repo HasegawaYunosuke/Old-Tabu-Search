@@ -172,7 +172,7 @@ void group_reader_recv(int * argument)
     for(;;) {
         MPI_Recv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, GROUP_SOLUTION, MPI_COMM_WORLD, &stat);
         copy_to_group_data(buffer, element_num, stac_num);
-        if(stac_num < DEFAULT_GROUP_DATASTOCKNUM- 1) {
+        if(stac_num > DEFAULT_GROUP_DATASTOCKNUM- 1) {
             stac_num = 0;
             set_now_other_group_stac_index(-1);
         }
