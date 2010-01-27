@@ -50,6 +50,7 @@ void group_reader_recv(int * argument);
 void set_other_group_sol_path(void);
 int * get_other_group_sol_path(void);
 void set_other_group_sol_path_data(int * pointer);
+void copy_to_group_data(int * buffer, int element_num, int stac_num);
 /* DEL ST */
 void check_send_data(int * send_data, int send_num);
 void show_saved_other_sol(void);
@@ -179,7 +180,7 @@ void group_reader_send(int * argument)
 {
     int * my_best_sol = get_best_solution_path();
     int element_num = get_tsp_size() + DEFAULT_SENDPARAMETERNUM;
-    int * list = get_readers_list;
+    int * list = get_readers_list();
     int send_node;
 
     send_node = list[random_num(DEFAULT_MPIGROUPNUM - 1)];
