@@ -28,6 +28,7 @@ int get_process_number(void);
 int get_MPI_group_data(void);
 double get_time(void);
 void show_mode(FILE *);
+char * get_process_name(void);
 
 void output_distance_log(void);
 void open_distance_log(void);
