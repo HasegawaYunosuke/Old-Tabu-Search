@@ -29,6 +29,9 @@ void open_loging_other_sol_path(void);
 #ifdef CROSSOVER_BEF_AFT
 void open_loging_x_sol_path(void);
 #endif
+#ifdef DISTANCE_LOG
+void open_distance_log(void);
+#endif
 void initialize(int argc, char ** argv)
 {
     int i;
