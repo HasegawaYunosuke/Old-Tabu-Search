@@ -76,6 +76,7 @@ void set_start_time(time_t start_time);
 time_t get_start_time(void);
 
 #ifdef MPIMODE
+int get_group_reader(void);
 int * get_same_group_list(void);
 void set_group_start_process(int group_start_process);
 int get_group_start_process(void);
@@ -174,13 +175,18 @@ void set_parameter_data(int num_of_all_proc, int process_number, int name_length
     for(i = 0; i < name_length; i++) {
         parameterp->process_name[i] = process_name[i];
     }
-    parameterp->group_reader_process = (int)(process_number / (num_of_all_proc / DEFAULT_MPIGROUPNUM));
 }
 
 void set_MPI_group_data(int all_MPI_group, int MPI_group)
 {
     parameterp->MPI_group = MPI_group;
     parameterp->all_MPI_group = all_MPI_group;
+    parameterp->group_reader_process =  MPI_group * (num_of_all_proc() / DEFAULT_MPIGROUPNUM);
+}
+
+int get_group_reader(void)
+{
+    return parameterp->group_reader_process;
 }
 
 int get_MPI_group_data(void)

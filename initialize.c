@@ -16,6 +16,8 @@ int * read_data(void);
 void best_MPI_recv(int * recv_process_number);
 int * get_same_group_list(void);
 int get_all_MPI_group_data(void);
+int get_process_number(void);
+int get_group_reader(void);
 #endif
 #ifdef DEBUG
 void open_loging_initial_path(void);
@@ -79,6 +81,15 @@ void initialize(int argc, char ** argv)
         }
     }
     #endif
+    #ifdef MPIMODE
+    if(get_group_reader() == get_process_number()) {
+        test_debug_log("I'm reader! process:",get_process_number());
+    }
+    else {
+        test_debug_log("I'm NOTreader! process:",get_process_number());
+    }
+    #endif
+
     #ifdef DEBUG
     open_loging_initial_path();
     #endif
@@ -94,7 +105,7 @@ void initialize(int argc, char ** argv)
     #ifdef DISTANCE_LOG
     open_distance_log();
     #endif
-    
+
 }
 
 double * make_graph(int * main_base_data)

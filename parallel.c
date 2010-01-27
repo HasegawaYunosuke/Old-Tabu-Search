@@ -76,16 +76,10 @@ void set_MPI_parameter(void)
     set_MPI_group();
     set_other_solution_path();
     set_merge_branchs();
-    set_group_reader();
     before_send_process_index = 0;
     #ifdef DEBUG
     mpi_comunication_log_manage(INIT);
     #endif
-}
-
-void set_group_reader(void)
-{
-
 }
 
 void set_other_solution_path(void)
