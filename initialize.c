@@ -81,14 +81,6 @@ void initialize(int argc, char ** argv)
         }
     }
     #endif
-    #ifdef MPIMODE
-    if(get_group_reader() == get_process_number()) {
-        test_debug_log("I'm reader! process:",get_process_number());
-    }
-    else {
-        test_debug_log("I'm NOTreader! process:",get_process_number());
-    }
-    #endif
 
     #ifdef DEBUG
     open_loging_initial_path();
@@ -104,6 +96,16 @@ void initialize(int argc, char ** argv)
     #endif
     #ifdef DISTANCE_LOG
     open_distance_log();
+    #endif
+    #ifdef MPIMODE
+    #ifdef DEBUG
+    if(get_group_reader() == get_process_number()) {
+        test_debug_log("I'm reader! process:",get_process_number());
+    }
+    else {
+        test_debug_log("I'm NOTreader! process:",get_process_number());
+    }
+    #endif
     #endif
 
 }
