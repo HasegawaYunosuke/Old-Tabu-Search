@@ -43,7 +43,8 @@ double * get_graph_data(void);
 int check_manneri(int type);
 int is_this_ok_same_group_list(int * list, int all_process);
 void how_long_matched(int * maximum, int * max_i, int * matchedB, int size);
-void set_group_reader(void);
+void group_reader_process(void);
+void not_group_reader_process(void);
 /* DEL ST */
 void check_send_data(int * send_data, int send_num);
 void show_saved_other_sol(void);
@@ -103,6 +104,14 @@ void parallel_finalize(void)
     MPI_Finalize();
     free(get_other_solution_path_data());
     free(get_same_group_list());
+}
+
+void group_reader_process(void)
+{
+}
+
+void not_group_reader_process(void)
+{
 }
 
 int decide_create_mode(void)

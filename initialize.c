@@ -18,6 +18,8 @@ int * get_same_group_list(void);
 int get_all_MPI_group_data(void);
 int get_process_number(void);
 int get_group_reader(void);
+void group_reader_process(void);
+void not_group_reader_process(void);
 #endif
 #ifdef DEBUG
 void open_loging_initial_path(void);
@@ -100,10 +102,10 @@ void initialize(int argc, char ** argv)
     #ifdef MPIMODE
     #ifdef DEBUG
     if(get_group_reader() == get_process_number()) {
-        test_debug_log("I'm reader! process:",get_process_number());
+        group_reader_process();
     }
     else {
-        test_debug_log("I'm NOTreader! process:",get_process_number());
+        not_group_reader_process();
     }
     #endif
     #endif
