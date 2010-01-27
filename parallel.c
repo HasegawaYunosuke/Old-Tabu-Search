@@ -44,7 +44,7 @@ int check_manneri(int type);
 int is_this_ok_same_group_list(int * list, int all_process);
 void how_long_matched(int * maximum, int * max_i, int * matchedB, int size);
 void group_reader_process(void);
-void not_group_reader_process(void);
+void create_readers_list(void);
 /* DEL ST */
 void check_send_data(int * send_data, int send_num);
 void show_saved_other_sol(void);
@@ -108,10 +108,41 @@ void parallel_finalize(void)
 
 void group_reader_process(void)
 {
+    pthread_t group_reader_thread;
+    /* DEL ST */
+    int i;
+    int * reader;
+    /* DEL EN */
+
+    create_readers_list();
+
+    /* DEL ST */
+#ifdef DEBUG
+    reader = get_readers_list();
+    test_debug_log("group_reader_process() DEBUG+++", -1);
+    test_debug_log("Process:", get_process_number());
+    for(i = 0; i < DEFAULT_MPIGROUPNUM - 1; i++) {
+        test_debug_log("readers:",reader[i]);
+    }
+    test_debug_log("+++++++++++++++++++++++++++++++", -1);
+#endif
+    /* DEL EN */
+
+    pthread_create(&group_reader_thread,
+                    NULL,
+                    (void *)group_reader_recv,
+                    (void *)void);
 }
 
-void not_group_reader_process(void)
+void group_reader_recv(void)
 {
+    int element_num = get_tsp_size() + DEFAULT_SENDPARAMETERNUM;
+    int buffer[TSPMAXSIZE];
+    MPI_Status stat;
+
+    for(;;) {
+        MPI_Recv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, GROUP_SOLUTION, MPI_COMM_WORLD, &stat);
+    }
 }
 
 int decide_create_mode(void)
@@ -226,8 +257,8 @@ void best_MPI_recv(int * recv_process_number)
 {
     int i;
     int tsp_size = get_tsp_size();
-    int element_num = tsp_size + 10;
-    int buffer[TSPMAXSIZE];
+    int element_num = tsp_size + DEFAULT_SENDPARAMETERNUM;
+    int buffer[element];
     int * other_sol_path = get_other_solution_path_data();
     int * other_list = get_same_group_list();
     int this_threads_index = 0;

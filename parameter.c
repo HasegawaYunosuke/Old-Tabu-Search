@@ -76,6 +76,8 @@ void set_start_time(time_t start_time);
 time_t get_start_time(void);
 
 #ifdef MPIMODE
+void create_readers_list(void);
+int * get_readers_list(void)
 int get_group_reader(void);
 int * get_same_group_list(void);
 void set_group_start_process(int group_start_process);
@@ -119,6 +121,7 @@ struct parameter {
     int group_reader_process;
     int all_MPI_group;
     int * same_group_list;
+    int * group_readers_list;
     int group_start_process;
     int name_length;
     char * process_name;
@@ -175,6 +178,26 @@ void set_parameter_data(int num_of_all_proc, int process_number, int name_length
     for(i = 0; i < name_length; i++) {
         parameterp->process_name[i] = process_name[i];
     }
+}
+
+void create_readers_list(void)
+{
+    int i, index = 0;
+    int num_of_proc_in_one_group = get_num_of_all_proc() / DEFAULT_MPIGROUPNUM;
+
+    parameterp->group_readers_list = mallocer_ip(DEFAULT_MPIGROUPNUM - 1);
+
+    for(i = 0; i < DEFAULT_MPIGROUPNUM; i++) {
+        if(i * num_of_proc_in_one_group != get_process_number()) {
+            parameterp->group_readers_list[index] = i * num_of_proc_in_one_group;
+            index++;
+        }
+    }
+}
+
+int * get_readers_list(void)
+{
+    return parameterp->group_readers_list;
 }
 
 void set_MPI_group_data(int all_MPI_group, int MPI_group)

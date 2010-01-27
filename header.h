@@ -1,9 +1,10 @@
 /* #define MPIMODE */
-#define LINUXUSER
+//#define LINUXUSER
 #define DEBUG
 #define POLEDEBUG
 #define CROSSOVER_BEF_AFT
 #define DISTANCE_LOG
+#define SEND_AMONGGROUP
 
 /* include files */
 #include <stdio.h>
@@ -20,7 +21,8 @@
 #ifdef MPIMODE
 #include <mpi.h>
 #define BEST_SOLUTION 101
-#define LOGFILENAME 102
+#define GROUP_SOLUTION 102
+#define LOGFILENAME 103
 #endif
 
 /* macro variable */
