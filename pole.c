@@ -69,13 +69,13 @@ int * pole_search(int * solution_path)
 { 
     int i;
     int tsp_size = get_tsp_size();
+
     int *solution_path_b;
+    solution_path_b = get_ga_solution_path();    
+
     int *solution_path_c;
-
-    solution_path_b = get_ga_solution_path();
-    solution_path_c = mallocer_ip(tsp_size + 1);
-
     int *other_solution_path;
+    solution_path_c = mallocer_ip(tsp_size + 1);
 
     /* Search Graph-Data */
     if(modep->graph_mode == ON) {
@@ -83,7 +83,6 @@ int * pole_search(int * solution_path)
             set_tabu_mode(ON);
             set_have_been_mid_mode();
             if(check_manneri(MIDDLEMODE) == YES){
-                set_ga_mode(ON);
                 set_counter();
                 if(modep->parallel_mode == ON){
                 other_solution_path = get_other_solution_path_data();
@@ -94,22 +93,26 @@ int * pole_search(int * solution_path)
                         }
                    }
                 }
-                #ifdef CROSSOVER_BEF_AFT
-                output_x_sol_path(solution_path, solution_path_b, 0);
-                #endif
-                //order_one_cross(solution_path, solution_path_b);
-                pmx_one_cross(solution_path, solution_path_b);
-                #ifdef CROSSOVER_BEF_AFT
-                output_x_sol_path(solution_path, solution_path_b, 1);
-                #endif
-                create_2opt_tabulist(get_tsp_size(), CLEAR);
-                set_tabu_mode(OFF);
-                initialize_history();
+                 if(get_ga_mode() == ON){
+                    #ifdef CROSSOVER_BEF_AFT
+                    output_x_sol_path(solution_path, solution_path_b, 0);
+                    #endif
+                    //order_one_cross(solution_path, solution_path_b);
+                    pmx_one_cross(solution_path, solution_path_b);
+                    #ifdef CROSSOVER_BEF_AFT
+                    output_x_sol_path(solution_path, solution_path_b, 1);
+                    #endif
+                    create_2opt_tabulist(get_tsp_size(), CLEAR);
+                    set_tabu_mode(OFF);
+                    initialize_history();
+                }
              }
         }
         solution_path = two_opt(solution_path);
         //solution_path_b = simple_two_opt(solution_path_b);
-        set_ga_solution_path(solution_path_b);
+        if(get_ga_mode() == ON){
+            set_ga_solution_path(solution_path_b);
+        }
     }
 
     /* Search Euclid-Data (non-available) */
