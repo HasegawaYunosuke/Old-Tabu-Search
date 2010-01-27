@@ -22,6 +22,13 @@ double get_all_cost_by_graph(int * cities);
 double get_best_cost(void);
 int * get_solution_path(void);
 
+int get_tsp_size(void);
+int get_num_of_all_proc(void);
+int get_process_number(void);
+int get_MPI_group_data(void);
+double get_time(void);
+void show_mode(FILE *);
+
 void output_distance_log(void);
 void open_distance_log(void);
 void close_distance_log(void);
@@ -54,7 +61,9 @@ void output_x_sol_path(int *path_a, int *path_b, int before_after)
 
     else {
         fprintf(x_sol_fp, "=== AFTER CROSSOVER ===\n\n");
-
+int get_num_of_all_proc(void);
+int get_process_number(void);
+int get_MPI_group_data(void);
         fprintf(x_sol_fp, "=== CHILD A ===\n");
         for(i = 0; i <= get_tsp_size(); i++) {
             fprintf(x_sol_fp, "No.%3d> city(%3d)\n",i, path_a[i]);
@@ -107,6 +116,18 @@ void open_distance_log(void)
     if((dis_log_fp = fopen(dis_log_name, "a")) == NULL) {
         error_procedure("can't find \"result_log\" directory");
     }
+    fprintf(dis_log_fp, "*******************************************************\n");
+    fprintf(dis_log_fp, "TSP Size:%5d\n",get_tsp_size());
+    fprintf(dis_log_fp, "All Proces Num:%2d\n",get_num_of_all_proc());
+    fprintf(dis_log_fp, "Process Number:%2d\n",get_process_number());
+    fprintf(dis_log_fp, "Process Name:%s\n",get_process_name());
+    fprintf(dis_log_fp, "MPI Group:%2d\n",get_MPI_group_data());
+    fprintf(dis_log_fp, "Running Time:%f\n",get_time());
+    fprintf(dis_log_fp, "\nActive Modes--->\n");
+    show_mode(dis_log_fp);
+    fprintf(dis_log_fp, "<---Active Modes\n");
+    fprintf(dis_log_fp, "*******************************************************\n\n");
+        
     fprintf(dis_log_fp, "*** DISTANCE LOG START ***\n");
 }
 
