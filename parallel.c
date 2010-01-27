@@ -23,6 +23,8 @@ int * get_best_solution_path(void);
 int * get_merge_route(void);
 int decide_create_mode(void);
 int check_other_data_satisfactory(void);
+int check_other_group_data_satisfactory(int type);
+int get_other_group_stac_satisfaction(void);
 int random_num(int maximum);
 int * get_solution_path(void);
 void set_merge_branchs(void);
@@ -47,10 +49,13 @@ void group_reader_process(void);
 void create_readers_list(void);
 int * get_readers_list(void);
 void group_reader_recv(int * argument);
+void group_reader_send(int type);
 void set_other_group_sol_path(void);
 int * get_other_group_sol_path(void);
 void set_other_group_sol_path_data(int * pointer);
 void copy_to_group_data(int * buffer, int element_num, int stac_num);
+void set_now_other_group_stac_index(int stac_num);
+int get_now_other_group_stac_index(void);
 /* DEL ST */
 void check_send_data(int * send_data, int send_num);
 void show_saved_other_sol(void);
@@ -169,14 +174,16 @@ void group_reader_recv(int * argument)
         copy_to_group_data(buffer, element_num, stac_num);
         if(stac_num < DEFAULT_GROUP_DATASTOCKNUM- 1) {
             stac_num = 0;
+            set_now_other_group_stac_index(-1);
         }
         else {
             stac_num++;
+            set_now_other_group_stac_index(stac_num - 1);
         }
     }
 }
 
-void group_reader_send(int * argument)
+void group_reader_send(int type)
 {
     int * my_best_sol = get_best_solution_path();
     int element_num = get_tsp_size() + DEFAULT_SENDPARAMETERNUM;
@@ -205,6 +212,9 @@ int decide_create_mode(void)
 
     if(check_other_data_satisfactory() == YES) {
         initialize_path_create_mode = MERGECREATE;
+        if(check_other_group_data_satisfactory(SOL_PATH_SHARE) == YES) {
+            initialize_path_create_mode = GROUPCREATE;
+        }
     }
 
     return initialize_path_create_mode;
@@ -228,6 +238,23 @@ int check_other_data_satisfactory(void)
             }
         }
         return_num = YES;
+    }
+
+    return return_num;
+}
+
+int check_other_group_data_satisfactory(int type)
+{
+    int return_num = NO;
+
+    switch(type) {
+        case SOL_PATH_SHARE:
+            if(get_other_group_stac_satisfaction() == ON) {
+                return_num = YES;
+            }
+            break;
+        case TABU_LIST_SHARE:
+            break;
     }
 
     return return_num;

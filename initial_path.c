@@ -22,6 +22,8 @@ double * mallocer_dp(int size);
 #ifdef MPIMODE
 int decide_create_mode(void);
 int * get_merge_route(void);
+int * get_other_group_sol_path(void);
+void adjust_group_sol_to_return(int * all_path, int * return_data, int choice_index);
 #endif
 #ifdef DEBUG
 void loging_initial_path(int * path, int create_mode);
@@ -74,8 +76,8 @@ int * initial_graph_path(double * graph_data)
 
     /* first time procedure */
     if(search_loop_times(READONLY) == 0 && turn_loop_times(READONLY) == 0) {
-        return_data = mallocer_ip(malloc_size + 10);
-        set_best_solution_path(mallocer_ip(malloc_size + 10));
+        return_data = mallocer_ip(malloc_size + DEFAULT_SENDPARAMETERNUM);
+        set_best_solution_path(mallocer_ip(malloc_size + DEFAULT_SENDPARAMETERNUM));
         srand(time(NULL));
         /* set return_data[0] to 'TSP-example-size' */
         return_data[0] = (int)graph_data[0];
@@ -142,9 +144,15 @@ int * create_euclid_path(int * return_data, int * euclid_data, int create_mode)
     return return_data;
 }
 
+/* create graph-path */
+/* return_data's format is followed.
+ * TSP-Size, city1, city2, ... ,cityN, parameter1, ..., parameterM
+ * 'N' means TSP-Size, 'M' is DEFAULT_SENDPARAMETERNUM - 1 (this '1' is First 'TSP-Size')
+ * All data length is TSP-Size + DEFAULT_SENDPARAMETERNUM */
 int * create_graph_path(int * return_data, double * graph_data, int create_mode)
 {
     int i, j;
+    int * buff;
     int mini_index;
     int first_point;
     int tsp_size = (int)graph_data[0];
@@ -153,9 +161,15 @@ int * create_graph_path(int * return_data, double * graph_data, int create_mode)
     double distance = DBL_MAX;
     double min_distance = DBL_MAX;
 
-
     switch (create_mode) {
     #ifdef MPIMODE
+        case GROUPCREATE:
+            buff = get_other_group_sol_path();
+            adjust_group_sol_to_return(buff, return_data, random_num(DEFAULT_GROUP_DATASTOCKNUM - 1));
+            #ifdef DEBUG
+            loging_initial_path(return_data, create_mode);
+            #endif
+            break;
         case MERGECREATE:
             return_data = get_merge_route();
             #ifdef DEBUG

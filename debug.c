@@ -78,8 +78,11 @@ void loging_initial_path(int * path, int create_mode)
     if(create_mode == DEFAULT) {
         fprintf(debug_fp, "=== DEFAULT MODE ===\n");
     }
-    else {
+    else if(create_mode == MERGECREATE) {
         fprintf(debug_fp, "=== MERGECREATE MODE ===\n");
+    }
+    else if(create_mode == GROUPCREATE) {
+        fprintf(debug_fp, "=== GROUPCREATE MODE ===\n");
     }
     for(i = 0; i <= get_tsp_size(); i++) {
         fprintf(debug_fp, "No.%3d> city(%3d)\n",i, path[i]);

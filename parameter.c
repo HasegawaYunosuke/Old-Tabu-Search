@@ -79,13 +79,17 @@ time_t get_start_time(void);
 void create_readers_list(void);
 int * get_readers_list(void);
 int get_group_reader(void);
+void set_now_other_group_stac_index(int stac_num);
+int get_now_other_group_stac_index(void);
 int * get_same_group_list(void);
 void set_group_start_process(int group_start_process);
 int get_group_start_process(void);
 void set_other_group_sol_path_data(int * pointer);
 int * get_other_group_sol_path(void);
+int get_other_group_stac_satisfaction(void);
 void best_MPI_send(void);
 void set_merge_branchs(void);
+void adjust_group_sol_to_return(int * all_path, int * return_data, int choice_index);
 void free_merge_branchs(void);
 int * get_branchA(void);
 int * get_branchB(void);
@@ -122,6 +126,8 @@ struct parameter {
     int num_of_all_proc;
     int MPI_group;
     int group_reader_process;
+    int now_other_group_stac_index;
+    int other_group_stac_satisfaction_flag;
     int all_MPI_group;
     int * same_group_list;
     int * group_readers_list;
@@ -181,6 +187,7 @@ void set_parameter_data(int num_of_all_proc, int process_number, int name_length
     for(i = 0; i < name_length; i++) {
         parameterp->process_name[i] = process_name[i];
     }
+    parameterp->other_group_stac_satisfaction_flag = OFF;
 }
 
 void create_readers_list(void)
@@ -196,6 +203,26 @@ void create_readers_list(void)
             index++;
         }
     }
+}
+
+void set_now_other_group_stac_index(int stac_num)
+{
+    if(stac_num >= 0) {
+        parameterp->now_other_group_stac_index = stac_num;
+    }
+    else {
+        parameterp->other_group_stac_satisfaction_flag = ON;
+    }
+}
+
+int get_other_group_stac_satisfaction(void)
+{
+    return parameterp->other_group_stac_satisfaction_flag;
+}
+
+int get_now_other_group_stac_index(void)
+{
+    return parameterp->now_other_group_stac_index;
 }
 
 int * get_readers_list(void)
@@ -218,6 +245,28 @@ void set_other_group_sol_path_data(int * pointer)
 int * get_other_group_sol_path(void)
 {
     return parameterp->other_group_path ;
+}
+
+void adjust_group_sol_to_return(int * all_path, int * return_data, int choice_index)
+{
+    int i;
+    int tsp_size = get_tsp_size();
+    int element_num = tsp_size + DEFAULT_SENDPARAMETERNUM;
+    int start_point = element_num * random_num;
+
+    for(i = 0; i < element_num; i++) {
+        if(i == 0) {
+            return_data[i] = tsp_size;
+        }
+        /* city solution-path */
+        else if(i <= tsp_size) {
+            return_data[i] = all_path[start_point + i - 1];
+        }
+        /* parameter */
+        else {
+            return_data[i] = all_path[start_point + i - 1];
+        }
+    }
 }
 
 int get_group_reader(void)
