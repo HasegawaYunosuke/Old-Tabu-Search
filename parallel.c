@@ -47,6 +47,9 @@ void group_reader_process(void);
 void create_readers_list(void);
 int * get_readers_list(void);
 void group_reader_recv(int * argument);
+void set_other_group_sol_path(void);
+int * get_other_group_sol_path(void);
+void set_other_group_sol_path_data(int * pointer);
 /* DEL ST */
 void check_send_data(int * send_data, int send_num);
 void show_saved_other_sol(void);
@@ -78,11 +81,30 @@ void set_MPI_parameter(void)
     set_parameter_data(num_of_all_proc, process_number, name_length, process_name);
     set_MPI_group();
     set_other_solution_path();
+    set_other_group_sol_path();
     set_merge_branchs();
     before_send_process_index = 0;
     #ifdef DEBUG
     mpi_comunication_log_manage(INIT);
     #endif
+}
+
+/* allocation of Other Group's Solution-Path Data Memory */
+/* data-format is followed.
+ * (city1, city2, ... , cityN, parameter1, parameter2, ... ,parameterM,
+ *  city1, city2, ... , cityN, parameter1, parameter2, ... ,parameterM,
+ *  ...
+ *  <The line-num of city-and-parameter data depend on proc num(<--create_num) in One-Group>
+ *  ...
+ *  city1, city2, ... , cityN, parameter1, parameter2, ... ,parameterM)
+ *
+ * 'N' is TSP-Problem-Size, 'M' is DEFAULT_SENDPARAMETERNUM's size */
+void set_other_group_sol_path(void)
+{
+    int create_num = DEFAULT_GROUP_DATASTOCKNUM;
+    int size = get_tsp_size() + DEFAULT_SENDPARAMETERNUM;
+
+    set_other_group_sol_path_data(mallocer_ip(size * create_num));
 }
 
 void set_other_solution_path(void)
@@ -96,9 +118,6 @@ void set_other_solution_path(void)
 
 void parallel_finalize(void)
 {
-    /* DEL ST */
-    //show_saved_other_sol();
-    /* DEL EN */
     /*MPI_Barrier(MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD);
@@ -108,14 +127,17 @@ void parallel_finalize(void)
     free(get_same_group_list());
 }
 
+/* If this process is appointed as a "group-reader",
+ * this process have to send-and-recv something data to other-GROUP (reader). */
 void group_reader_process(void)
 {
     pthread_t group_reader_thread;
     int argument = SOL_PATH_SHARE;
 
-    /* create other group's reader process num */
-    /* (ex) my-proc-num is "0", all-proc-num is "8", and Group-num is static "4", 
-       "process:0,2,4,6" are the Group Reader. so, list's content is "2,4,6" */
+    /* create other group-reader's process-num list */
+    /* (ex)
+     * this-proc-num is "0", all-proc-num is "8", and the num of Groups is "4",
+     * "process:0,2,4,6" are the Group-Reader. So, the content of list is "2,4,6" (except myself) */
     create_readers_list();
 
     /* reader's reciev_process */
@@ -130,6 +152,7 @@ void group_reader_recv(int * argument)
     int element_num;
     int buffer[TSPMAXSIZE];
     MPI_Status stat;
+    int stac_num = 0;
 
     switch((*argument)) {
         case SOL_PATH_SHARE:
@@ -142,12 +165,37 @@ void group_reader_recv(int * argument)
 
     for(;;) {
         MPI_Recv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, GROUP_SOLUTION, MPI_COMM_WORLD, &stat);
-        copy_to_group_data(buffer, element_num);
+        copy_to_group_data(buffer, element_num, stac_num);
+        if(stac_num < DEFAULT_GROUP_DATASTOCKNUM- 1) {
+            stac_num = 0;
+        }
+        else {
+            stac_num++;
+        }
     }
 }
 
-void copy_to_group_data(int * buffer, int element_num)
+void group_reader_send(int * argument)
 {
+    int * my_best_sol = get_best_solution_path();
+    int element_num = get_tsp_size() + DEFAULT_SENDPARAMETERNUM;
+    int * list = get_readers_list;
+    int send_node;
+
+    send_node = list[random_num(DEFAULT_MPIGROUPNUM - 1)];
+
+    MPI_Send((void *)my_best_sol, element_num, MPI_INT, send_node, GROUP_SOLUTION, MPI_COMM_WORLD);
+}
+
+void copy_to_group_data(int * buffer, int element_num, int stac_num)
+{
+    int * other_group_sol = get_other_group_sol_path();
+    int i;
+    int start_point = stac_num * element_num;
+
+    for(i = 0; i < element_num; i++) {
+        other_group_sol[start_point + i] = buffer[i];
+    }
 }
 
 int decide_create_mode(void)
@@ -223,7 +271,7 @@ void create_same_group_list(int group_num, int my_group)
 void best_MPI_send(void)
 {
     int my_process_num = get_process_number();
-    int element_num = get_tsp_size() + 10;
+    int element_num = get_tsp_size() + DEFAULT_SENDPARAMETERNUM;
     int * my_best_sol = get_best_solution_path();
     int * other_list = get_same_group_list();
     int i;
@@ -278,11 +326,11 @@ void best_MPI_recv(int * recv_process_number)
     for(;;) {
         MPI_Recv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, BEST_SOLUTION, MPI_COMM_WORLD, &stat);
 
-        //pthread_mutex_lock(&recv_sol_lock);
+        pthread_mutex_lock(&recv_sol_lock);
         for(i = 0; i < element_num; i++) {
             other_sol_path[this_threads_index + i] = buffer[i];
         }
-        //pthread_mutex_unlock(&recv_sol_lock);
+        pthread_mutex_unlock(&recv_sol_lock);
 
 #ifdef DEBUG
         mpi_comunication_log_manage(MPI_RECVADD);

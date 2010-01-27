@@ -82,6 +82,8 @@ int get_group_reader(void);
 int * get_same_group_list(void);
 void set_group_start_process(int group_start_process);
 int get_group_start_process(void);
+void set_other_group_sol_path_data(int * pointer);
+int * get_other_group_sol_path(void);
 void best_MPI_send(void);
 void set_merge_branchs(void);
 void free_merge_branchs(void);
@@ -105,6 +107,7 @@ struct parameter {
     int * solution_path;        /* the sequence of city data arrived */
     int * best_solution_path;   /* Local Best Solution Path */
     int * other_solution_path;
+    int * other_group_path;
     double all_cost;            /* solution_path's cost */
     double best_cost;
     int turn_times;
@@ -205,6 +208,16 @@ void set_MPI_group_data(int all_MPI_group, int MPI_group)
     parameterp->MPI_group = MPI_group;
     parameterp->all_MPI_group = all_MPI_group;
     parameterp->group_reader_process =  MPI_group * (get_num_of_all_proc() / DEFAULT_MPIGROUPNUM);
+}
+
+void set_other_group_sol_path_data(int * pointer)
+{
+    parameterp->other_group_path = pointer;
+}
+
+int * get_other_group_sol_path(void)
+{
+    return parameterp->other_group_path ;
 }
 
 int get_group_reader(void)
