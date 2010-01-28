@@ -175,12 +175,27 @@ class Record implements Runnable{
                     str1[waki] = ",";
                     waki++;
                 }
+
+				if(abcd[0] == -1){
+					bw.close();
+					osw.close();
+					fos.close();
+					break; 
+				}
+
                 str1[waki] = Integer.toString(this.all_cost);
                 waki++;
                 str1[waki] = ",";
                 waki++;
                 str1[waki] = Integer.toString(this.Node_name);
                 waki++;
+
+				if(abcd[0] == -1){ 
+					bw.close();
+					osw.close();
+					fos.close(); 
+					fos.close();
+				}
 
                 for(r=0; r<waki; r++){
                     bw.write(str1[r]);

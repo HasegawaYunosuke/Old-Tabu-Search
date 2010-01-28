@@ -123,7 +123,7 @@ class Get_Line extends JPanel{
 
         if(flag == true){
             for(int m=0;m<this.i-1;m++){ 
-                g.drawLine(this.x,getReaY(this.solution[m]/300),this.x+10,getReaY(this.solution[m+1]/300) );
+                g.drawLine(this.x,getReaY(this.solution[m] / 100),this.x+10,getReaY(this.solution[m+1] / 100) );
                 this.x += 10;
             }
         }

@@ -40,7 +40,7 @@ class All_Cost extends JPanel{
 
 	private int getReaY( int yy){
 
-        waru = yy / 280;
+        waru = yy / 1000;
 		return ooy - waru;
 	}
 

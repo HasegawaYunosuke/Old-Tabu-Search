@@ -64,11 +64,11 @@ class Real_Time extends JPanel implements Runnable{
             }
             else if(this.no == 2){
                 this.bx = 0;
-                this.by = 520;
+                this.by = 450;
             }
             else if(this.no == 3){
                 this.bx = 550;
-                this.by = 520;
+                this.by = 450;
             }
             InputStream in = clntSock.getInputStream();
             DataInputStream ir1 = null;
@@ -155,7 +155,7 @@ class Real_Time extends JPanel implements Runnable{
                   frame = new JFrame();
                   frame.getContentPane().add(this);
                   frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                  frame.setBounds(this.bx, this.by, 500, 500);
+                  frame.setBounds(this.bx, this.by, 550, 400);
                   frame.setTitle("Node" + Node_name);
                   label = new JLabel();
                   frame.add(label,BorderLayout.NORTH);
