@@ -22,10 +22,14 @@ void set_logfile_name(int * buffer, int element_num);
 void close_loging_initial_path(void);
 #ifdef MPIMODE
 void mpi_comunication_log_manage(int type);
+void tabu_matching_loging(int type);
 #endif
 #endif
 #ifdef POLEDEBUG
 void close_loging_other_sol_path(void);
+#endif
+#ifdef CROSSOVER_BEF_AFT
+void close_loging_x_sol_path(void);
 #endif
 
 /* global variable */
@@ -57,7 +61,13 @@ void finalize(void)
     #ifdef POLEDEBUG
     close_loging_other_sol_path();
     #endif
-    printf("Program is normally terminated.....\n");
+    #ifdef CROSSOVER_BEF_AFT
+    close_loging_x_sol_path();
+    #endif
+    #ifdef DISTANCE_LOG
+    close_distance_log();
+    #endif
+    //printf("Program is normally terminated.....\n");
 }
 
 void set_logfile_name(int * buffer, int element_num)
@@ -102,6 +112,7 @@ void output_log(void)
     #ifdef MPIMODE
     #ifdef DEBUG
     mpi_comunication_log_manage(CHECK);
+    tabu_matching_loging(CHECK);
     #endif
     #endif
 }

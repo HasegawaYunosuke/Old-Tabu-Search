@@ -16,14 +16,25 @@ int * read_data(void);
 void best_MPI_recv(int * recv_process_number);
 int * get_same_group_list(void);
 int get_all_MPI_group_data(void);
+int get_process_number(void);
+int get_group_reader(void);
+#ifdef SEND_AMONGGROUP
+void group_reader_process(void);
+#endif
 #endif
 #ifdef DEBUG
 void open_loging_initial_path(void);
+void tabu_matching_loging(int type);
 #endif
 #ifdef POLEDEBUG
 void open_loging_other_sol_path(void);
 #endif
-
+#ifdef CROSSOVER_BEF_AFT
+void open_loging_x_sol_path(void);
+#endif
+#ifdef DISTANCE_LOG
+void open_distance_log(void);
+#endif
 void initialize(int argc, char ** argv)
 {
     int i;
@@ -76,12 +87,32 @@ void initialize(int argc, char ** argv)
         }
     }
     #endif
+
     #ifdef DEBUG
     open_loging_initial_path();
     #endif
     #ifdef POLEDEBUG
     open_loging_other_sol_path();
     #endif
+    #ifdef DEBUG
+    tabu_matching_loging(INIT);
+    #endif
+    #ifdef CROSSOVER_BEF_AFT
+    open_loging_x_sol_path();
+    #endif
+    #ifdef DISTANCE_LOG
+    open_distance_log();
+    #endif
+
+    /* Communication among Group-Readers */
+    #ifdef MPIMODE
+    #ifdef SEND_AMONGGROUP
+    if(get_group_reader() == get_process_number()) {
+        group_reader_process();
+    }
+    #endif
+    #endif
+
 }
 
 double * make_graph(int * main_base_data)

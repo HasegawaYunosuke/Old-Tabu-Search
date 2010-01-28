@@ -24,6 +24,10 @@ double get_time(void);
 int check_manneri(int type);
 int search_loop_times(int type);
 
+#ifdef DISTANCE_LOG
+void output_distance_log(void);
+#endif
+
 void realtime_result(void)
 {
     /* DEL ST 
@@ -59,6 +63,9 @@ void realtime_result(void)
         printf("\n");
     }
     /* DEL EN */
+#ifdef DISTANCE_LOG
+output_distance_log();
+#endif
 }
 
 void turn_terminated_show(void)
@@ -116,6 +123,7 @@ void show_mode(FILE * fp)
     show_on_off(fp,modep->tozaki_mode, "Tozaki_Mode");
     show_on_off(fp,modep->tabu2opt_mode, "Tabu-2opt_Mode");
     show_on_off(fp,modep->only2opt_mode, "Only-2opt_Mode");
+    show_on_off(fp,modep->ga_mode, "GA_Mode");
 }
 
 void show_on_off(FILE * fp, int on_off, char * buffer)

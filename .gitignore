@@ -8,3 +8,6 @@ nohup.*
 test.repo/*
 log_data/*
 debug_log/*
+result_log/*
+0
+*.o
