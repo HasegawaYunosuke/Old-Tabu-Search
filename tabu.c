@@ -15,6 +15,7 @@ void free_tabu(void);
 void tabu_matching_loging(int type);
 #endif
 #ifdef MPIMODE
+int is_2opt_share_tabu(int * cities1);
 void create_2opt_share_tabulist(void);
 void add_2opt_share_tabulist(int * cities);
 void free_tabu_share(void);
