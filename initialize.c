@@ -18,6 +18,9 @@ int * get_same_group_list(void);
 int get_all_MPI_group_data(void);
 int get_process_number(void);
 int get_group_reader(void);
+#ifdef SEND_AMONGGROUP
+void group_reader_process(void);
+#endif
 #endif
 #ifdef DEBUG
 void open_loging_initial_path(void);
@@ -100,13 +103,12 @@ void initialize(int argc, char ** argv)
     #ifdef DISTANCE_LOG
     open_distance_log();
     #endif
+
+    /* Communication among Group-Readers */
     #ifdef MPIMODE
-    #ifdef DEBUG
+    #ifdef SEND_AMONGGROUP
     if(get_group_reader() == get_process_number()) {
-        test_debug_log("I'm reader! process:",get_process_number());
-    }
-    else {
-        test_debug_log("I'm NOTreader! process:",get_process_number());
+        group_reader_process();
     }
     #endif
     #endif

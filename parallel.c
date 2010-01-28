@@ -23,6 +23,8 @@ int * get_best_solution_path(void);
 int * get_merge_route(void);
 int decide_create_mode(void);
 int check_other_data_satisfactory(void);
+int check_other_group_data_satisfactory(int type);
+int get_other_group_stac_satisfaction(void);
 int random_num(int maximum);
 int * get_solution_path(void);
 void set_merge_branchs(void);
@@ -43,7 +45,17 @@ double * get_graph_data(void);
 int check_manneri(int type);
 int is_this_ok_same_group_list(int * list, int all_process);
 void how_long_matched(int * maximum, int * max_i, int * matchedB, int size);
-void set_group_reader(void);
+void group_reader_process(void);
+void create_readers_list(void);
+int * get_readers_list(void);
+void group_reader_recv(int * argument);
+void group_reader_send(int type);
+void set_other_group_sol_path(void);
+int * get_other_group_sol_path(void);
+void set_other_group_sol_path_data(int * pointer);
+void copy_to_group_data(int * buffer, int element_num, int stac_num);
+void set_now_other_group_stac_index(int stac_num);
+int get_now_other_group_stac_index(void);
 /* DEL ST */
 void check_send_data(int * send_data, int send_num);
 void show_saved_other_sol(void);
@@ -75,11 +87,30 @@ void set_MPI_parameter(void)
     set_parameter_data(num_of_all_proc, process_number, name_length, process_name);
     set_MPI_group();
     set_other_solution_path();
+    set_other_group_sol_path();
     set_merge_branchs();
     before_send_process_index = 0;
     #ifdef DEBUG
     mpi_comunication_log_manage(INIT);
     #endif
+}
+
+/* allocation of Other Group's Solution-Path Data Memory */
+/* data-format is followed.
+ * (city1, city2, ... , cityN, parameter1, parameter2, ... ,parameterM,
+ *  city1, city2, ... , cityN, parameter1, parameter2, ... ,parameterM,
+ *  ...
+ *  <The line-num of city-and-parameter data depend on proc num(<--create_num) in One-Group>
+ *  ...
+ *  city1, city2, ... , cityN, parameter1, parameter2, ... ,parameterM)
+ *
+ * 'N' is TSP-Problem-Size, 'M' is DEFAULT_SENDPARAMETERNUM's size */
+void set_other_group_sol_path(void)
+{
+    int create_num = DEFAULT_GROUP_DATASTOCKNUM;
+    int size = get_tsp_size() + DEFAULT_SENDPARAMETERNUM;
+
+    set_other_group_sol_path_data(mallocer_ip(size * create_num));
 }
 
 void set_other_solution_path(void)
@@ -93,9 +124,6 @@ void set_other_solution_path(void)
 
 void parallel_finalize(void)
 {
-    /* DEL ST */
-    //show_saved_other_sol();
-    /* DEL EN */
     /*MPI_Barrier(MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD);
@@ -105,12 +133,88 @@ void parallel_finalize(void)
     free(get_same_group_list());
 }
 
+/* If this process is appointed as a "group-reader",
+ * this process have to send-and-recv something data to other-GROUP (reader). */
+void group_reader_process(void)
+{
+    pthread_t group_reader_thread;
+    int argument = SOL_PATH_SHARE;
+
+    /* create other group-reader's process-num list */
+    /* (ex)
+     * this-proc-num is "0", all-proc-num is "8", and the num of Groups is "4",
+     * "process:0,2,4,6" are the Group-Reader. So, the content of list is "2,4,6" (except myself) */
+    create_readers_list();
+
+    /* reader's reciev_process */
+    pthread_create(&group_reader_thread,
+                    NULL,
+                    (void *)group_reader_recv,
+                    (void *)&argument);
+}
+
+void group_reader_recv(int * argument)
+{
+    int element_num;
+    int buffer[TSPMAXSIZE];
+    MPI_Status stat;
+    int stac_num = 0;
+
+    switch((*argument)) {
+        case SOL_PATH_SHARE:
+            element_num = get_tsp_size() + DEFAULT_SENDPARAMETERNUM;
+            break;
+        case TABU_LIST_SHARE:
+            element_num = get_tsp_size() + DEFAULT_SENDPARAMETERNUM;
+            break;
+    }
+
+    for(;;) {
+        MPI_Recv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, GROUP_SOLUTION, MPI_COMM_WORLD, &stat);
+        copy_to_group_data(buffer, element_num, stac_num);
+        if(stac_num > DEFAULT_GROUP_DATASTOCKNUM- 1) {
+            stac_num = 0;
+            set_now_other_group_stac_index(-1);
+        }
+        else {
+            stac_num++;
+            set_now_other_group_stac_index(stac_num - 1);
+        }
+    }
+}
+
+void group_reader_send(int type)
+{
+    int * my_best_sol = get_best_solution_path();
+    int element_num = get_tsp_size() + DEFAULT_SENDPARAMETERNUM;
+    int * list = get_readers_list();
+    int send_node;
+
+    send_node = list[random_num(DEFAULT_MPIGROUPNUM - 1)];
+
+    MPI_Send((void *)my_best_sol, element_num, MPI_INT, send_node, GROUP_SOLUTION, MPI_COMM_WORLD);
+}
+
+void copy_to_group_data(int * buffer, int element_num, int stac_num)
+{
+    int * other_group_sol = get_other_group_sol_path();
+    int i;
+    int start_point = stac_num * element_num;
+
+    for(i = 0; i < element_num; i++) {
+        other_group_sol[start_point + i] = buffer[i];
+    }
+}
+
 int decide_create_mode(void)
 {
     int initialize_path_create_mode = DEFAULT;
 
     if(check_other_data_satisfactory() == YES) {
         initialize_path_create_mode = MERGECREATE;
+        if(check_other_group_data_satisfactory(SOL_PATH_SHARE) == YES) {
+            initialize_path_create_mode = GROUPCREATE;
+        }
     }
 
     return initialize_path_create_mode;
@@ -134,6 +238,23 @@ int check_other_data_satisfactory(void)
             }
         }
         return_num = YES;
+    }
+
+    return return_num;
+}
+
+int check_other_group_data_satisfactory(int type)
+{
+    int return_num = NO;
+
+    switch(type) {
+        case SOL_PATH_SHARE:
+            if(get_other_group_stac_satisfaction() == ON) {
+                return_num = YES;
+            }
+            break;
+        case TABU_LIST_SHARE:
+            break;
     }
 
     return return_num;
@@ -178,7 +299,7 @@ void create_same_group_list(int group_num, int my_group)
 void best_MPI_send(void)
 {
     int my_process_num = get_process_number();
-    int element_num = get_tsp_size() + 10;
+    int element_num = get_tsp_size() + DEFAULT_SENDPARAMETERNUM;
     int * my_best_sol = get_best_solution_path();
     int * other_list = get_same_group_list();
     int i;
@@ -217,8 +338,8 @@ void best_MPI_recv(int * recv_process_number)
 {
     int i;
     int tsp_size = get_tsp_size();
-    int element_num = tsp_size + 10;
-    int buffer[TSPMAXSIZE];
+    int element_num = tsp_size + DEFAULT_SENDPARAMETERNUM;
+    int buffer[element_num];
     int * other_sol_path = get_other_solution_path_data();
     int * other_list = get_same_group_list();
     int this_threads_index = 0;
@@ -233,11 +354,11 @@ void best_MPI_recv(int * recv_process_number)
     for(;;) {
         MPI_Recv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, BEST_SOLUTION, MPI_COMM_WORLD, &stat);
 
-        //pthread_mutex_lock(&recv_sol_lock);
+        pthread_mutex_lock(&recv_sol_lock);
         for(i = 0; i < element_num; i++) {
             other_sol_path[this_threads_index + i] = buffer[i];
         }
-        //pthread_mutex_unlock(&recv_sol_lock);
+        pthread_mutex_unlock(&recv_sol_lock);
 
 #ifdef DEBUG
         mpi_comunication_log_manage(MPI_RECVADD);

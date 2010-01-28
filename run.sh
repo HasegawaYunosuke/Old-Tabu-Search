@@ -11,7 +11,7 @@ scrun -group=machinefile2,network=sctp -nodes=4x2 ./mpi.exe -f tsp_data/lin318.t
 fi
 if [ $1 == 3 ]
 then
-scrun -group=pcc,network=sctp -nodes=4x2 ./mpi.exe -f tsp_data/lin318.tsp -b -m -t 30
+scrun -group=machinefile2,network=sctp -nodes=4x2 ./mpi.exe -f tsp_data/eil51.tsp -b -m -t 30
 fi
 if [ $1 == 4 ]
 then

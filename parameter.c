@@ -76,12 +76,20 @@ void set_start_time(time_t start_time);
 time_t get_start_time(void);
 
 #ifdef MPIMODE
+void create_readers_list(void);
+int * get_readers_list(void);
 int get_group_reader(void);
+void set_now_other_group_stac_index(int stac_num);
+int get_now_other_group_stac_index(void);
 int * get_same_group_list(void);
 void set_group_start_process(int group_start_process);
 int get_group_start_process(void);
+void set_other_group_sol_path_data(int * pointer);
+int * get_other_group_sol_path(void);
+int get_other_group_stac_satisfaction(void);
 void best_MPI_send(void);
 void set_merge_branchs(void);
+void adjust_group_sol_to_return(int * all_path, int * return_data, int choice_index);
 void free_merge_branchs(void);
 int * get_branchA(void);
 int * get_branchB(void);
@@ -103,6 +111,7 @@ struct parameter {
     int * solution_path;        /* the sequence of city data arrived */
     int * best_solution_path;   /* Local Best Solution Path */
     int * other_solution_path;
+    int * other_group_path;
     double all_cost;            /* solution_path's cost */
     double best_cost;
     int turn_times;
@@ -117,8 +126,11 @@ struct parameter {
     int num_of_all_proc;
     int MPI_group;
     int group_reader_process;
+    int now_other_group_stac_index;
+    int other_group_stac_satisfaction_flag;
     int all_MPI_group;
     int * same_group_list;
+    int * group_readers_list;
     int group_start_process;
     int name_length;
     char * process_name;
@@ -175,6 +187,47 @@ void set_parameter_data(int num_of_all_proc, int process_number, int name_length
     for(i = 0; i < name_length; i++) {
         parameterp->process_name[i] = process_name[i];
     }
+    parameterp->other_group_stac_satisfaction_flag = OFF;
+}
+
+void create_readers_list(void)
+{
+    int i, index = 0;
+    int num_of_proc_in_one_group = get_num_of_all_proc() / DEFAULT_MPIGROUPNUM;
+
+    parameterp->group_readers_list = mallocer_ip(DEFAULT_MPIGROUPNUM - 1);
+
+    for(i = 0; i < DEFAULT_MPIGROUPNUM; i++) {
+        if(i * num_of_proc_in_one_group != get_process_number()) {
+            parameterp->group_readers_list[index] = i * num_of_proc_in_one_group;
+            index++;
+        }
+    }
+}
+
+void set_now_other_group_stac_index(int stac_num)
+{
+    if(stac_num >= 0) {
+        parameterp->now_other_group_stac_index = stac_num;
+    }
+    else {
+        parameterp->other_group_stac_satisfaction_flag = ON;
+    }
+}
+
+int get_other_group_stac_satisfaction(void)
+{
+    return parameterp->other_group_stac_satisfaction_flag;
+}
+
+int get_now_other_group_stac_index(void)
+{
+    return parameterp->now_other_group_stac_index;
+}
+
+int * get_readers_list(void)
+{
+    return parameterp->group_readers_list;
 }
 
 void set_MPI_group_data(int all_MPI_group, int MPI_group)
@@ -182,6 +235,38 @@ void set_MPI_group_data(int all_MPI_group, int MPI_group)
     parameterp->MPI_group = MPI_group;
     parameterp->all_MPI_group = all_MPI_group;
     parameterp->group_reader_process =  MPI_group * (get_num_of_all_proc() / DEFAULT_MPIGROUPNUM);
+}
+
+void set_other_group_sol_path_data(int * pointer)
+{
+    parameterp->other_group_path = pointer;
+}
+
+int * get_other_group_sol_path(void)
+{
+    return parameterp->other_group_path ;
+}
+
+void adjust_group_sol_to_return(int * all_path, int * return_data, int choice_index)
+{
+    int i;
+    int tsp_size = get_tsp_size();
+    int element_num = tsp_size + DEFAULT_SENDPARAMETERNUM;
+    int start_point = element_num * choice_index;
+
+    for(i = 0; i < element_num; i++) {
+        if(i == 0) {
+            return_data[i] = tsp_size;
+        }
+        /* city solution-path */
+        else if(i <= tsp_size) {
+            return_data[i] = all_path[start_point + i - 1];
+        }
+        /* parameter */
+        else {
+            return_data[i] = all_path[start_point + i - 1];
+        }
+    }
 }
 
 int get_group_reader(void)

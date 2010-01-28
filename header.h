@@ -4,6 +4,7 @@
 //#define POLEDEBUG
 //#define CROSSOVER_BEF_AFT
 //#define DISTANCE_LOG
+//#define SEND_AMONGGROUP
 
 /* include files */
 #include <stdio.h>
@@ -20,7 +21,10 @@
 #ifdef MPIMODE
 #include <mpi.h>
 #define BEST_SOLUTION 101
-#define LOGFILENAME 102
+#define GROUP_SOLUTION 102
+#define LOGFILENAME 103
+#define SOL_PATH_SHARE 104
+#define TABU_LIST_SHARE 105
 #endif
 
 /* macro variable */
@@ -45,6 +49,7 @@
 #define WHOLE 70
 #define MATCH 80
 #define MERGECREATE 100
+#define GROUPCREATE 101
 #define MPI_SENDADD 301
 #define MPI_RECVADD 302
 
@@ -61,7 +66,12 @@
 #define DEFAULT_MPIGROUPNUM 4
 #define DEFAULT_MIDDLEMANNNERI 100
 #define DEFAULT_SENDPARAMETERNUM 10
+<<<<<<< HEAD:header.h
 #define GA_CROSS_POINT 10
+=======
+#define DEFAULT_GROUP_DATASTOCKNUM 10
+#define GA_CROSS_POINT 10 
+>>>>>>> edb9d6c7c7dfca21f5682372ed2e1789c273ef89:header.h
 #define GA_COUNTER 100
 
 /* grobal variable */

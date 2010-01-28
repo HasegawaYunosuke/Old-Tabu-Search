@@ -26,6 +26,11 @@ void finalize(void);
 #ifdef MPIMODE
 void set_MPI_group(void);
 void best_MPI_send(void);
+#ifdef SEND_AMONGGROUP
+void group_reader_send(int type);
+int get_group_reader(void);
+int get_process_number(void);
+#endif
 #endif
 
 int main(int argc, char ** argv)
@@ -40,7 +45,7 @@ int main(int argc, char ** argv)
     for(;;) {
         /* create initial-path by each mode */
         initial_path();
-        
+
         /* search-turn loop */
         for(;;) {
             /* search */
@@ -55,6 +60,11 @@ int main(int argc, char ** argv)
         #ifdef MPIMODE
         /* send data other node */
         best_MPI_send();
+        #ifdef SEND_AMONGGROUP
+        if(get_group_reader() == get_process_number()) {
+            group_reader_send(DEFAULT);
+        }
+        #endif
         #endif
 
         /* whole-search-terminate */
