@@ -66,12 +66,8 @@
 #define DEFAULT_MPIGROUPNUM 4
 #define DEFAULT_MIDDLEMANNNERI 100
 #define DEFAULT_SENDPARAMETERNUM 10
-<<<<<<< HEAD:header.h
-#define GA_CROSS_POINT 10
-=======
 #define DEFAULT_GROUP_DATASTOCKNUM 10
-#define GA_CROSS_POINT 10 
->>>>>>> edb9d6c7c7dfca21f5682372ed2e1789c273ef89:header.h
+#define GA_CROSS_POINT 10
 #define GA_COUNTER 100
 
 /* grobal variable */
