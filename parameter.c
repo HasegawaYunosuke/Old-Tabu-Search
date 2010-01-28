@@ -77,6 +77,7 @@ time_t get_start_time(void);
 
 #ifdef MPIMODE
 void create_readers_list(void);
+void create_2opt_share_tabulist(void);
 int * get_readers_list(void);
 int get_group_reader(void);
 void set_now_other_group_stac_index(int stac_num);
@@ -463,6 +464,9 @@ void initial_parameter(int tsp_size)
     /* create tabu list for 2-opt (only first procedure) */
     if(modep->tabu2opt_mode == ON) {
         create_2opt_tabulist(get_tsp_size(), INIT);
+#ifdef MPIMODE
+        create_2opt_share_tabulist();
+#endif
     }
 }
 
