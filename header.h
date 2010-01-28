@@ -3,7 +3,7 @@
 #define DEBUG
 //#define POLEDEBUG
 //#define CROSSOVER_BEF_AFT
-#define DISTANCE_LOG
+//#define DISTANCE_LOG
 
 /* include files */
 #include <stdio.h>
@@ -61,7 +61,7 @@
 #define DEFAULT_MPIGROUPNUM 4
 #define DEFAULT_MIDDLEMANNNERI 100
 #define DEFAULT_SENDPARAMETERNUM 10
-#define GA_CROSS_POINT 10 
+#define GA_CROSS_POINT 10
 #define GA_COUNTER 100
 
 /* grobal variable */

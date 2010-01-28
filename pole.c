@@ -66,12 +66,12 @@ void output_x_sol_path(int *path_a, int *path_b, int before_after);
 int create_mode;
 
 int * pole_search(int * solution_path)
-{ 
+{
     int i;
     int tsp_size = get_tsp_size();
 
     int *solution_path_b;
-    solution_path_b = get_ga_solution_path();    
+    solution_path_b = get_ga_solution_path();
 
     int *solution_path_c;
     int *other_solution_path;
@@ -89,7 +89,7 @@ int * pole_search(int * solution_path)
                  transform_solution_path(other_solution_path, solution_path_c);
                    if(check_other_solution_path_data(solution_path_c) == YES) {
                         for(i = 0; i < tsp_size + 1; i++){
-                            solution_path_b[i] = solution_path_c[i]; 
+                            solution_path_b[i] = solution_path_c[i];
                         }
                    }
                 }
@@ -97,8 +97,8 @@ int * pole_search(int * solution_path)
                     #ifdef CROSSOVER_BEF_AFT
                     output_x_sol_path(solution_path, solution_path_b, 0);
                     #endif
-                    //order_one_cross(solution_path, solution_path_b);
-                    pmx_one_cross(solution_path, solution_path_b);
+                    order_one_cross(solution_path, solution_path_b);
+                    //pmx_one_cross(solution_path, solution_path_b);
                     #ifdef CROSSOVER_BEF_AFT
                     output_x_sol_path(solution_path, solution_path_b, 1);
                     #endif
