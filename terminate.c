@@ -33,7 +33,10 @@ int loop_terminate(void)
         }
     }
     if(timer(CHECK) == OFF) {
-        turn_loop_times(INIT);
+        if(modep->pole_mode == OFF)
+            {
+            turn_loop_times(INIT);
+            }
         turn_terminated_by_time_show();
         return_num = YES;
     }
