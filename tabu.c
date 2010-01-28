@@ -273,7 +273,7 @@ int * base_format_to_send_format_share_tabulist(int type)
         start_i = 0;
     }
     else if(type == DOWNER) {
-        start_i = get_list_size() / 2;
+        start_i = get_list_size(get_tsp_size()) / 2;
     }
 
     for(i = 0; i < element_num; i++) {
@@ -291,7 +291,7 @@ int * recv_format_to_base_format_share_tabulist(void)
     int element_num = get_send_recv_element_num();
 
     for(i = 0; i < element_num; i++) {
-        jor(j = 0; j < 4; j++) {
+        for(j = 0; j < 4; j++) {
             share_tabulist_2opt[j][i + share_tabulist_2opt_index] = recv_tabulist_data[j + 4 * i];
             share_tabulist_2opt_index++;
             if(share_tabulist_2opt_index >= get_list_size(get_tsp_size())) {

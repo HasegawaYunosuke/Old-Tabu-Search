@@ -57,8 +57,10 @@ void copy_to_group_data(int * buffer, int element_num, int stac_num);
 void set_now_other_group_stac_index(int stac_num);
 int get_now_other_group_stac_index(void);
 int get_send_recv_element_num(void);
+int * get_tabulist_data(void);
 int * get_tabulist_data_buffer(void);
 void copy_to_share_tabulist(int * tabulist_buffer, int element_num);
+int share_tabulist_is_satisfactory(void);
 /* DEL ST */
 void check_send_data(int * send_data, int send_num);
 void show_saved_other_sol(void);
@@ -232,6 +234,7 @@ void copy_to_group_data(int * buffer, int element_num, int stac_num)
 void copy_to_share_tabulist(int * tabulist_buffer, int element_num)
 {
     int i;
+    int * share_tabulist;
 
     share_tabulist = get_tabulist_data();
     for(i = 0; i < element_num; i++) {
@@ -287,6 +290,7 @@ int check_other_group_data_satisfactory(int type)
             }
             break;
         case TABU_LIST_SHARE:
+            return_num = share_tabulist_is_satisfactory();
             break;
     }
 
