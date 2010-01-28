@@ -207,6 +207,8 @@ void share_flag_set(void)
 /* Same format (Local-Tabulist) */
 void create_2opt_share_tabulist(void)
 {
+    int i;
+
     share_list_size = get_list_size(get_tsp_size());
     for(i = 0; i < 4; i++) {
         share_tabulist_2opt[i] = mallocer_ip(share_list_size);
@@ -232,6 +234,8 @@ void add_2opt_share_tabulist(int * cities)
 
 void free_tabu_share(void)
 {
+    int i;
+
     for(i = 0; i < 4; i++) {
         free(share_tabulist_2opt[i]);
     }
