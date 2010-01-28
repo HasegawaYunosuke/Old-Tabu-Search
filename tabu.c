@@ -15,12 +15,21 @@ void free_tabu(void);
 void tabu_matching_loging(int type);
 #endif
 #ifdef MPIMODE
+void initialize_share_tabulist(void);
+void create_send_recv_tabulist(void);
 int is_2opt_share_tabu(int * cities1);
 void create_2opt_share_tabulist(void);
 void add_2opt_share_tabulist(int * cities);
 void free_tabu_share(void);
 void share_tabu_matching(int * cities);
 void share_flag_set(void);
+int share_tabulist_is_satisfactory(void);
+int * get_share_tabulist(void);
+int get_send_recv_element_num(void);
+int * get_tabulist_data_buffer(void);
+int * get_tabulist_data(void);
+int * base_format_to_send_format_share_tabulist(int type);
+int * recv_format_to_base_format_share_tabulist(void);
 #endif
 
 /* grobal variable */
@@ -31,10 +40,14 @@ int find_out_flag;
 pthread_mutex_t match_mutex;
 #ifdef MPIMODE
 int share_list_size = 1;
+int share_list_size_over_limit = NO;
 int * share_tabulist_2opt[4];
 int share_tabulist_2opt_index;
 int find_out_share_flag = NO;
 pthread_mutex_t share_match_mutex;
+int * send_tabulist_data;
+int * recv_tabulist_data;
+int * recv_tabulist_data_buffer;
 #endif
 
 int is_2opt_tabu(int * cities1)
@@ -205,7 +218,12 @@ void share_flag_set(void)
     find_out_share_flag = NO;
 }
 
-/* Same format (Local-Tabulist) */
+void initialize_share_tabulist(void)
+{
+    create_2opt_share_tabulist();
+    create_send_recv_tabulist();
+}
+
 void create_2opt_share_tabulist(void)
 {
     int i;
@@ -218,6 +236,71 @@ void create_2opt_share_tabulist(void)
     share_tabulist_2opt_index = 0;
 }
 
+/* This format is followed (city1 --> c1) */
+/* c1, c2, c3, c4, c1, c2, c3, c4, ... , c3, c4
+ * All data-size is
+ * {1/2 x list_size x 4} == list_size x 2 */
+
+void create_send_recv_tabulist(void)
+{
+    send_tabulist_data = mallocer_ip(get_list_size(get_tsp_size())  * 2);
+    recv_tabulist_data = mallocer_ip(get_list_size(get_tsp_size())  * 2);
+    recv_tabulist_data_buffer = mallocer_ip(get_list_size(get_tsp_size()) * 2);
+}
+
+int * get_tabulist_data_buffer(void)
+{
+    return recv_tabulist_data_buffer;
+}
+
+int * get_tabulist_data(void)
+{
+    return recv_tabulist_data;
+}
+
+int get_send_recv_element_num(void)
+{
+    return (get_list_size(get_tsp_size()) * 2);
+}
+
+/* adjust the data-format */
+int * base_format_to_send_format_share_tabulist(int type)
+{
+    int i,j, start_i = 0;
+    int element_num = get_send_recv_element_num();
+
+    if(type == UPPER) {
+        start_i = 0;
+    }
+    else if(type == DOWNER) {
+        start_i = get_list_size() / 2;
+    }
+
+    for(i = 0; i < element_num; i++) {
+        for(j = 0; j < 4; j++) {
+            send_tabulist_data[j + 4 * i] = share_tabulist_2opt[j][i + start_i];
+        }
+    }
+
+    return send_tabulist_data;
+}
+
+int * recv_format_to_base_format_share_tabulist(void)
+{
+    int i,j, start_i = 0;
+    int element_num = get_send_recv_element_num();
+
+    for(i = 0; i < element_num; i++) {
+        jor(j = 0; j < 4; j++) {
+            share_tabulist_2opt[j][i + share_tabulist_2opt_index] = recv_tabulist_data[j + 4 * i];
+            share_tabulist_2opt_index++;
+            if(share_tabulist_2opt_index >= get_list_size(get_tsp_size())) {
+                share_tabulist_2opt_index = 0;
+            }
+        }
+    }
+}
+
 void add_2opt_share_tabulist(int * cities)
 {
     int i;
@@ -227,6 +310,9 @@ void add_2opt_share_tabulist(int * cities)
     }
 
     if(share_tabulist_2opt_index >= get_list_size(get_tsp_size())) {
+        if(share_list_size_over_limit == NO) {
+            share_list_size_over_limit = YES;
+        }
         share_tabulist_2opt_index = 0;
     }
 
@@ -240,6 +326,9 @@ void free_tabu_share(void)
     for(i = 0; i < 4; i++) {
         free(share_tabulist_2opt[i]);
     }
+    free(send_tabulist_data);
+    free(recv_tabulist_data);
+    free(recv_tabulist_data_buffer);
 }
 
 void share_tabu_matching(int * cities)
@@ -261,4 +350,29 @@ void share_tabu_matching(int * cities)
     }
 }
 
+int share_tabulist_is_satisfactory(void)
+{
+    return share_list_size_over_limit;
+}
+
+int alternative_type = UPPER;
+
+int * get_share_tabulist(void)
+{
+    int * return_data;
+    int type;
+
+    if(alternative_type == ON) {
+        alternative_type = OFF;
+        type = UPPER;
+    }
+    else {
+        alternative_type = ON;
+        type = DOWNER;
+    }
+
+    return_data = base_format_to_send_format_share_tabulist(type);
+
+    return return_data;
+}
 #endif

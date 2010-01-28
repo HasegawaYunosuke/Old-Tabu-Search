@@ -48,6 +48,8 @@
 #define LONGMODE 60
 #define WHOLE 70
 #define MATCH 80
+#define UPPER 90
+#define DOWNER 95
 #define MERGECREATE 100
 #define GROUPCREATE 101
 #define MPI_SENDADD 301

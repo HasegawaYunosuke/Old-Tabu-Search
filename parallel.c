@@ -56,6 +56,9 @@ void set_other_group_sol_path_data(int * pointer);
 void copy_to_group_data(int * buffer, int element_num, int stac_num);
 void set_now_other_group_stac_index(int stac_num);
 int get_now_other_group_stac_index(void);
+int get_send_recv_element_num(void);
+int * get_tabulist_data_buffer(void);
+void copy_to_share_tabulist(int * tabulist_buffer, int element_num);
 /* DEL ST */
 void check_send_data(int * send_data, int send_num);
 void show_saved_other_sol(void);
@@ -66,6 +69,7 @@ void mpi_comunication_log_manage(int type);
 void figure_of_match_num(int matched_num);
 void output_other_sol_path(void);
 void test_debug_log(char message[128], int num);
+int * get_share_tabulist(void);
 #endif
 
 /* grobal variable */
@@ -157,6 +161,7 @@ void group_reader_recv(int * argument)
 {
     int element_num;
     int buffer[TSPMAXSIZE];
+    int * tabulist_buffer = get_tabulist_data_buffer();
     MPI_Status stat;
     int stac_num = 0;
 
@@ -165,34 +170,52 @@ void group_reader_recv(int * argument)
             element_num = get_tsp_size() + DEFAULT_SENDPARAMETERNUM;
             break;
         case TABU_LIST_SHARE:
-            element_num = get_tsp_size() + DEFAULT_SENDPARAMETERNUM;
+            element_num = get_send_recv_element_num();
             break;
     }
 
-    for(;;) {
-        MPI_Recv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, GROUP_SOLUTION, MPI_COMM_WORLD, &stat);
-        copy_to_group_data(buffer, element_num, stac_num);
-        if(stac_num > DEFAULT_GROUP_DATASTOCKNUM- 1) {
-            stac_num = 0;
-            set_now_other_group_stac_index(-1);
-        }
-        else {
-            stac_num++;
-            set_now_other_group_stac_index(stac_num - 1);
-        }
+    switch((*argument)) {
+        case SOL_PATH_SHARE:
+            for(;;) {
+                MPI_Recv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, GROUP_SOLUTION, MPI_COMM_WORLD, &stat);
+                copy_to_group_data(buffer, element_num, stac_num);
+                if(stac_num > DEFAULT_GROUP_DATASTOCKNUM- 1) {
+                    stac_num = 0;
+                    set_now_other_group_stac_index(-1);
+                }
+                else {
+                    stac_num++;
+                    set_now_other_group_stac_index(stac_num - 1);
+                }
+            }
+        case TABU_LIST_SHARE:
+            for(;;) {
+                MPI_Recv((void *)tabulist_buffer, element_num, MPI_INT, MPI_ANY_SOURCE, GROUP_SOLUTION, MPI_COMM_WORLD, &stat);
+                copy_to_share_tabulist(tabulist_buffer, element_num);
+            }
     }
 }
 
 void group_reader_send(int type)
 {
     int * my_best_sol = get_best_solution_path();
-    int element_num = get_tsp_size() + DEFAULT_SENDPARAMETERNUM;
+    int * my_share_tabulist = get_share_tabulist();
+    int element_num;
     int * list = get_readers_list();
     int send_node;
 
-    send_node = list[random_num(DEFAULT_MPIGROUPNUM - 1)];
-
-    MPI_Send((void *)my_best_sol, element_num, MPI_INT, send_node, GROUP_SOLUTION, MPI_COMM_WORLD);
+    switch(type) {
+        case SOL_PATH_SHARE:
+            element_num = get_tsp_size() + DEFAULT_SENDPARAMETERNUM;
+            send_node = list[random_num(DEFAULT_MPIGROUPNUM - 1)];
+            MPI_Send((void *)my_best_sol, element_num, MPI_INT, send_node, GROUP_SOLUTION, MPI_COMM_WORLD);
+            break;
+        case TABU_LIST_SHARE:
+            element_num = get_send_recv_element_num();
+            send_node = list[random_num(DEFAULT_MPIGROUPNUM - 1)];
+            MPI_Send((void *)my_share_tabulist, element_num, MPI_INT, send_node, GROUP_SOLUTION, MPI_COMM_WORLD);
+            break;
+    }
 }
 
 void copy_to_group_data(int * buffer, int element_num, int stac_num)
@@ -203,6 +226,16 @@ void copy_to_group_data(int * buffer, int element_num, int stac_num)
 
     for(i = 0; i < element_num; i++) {
         other_group_sol[start_point + i] = buffer[i];
+    }
+}
+
+void copy_to_share_tabulist(int * tabulist_buffer, int element_num)
+{
+    int i;
+
+    share_tabulist = get_tabulist_data();
+    for(i = 0; i < element_num; i++) {
+        share_tabulist[i] = tabulist_buffer[i];
     }
 }
 

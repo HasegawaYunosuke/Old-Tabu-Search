@@ -62,7 +62,7 @@ int main(int argc, char ** argv)
         best_MPI_send();
         #ifdef SEND_AMONGGROUP
         if(get_group_reader() == get_process_number()) {
-            group_reader_send(DEFAULT);
+            group_reader_send(SOL_PATH_SHARE);
         }
         #endif
         #endif
