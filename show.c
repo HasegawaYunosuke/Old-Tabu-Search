@@ -31,7 +31,7 @@ void output_distance_log(void);
 
 void realtime_result(void)
 {
-    /* DEL ST 
+    /* DEL ST */
     if(modep->parallel_mode != YES) {
         printf("DEL:all_cost == %f,",get_all_cost_by_graph(get_solution_path()));
         printf("best == %.2f,",get_best_cost());

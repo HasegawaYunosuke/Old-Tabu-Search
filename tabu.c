@@ -103,7 +103,11 @@ void tabu_matching(int * cities)
             pthread_mutex_lock(&match_mutex);
             find_out_flag = YES;
             pthread_mutex_unlock(&match_mutex);
+#ifdef MPIMODE
+#ifdef SEND_AMONGGROUP
             add_2opt_share_tabulist(cities);
+#endif
+#endif
         }
         if(find_out_flag == YES) {
             break;

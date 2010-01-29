@@ -67,7 +67,7 @@ void finalize(void)
     #ifdef DISTANCE_LOG
     close_distance_log();
     #endif
-    //printf("Program is normally terminated.....\n");
+    printf("Program is normally terminated.....\n");
 }
 
 void set_logfile_name(int * buffer, int element_num)
