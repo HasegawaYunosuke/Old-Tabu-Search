@@ -61,6 +61,7 @@ int * get_tabulist_data(void);
 int * get_tabulist_data_buffer(void);
 void copy_to_share_tabulist(int * tabulist_buffer, int element_num);
 int share_tabulist_is_satisfactory(void);
+int * get_share_tabulist(void);
 /* DEL ST */
 void check_send_data(int * send_data, int send_num);
 void show_saved_other_sol(void);
@@ -71,7 +72,6 @@ void mpi_comunication_log_manage(int type);
 void figure_of_match_num(int matched_num);
 void output_other_sol_path(void);
 void test_debug_log(char message[128], int num);
-int * get_share_tabulist(void);
 #endif
 
 /* grobal variable */
@@ -394,10 +394,12 @@ void best_MPI_recv(int * recv_process_number)
         }
     }
 
+    pthread_mutex_init(&recv_sol_lock, NULL);
+
     for(;;) {
-        //MPI_Recv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, BEST_SOLUTION, MPI_COMM_WORLD, &stat);
-        MPI_Irecv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, BEST_SOLUTION, MPI_COMM_WORLD, &req);
-        MPI_Wait(&req, &stat);
+        MPI_Recv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, BEST_SOLUTION, MPI_COMM_WORLD, &stat);
+        /*MPI_Irecv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, BEST_SOLUTION, MPI_COMM_WORLD, &req);
+        MPI_Wait(&req, &stat);*/
 
         pthread_mutex_lock(&recv_sol_lock);
         for(i = 0; i < element_num; i++) {
@@ -409,7 +411,7 @@ void best_MPI_recv(int * recv_process_number)
         mpi_comunication_log_manage(MPI_RECVADD);
         output_other_sol_path();
 #endif
-        }
+    }
 }
 
 void check_send_data(int * send_data, int send_num)

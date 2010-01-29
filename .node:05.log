@@ -1,0 +1,16 @@
+*******************************************************
+TSP Size:   51
+All Proces Num: 8
+Process Number: 5
+Process Name:pc17
+MPI Group: 2
+Running Time:300.000000
+Best Cost:428.98
+Search Count Num:187
+
+Active Modes--->
+	Graph_Mode ON
+	Hasegawa_Mode ON
+	Tabu-2opt_Mode ON
+<---Active Modes
+*******************************************************

@@ -196,6 +196,8 @@ void set_parameter_data(int num_of_all_proc, int process_number, int name_length
 
 int num_counter(int field_type, int use_type)
 {
+    int return_data = -1;
+
     switch(field_type) {
         case TURN_COUNTER:
             if(use_type == ADD) {
@@ -205,10 +207,9 @@ int num_counter(int field_type, int use_type)
                 else {
                     parameterp->turn_count++;
                 }
-                return -1;
             }
             else if(use_type == CHECK) {
-                return parameterp->turn_count;
+                return_data =  parameterp->turn_count;
             }
             break;
         case SEARCH_COUNTER:
@@ -219,18 +220,18 @@ int num_counter(int field_type, int use_type)
                 else {
                     parameterp->search_count++;
                 }
-                return -1;
             }
             else if(use_type == CHECK) {
-                return parameterp->search_count;
+                return_data =  parameterp->search_count;
             }
             break;
         case INIT:
             parameterp->turn_count = 0;
             parameterp->search_count = 0;
-            return -1;
             break;
     }
+
+    return return_data;
 }
 
 void create_readers_list(void)
@@ -822,7 +823,9 @@ void set_all_cost(void)
         parameterp->best_cost = all_cost;
         set_best_solution_path_data();
         #ifdef MPIMODE
-        //best_MPI_send();
+        if(modep->parallel_mode == ON) {
+            //best_MPI_send();
+        }
         #endif
     }
 }

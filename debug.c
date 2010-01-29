@@ -37,6 +37,7 @@ void tabu_matching_init(void);
 void add_whole_check_num(void);
 void add_matched_num(void);
 void loging_tabu_matched(void);
+int * get_best_solution_path(void);
 
 #ifdef MPIMODE
 void figure_of_match_num(int matched_num);
@@ -46,7 +47,6 @@ void mpi_send_num_add(void); /* local function */
 void mpi_recv_num_add(void); /* local function */
 void loging_mpi_com(void); /* local function */
 int get_num_of_all_proc(void);
-int * get_best_solution_path(void);
 int get_process_number(void);
 #endif
 #ifdef POLEDEBUG

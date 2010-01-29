@@ -41,9 +41,7 @@ void finalize(void)
     output_log();
 
     #ifdef MPIMODE
-    if(modep->parallel_mode) {
-    }
-    else {
+    if(modep->parallel_mode == ON) {
         parallel_finalize();
     }
     #endif
@@ -92,7 +90,9 @@ void output_log(void)
     date = localtime(&timer);
 
     #ifdef MPIMODE
-    sprintf(time_data,"log_data/%d.%d.%d_%d:%d:%d",lnp[0], lnp[1], lnp[2], lnp[3], lnp[4], lnp[5]);
+    if(modep->parallel_mode == ON) {
+        sprintf(time_data,"log_data/%d.%d.%d_%d:%d:%d",lnp[0], lnp[1], lnp[2], lnp[3], lnp[4], lnp[5]);
+    }
     #else
     strftime(time_data, 63, "log_data/%Y.%m.%d_%H:%M:%S",date);
     #endif
@@ -111,8 +111,10 @@ void output_log(void)
 
     #ifdef MPIMODE
     #ifdef DEBUG
-    mpi_comunication_log_manage(CHECK);
-    tabu_matching_loging(CHECK);
+    if(modep->parallel_mode == ON) {
+        mpi_comunication_log_manage(CHECK);
+        tabu_matching_loging(CHECK);
+    }
     #endif
     #endif
 }

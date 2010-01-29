@@ -75,6 +75,9 @@ void initialize(int argc, char ** argv)
     #ifdef MPIMODE
     if(modep->parallel_mode == ON) {
         MPI_Init(&argc, &argv);
+        /* DEL ST */
+        startiii = MPI_Wtime();
+        /* DEL EN */
         set_MPI_parameter();
         recv_thread_num = get_all_MPI_group_data() - 1;
         MPI_recv_thread = (pthread_t *)malloc(recv_thread_num * sizeof(pthread_t));
@@ -85,14 +88,21 @@ void initialize(int argc, char ** argv)
                             (void *)best_MPI_recv,
                             (void *)&other_list[i]);
         }
+        /* DEL ST */
+        endiii = MPI_Wtime();
+        /* DEL EN */
     }
     #endif
 
     #ifdef DEBUG
     open_loging_initial_path();
     #endif
+    #ifdef MPIMODE
     #ifdef POLEDEBUG
-    open_loging_other_sol_path();
+    if(modep->parallel_mode == ON) {
+        open_loging_other_sol_path();
+    }
+    #endif
     #endif
     #ifdef DEBUG
     tabu_matching_loging(INIT);
@@ -107,8 +117,10 @@ void initialize(int argc, char ** argv)
     /* Communication among Group-Readers */
     #ifdef MPIMODE
     #ifdef SEND_AMONGGROUP
-    if(get_group_reader() == get_process_number()) {
-        group_reader_process();
+    if(modep->parallel_mode == ON) {
+        if(get_group_reader() == get_process_number()) {
+            group_reader_process();
+        }
     }
     #endif
     #endif

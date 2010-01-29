@@ -42,6 +42,7 @@ int main(int argc, char ** argv)
 
     /* timer start */
     timer(ON);
+
     num_counter(INIT, INIT);
 
     /* whole-search loop */
@@ -54,7 +55,7 @@ int main(int argc, char ** argv)
             /* search */
             search();
 
-            realtime_result();
+            //realtime_result();
 
             /* counting turn-num */
             num_counter(TURN_COUNTER, ADD);
@@ -65,14 +66,15 @@ int main(int argc, char ** argv)
         }
 
         #ifdef MPIMODE
-
-        /* send data other node */
-        best_MPI_send();
-        #ifdef SEND_AMONGGROUP
-        if(get_group_reader() == get_process_number() && check_other_group_data_satisfactory(TABU_LIST_SHARE)) {
-            group_reader_send(TABU_LIST_SHARE);
+        if(modep->parallel_mode == ON) {
+            /* send data other node */
+            best_MPI_send();
+            #ifdef SEND_AMONGGROUP
+            if(get_group_reader() == get_process_number() && check_other_group_data_satisfactory(TABU_LIST_SHARE)) {
+                group_reader_send(TABU_LIST_SHARE);
+            }
+            #endif
         }
-        #endif
         #endif
 
         /* counting turn-num */
@@ -84,6 +86,7 @@ int main(int argc, char ** argv)
 
     /* finalize procedure */
     finalize();
+    printf("DOU?:%f\n",endiii - startiii);
 
     return 0;
 }

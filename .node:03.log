@@ -1,0 +1,16 @@
+*******************************************************
+TSP Size:   51
+All Proces Num: 8
+Process Number: 3
+Process Name:pc16
+MPI Group: 1
+Running Time:300.000000
+Best Cost:428.98
+Search Count Num:171
+
+Active Modes--->
+	Graph_Mode ON
+	Hasegawa_Mode ON
+	Tabu-2opt_Mode ON
+<---Active Modes
+*******************************************************

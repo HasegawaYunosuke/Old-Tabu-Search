@@ -1,10 +1,10 @@
 /* #define MPIMODE */
 #define LINUXUSER
-#define DEBUG
-#define POLEDEBUG
-//#define CROSSOVER_BEF_AFT
+//#define DEBUG
+//#define POLEDEBUG
+#define CROSSOVER_BEF_AFT
 //#define DISTANCE_LOG
-#define SEND_AMONGGROUP
+//#define SEND_AMONGGROUP
 
 /* include files */
 #include <stdio.h>
@@ -94,3 +94,6 @@ struct mode {
 struct mode * modep;
 pthread_mutex_t mutex;
 pthread_t visual_thread;
+/* DEL ST */
+double startiii, endiii;
+/* DEL EN */
