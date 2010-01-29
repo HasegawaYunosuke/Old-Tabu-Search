@@ -415,6 +415,7 @@ void best_MPI_recv(int * recv_process_number)
             output_other_sol_path();
 #endif
         }
+
         sleep(1);
     }
 }
