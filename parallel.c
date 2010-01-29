@@ -224,7 +224,7 @@ void group_reader_send(int type)
         case TABU_LIST_SHARE:
             element_num = get_send_recv_element_num();
             send_node = list[random_num(DEFAULT_MPIGROUPNUM - 1)];
-            //MPI_Send((void *)my_share_tabulist, element_num, MPI_INT, send_node, GROUP_SOLUTION, MPI_COMM_WORLD);
+            MPI_Send((void *)my_share_tabulist, element_num, MPI_INT, send_node, GROUP_SOLUTION, MPI_COMM_WORLD);
             break;
     }
 }
@@ -366,8 +366,12 @@ void best_MPI_send(void)
         }*/
         /* Send it-self best-solution-path to Only-One process that chose by turn (Low-Cost)*/
 
-        //MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[before_send_process_index], BEST_SOLUTION, MPI_COMM_WORLD);
+        /* Blocking Send */
+        MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[before_send_process_index], BEST_SOLUTION, MPI_COMM_WORLD);
+
+        /* Non-Blocking Send () */
         //MPI_Isend((void *)my_best_sol, element_num, MPI_INT, other_list[before_send_process_index], BEST_SOLUTION, MPI_COMM_WORLD, &req);
+        //MPI_Wait(&req, &stat);
 
         before_send_process_index++;
 #ifdef DEBUG
@@ -382,7 +386,6 @@ void best_MPI_send(void)
         /* DEL EN */
 #endif
     }
-    //MPI_Wait(&req, &stat);
 }
 
 void best_MPI_recv(int * recv_process_number)
