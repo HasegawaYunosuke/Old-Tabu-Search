@@ -358,7 +358,7 @@ void best_MPI_send(void)
         /* Send it-self best-solution-path to Only-One process that chose by turn (Low-Cost)*/
 
         //MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[before_send_process_index], BEST_SOLUTION, MPI_COMM_WORLD);
-        MPI_Isend((void *)my_best_sol, element_num, MPI_INT, other_list[before_send_process_index], BEST_SOLUTION, MPI_COMM_WORLD, &req);
+        //MPI_Isend((void *)my_best_sol, element_num, MPI_INT, other_list[before_send_process_index], BEST_SOLUTION, MPI_COMM_WORLD, &req);
 
         before_send_process_index++;
 #ifdef DEBUG
@@ -373,7 +373,7 @@ void best_MPI_send(void)
         /* DEL EN */
 #endif
     }
-    MPI_Wait(&req, &stat);
+    //MPI_Wait(&req, &stat);
 }
 
 void best_MPI_recv(int * recv_process_number)
@@ -386,6 +386,7 @@ void best_MPI_recv(int * recv_process_number)
     int * other_list = get_same_group_list();
     int this_threads_index = 0;
     MPI_Status stat;
+    MPI_Request req;
 
     for(i = 0; i < get_all_MPI_group_data() - 1; i++) {
         if(other_list[i] == (*recv_process_number)) {
@@ -394,7 +395,9 @@ void best_MPI_recv(int * recv_process_number)
     }
 
     for(;;) {
-        MPI_Recv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, BEST_SOLUTION, MPI_COMM_WORLD, &stat);
+        //MPI_Recv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, BEST_SOLUTION, MPI_COMM_WORLD, &stat);
+        MPI_Irecv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, BEST_SOLUTION, MPI_COMM_WORLD, &req);
+        MPI_Wait(&req, &stat);
 
         pthread_mutex_lock(&recv_sol_lock);
         for(i = 0; i < element_num; i++) {

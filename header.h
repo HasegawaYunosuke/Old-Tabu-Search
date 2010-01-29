@@ -50,10 +50,12 @@
 #define MATCH 80
 #define UPPER 90
 #define DOWNER 95
-#define MERGECREATE 100
-#define GROUPCREATE 101
-#define MPI_SENDADD 301
-#define MPI_RECVADD 302
+#define TURN_COUNTER 100
+#define SEARCH_COUNTER 101
+#define MERGECREATE 300
+#define GROUPCREATE 301
+#define MPI_SENDADD 302
+#define MPI_RECVADD 303
 
 /* macro parameter */
 #define TSPMAXSIZE 2000

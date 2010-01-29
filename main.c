@@ -22,6 +22,7 @@ int loop_terminate(void);
 int search_terminate(void);
 void initial_path(void);
 void search(void);
+int num_counter(int field_type, int use_type);
 void finalize(void);
 #ifdef MPIMODE
 void set_MPI_group(void);
@@ -41,6 +42,7 @@ int main(int argc, char ** argv)
 
     /* timer start */
     timer(ON);
+    num_counter(INIT, INIT);
 
     /* whole-search loop */
     for(;;) {
@@ -54,11 +56,16 @@ int main(int argc, char ** argv)
 
             realtime_result();
 
+            /* counting turn-num */
+            num_counter(TURN_COUNTER, ADD);
+
+
             /* search-turn terminate */
             if(loop_terminate() == YES) {break;}
         }
 
         #ifdef MPIMODE
+
         /* send data other node */
         best_MPI_send();
         #ifdef SEND_AMONGGROUP
@@ -67,6 +74,9 @@ int main(int argc, char ** argv)
         }
         #endif
         #endif
+
+        /* counting turn-num */
+        num_counter(SEARCH_COUNTER, ADD);
 
         /* whole-search-terminate */
         if(search_terminate() == YES) {break;}

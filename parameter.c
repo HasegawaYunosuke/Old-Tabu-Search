@@ -2,6 +2,7 @@
 #include "header.h"
 
 /* functions */
+int num_counter(int field_type, int use_type);
 void mannneri_initialize(void);
 int search_is_done(int type);
 void set_parameter_data(int num_of_all_proc, int process_number, int name_length, char * process_name);
@@ -117,6 +118,8 @@ struct parameter {
     double best_cost;
     int turn_times;
     int search_times;
+    int turn_count;
+    int search_count;
     int solution_data_flag;
     int search_is_done;
     int not_found_cities[4];
@@ -189,6 +192,45 @@ void set_parameter_data(int num_of_all_proc, int process_number, int name_length
         parameterp->process_name[i] = process_name[i];
     }
     parameterp->other_group_stac_satisfaction_flag = OFF;
+}
+
+int num_counter(int field_type, int use_type)
+{
+    switch(field_type) {
+        case TURN_COUNTER:
+            if(use_type == ADD) {
+                if(parameterp->turn_count > INT_MAX - 1) {
+                    parameterp->turn_count = INT_MAX;
+                }
+                else {
+                    parameterp->turn_count++;
+                }
+                return -1;
+            }
+            else if(use_type == CHECK) {
+                return parameterp->turn_count;
+            }
+            break;
+        case SEARCH_COUNTER:
+            if(use_type == ADD) {
+                if(parameterp->search_count > INT_MAX - 1) {
+                    parameterp->search_count = INT_MAX;
+                }
+                else {
+                    parameterp->search_count++;
+                }
+                return -1;
+            }
+            else if(use_type == CHECK) {
+                return parameterp->search_count;
+            }
+            break;
+        case INIT:
+            parameterp->turn_count = 0;
+            parameterp->search_count = 0;
+            return -1;
+            break;
+    }
 }
 
 void create_readers_list(void)
