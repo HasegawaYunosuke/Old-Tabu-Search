@@ -76,8 +76,8 @@ void set_start_time(time_t start_time);
 time_t get_start_time(void);
 
 #ifdef MPIMODE
+void initialize_share_tabulist(void);
 void create_readers_list(void);
-void create_2opt_share_tabulist(void);
 int * get_readers_list(void);
 int get_group_reader(void);
 void set_now_other_group_stac_index(int stac_num);
@@ -465,7 +465,7 @@ void initial_parameter(int tsp_size)
     if(modep->tabu2opt_mode == ON) {
         create_2opt_tabulist(get_tsp_size(), INIT);
 #ifdef MPIMODE
-        create_2opt_share_tabulist();
+        initialize_share_tabulist();
 #endif
     }
 }
@@ -780,7 +780,7 @@ void set_all_cost(void)
         parameterp->best_cost = all_cost;
         set_best_solution_path_data();
         #ifdef MPIMODE
-        best_MPI_send();
+        //best_MPI_send();
         #endif
     }
 }

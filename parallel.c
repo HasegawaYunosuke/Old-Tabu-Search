@@ -144,7 +144,7 @@ void parallel_finalize(void)
 void group_reader_process(void)
 {
     pthread_t group_reader_thread;
-    int argument = SOL_PATH_SHARE;
+    int argument = TABU_LIST_SHARE;
 
     /* create other group-reader's process-num list */
     /* (ex)
@@ -215,7 +215,7 @@ void group_reader_send(int type)
         case TABU_LIST_SHARE:
             element_num = get_send_recv_element_num();
             send_node = list[random_num(DEFAULT_MPIGROUPNUM - 1)];
-            MPI_Send((void *)my_share_tabulist, element_num, MPI_INT, send_node, GROUP_SOLUTION, MPI_COMM_WORLD);
+            //MPI_Send((void *)my_share_tabulist, element_num, MPI_INT, send_node, GROUP_SOLUTION, MPI_COMM_WORLD);
             break;
     }
 }
@@ -248,9 +248,9 @@ int decide_create_mode(void)
 
     if(check_other_data_satisfactory() == YES) {
         initialize_path_create_mode = MERGECREATE;
-        if(check_other_group_data_satisfactory(SOL_PATH_SHARE) == YES) {
+        /*if(check_other_group_data_satisfactory(SOL_PATH_SHARE) == YES) {
             initialize_path_create_mode = GROUPCREATE;
-        }
+        }*/
     }
 
     return initialize_path_create_mode;
@@ -341,6 +341,7 @@ void best_MPI_send(void)
     int * other_list = get_same_group_list();
     int i;
     MPI_Status stat;
+    MPI_Request req;
 
     if(check_manneri(FIRST_MIDDLEMODED) == YES) {
         /* DEL ST */
@@ -355,7 +356,10 @@ void best_MPI_send(void)
             MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[i], BEST_SOLUTION, MPI_COMM_WORLD);
         }*/
         /* Send it-self best-solution-path to Only-One process that chose by turn (Low-Cost)*/
-        MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[before_send_process_index], BEST_SOLUTION, MPI_COMM_WORLD);
+
+        //MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[before_send_process_index], BEST_SOLUTION, MPI_COMM_WORLD);
+        MPI_Isend((void *)my_best_sol, element_num, MPI_INT, other_list[before_send_process_index], BEST_SOLUTION, MPI_COMM_WORLD, &req);
+
         before_send_process_index++;
 #ifdef DEBUG
         mpi_comunication_log_manage(MPI_SENDADD);
@@ -369,6 +373,7 @@ void best_MPI_send(void)
         /* DEL EN */
 #endif
     }
+    MPI_Wait(&req, &stat);
 }
 
 void best_MPI_recv(int * recv_process_number)
@@ -399,7 +404,7 @@ void best_MPI_recv(int * recv_process_number)
 
 #ifdef DEBUG
         mpi_comunication_log_manage(MPI_RECVADD);
-        //output_other_sol_path();
+        output_other_sol_path();
 #endif
         }
 }

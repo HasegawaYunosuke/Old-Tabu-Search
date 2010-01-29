@@ -26,6 +26,7 @@ void finalize(void);
 #ifdef MPIMODE
 void set_MPI_group(void);
 void best_MPI_send(void);
+int check_other_group_data_satisfactory(int type);
 #ifdef SEND_AMONGGROUP
 void group_reader_send(int type);
 int get_group_reader(void);
@@ -61,8 +62,8 @@ int main(int argc, char ** argv)
         /* send data other node */
         best_MPI_send();
         #ifdef SEND_AMONGGROUP
-        if(get_group_reader() == get_process_number()) {
-            group_reader_send(SOL_PATH_SHARE);
+        if(get_group_reader() == get_process_number() && check_other_group_data_satisfactory(TABU_LIST_SHARE)) {
+            group_reader_send(TABU_LIST_SHARE);
         }
         #endif
         #endif
