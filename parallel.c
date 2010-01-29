@@ -166,6 +166,7 @@ void group_reader_recv(int * argument)
     int * tabulist_buffer = get_tabulist_data_buffer();
     MPI_Status stat;
     int stac_num = 0;
+    int recvbuff_flag = 0;
 
     switch((*argument)) {
         case SOL_PATH_SHARE:
@@ -179,21 +180,29 @@ void group_reader_recv(int * argument)
     switch((*argument)) {
         case SOL_PATH_SHARE:
             for(;;) {
-                MPI_Recv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, GROUP_SOLUTION, MPI_COMM_WORLD, &stat);
-                copy_to_group_data(buffer, element_num, stac_num);
-                if(stac_num > DEFAULT_GROUP_DATASTOCKNUM- 1) {
-                    stac_num = 0;
-                    set_now_other_group_stac_index(-1);
+                MPI_Iprobe(MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &recvbuff_flag, &stat);
+                if(recvbuff_flag == 1) {
+                    MPI_Recv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, GROUP_SOLUTION, MPI_COMM_WORLD, &stat);
+                    copy_to_group_data(buffer, element_num, stac_num);
+                    if(stac_num > DEFAULT_GROUP_DATASTOCKNUM- 1) {
+                        stac_num = 0;
+                        set_now_other_group_stac_index(-1);
+                    }
+                    else {
+                        stac_num++;
+                        set_now_other_group_stac_index(stac_num - 1);
+                    }
                 }
-                else {
-                    stac_num++;
-                    set_now_other_group_stac_index(stac_num - 1);
-                }
+                sleep(1);
             }
         case TABU_LIST_SHARE:
             for(;;) {
-                MPI_Recv((void *)tabulist_buffer, element_num, MPI_INT, MPI_ANY_SOURCE, GROUP_SOLUTION, MPI_COMM_WORLD, &stat);
-                copy_to_share_tabulist(tabulist_buffer, element_num);
+                MPI_Iprobe(MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &recvbuff_flag, &stat);
+                if(recvbuff_flag == 1) {
+                    MPI_Recv((void *)tabulist_buffer, element_num, MPI_INT, MPI_ANY_SOURCE, GROUP_SOLUTION, MPI_COMM_WORLD, &stat);
+                    copy_to_share_tabulist(tabulist_buffer, element_num);
+                }
+                sleep(1);
             }
     }
 }
@@ -400,9 +409,12 @@ void best_MPI_recv(int * recv_process_number)
     for(;;) {
         MPI_Iprobe(MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &recvbuff_flag, &stat);
         if(recvbuff_flag == 1) {
+            /* Blocking Recv */
             MPI_Recv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, BEST_SOLUTION, MPI_COMM_WORLD, &stat);
-            /*MPI_Irecv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, BEST_SOLUTION, MPI_COMM_WORLD, &req);
-            MPI_Wait(&req, &stat);*/
+
+            /* Non-Blocking Recv (Low-Speed) */
+            //MPI_Irecv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, BEST_SOLUTION, MPI_COMM_WORLD, &req);
+            //MPI_Wait(&req, &stat);
 
             pthread_mutex_lock(&recv_sol_lock);
             for(i = 0; i < element_num; i++) {
@@ -416,6 +428,7 @@ void best_MPI_recv(int * recv_process_number)
 #endif
         }
 
+        /* this sleep is Hummmmmm... */
         sleep(1);
     }
 }

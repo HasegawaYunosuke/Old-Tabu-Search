@@ -73,11 +73,8 @@ void initialize(int argc, char ** argv)
     }
 
     #ifdef MPIMODE
-    //if(modep->parallel_mode == ON) {
+    if(modep->parallel_mode == ON) {
         MPI_Init(&argc, &argv);
-        /* DEL ST */
-        startiii = MPI_Wtime();
-        /* DEL EN */
         set_MPI_parameter();
         recv_thread_num = get_all_MPI_group_data() - 1;
         MPI_recv_thread = (pthread_t *)malloc(recv_thread_num * sizeof(pthread_t));
@@ -88,10 +85,7 @@ void initialize(int argc, char ** argv)
                             (void *)best_MPI_recv,
                             (void *)&other_list[i]);
         }
-        /* DEL ST */
-        endiii = MPI_Wtime();
-        /* DEL EN */
-    //}
+    }
     #endif
 
     #ifdef DEBUG
