@@ -4,7 +4,7 @@
 #define POLEDEBUG
 //#define CROSSOVER_BEF_AFT
 //#define DISTANCE_LOG
-#define SEND_AMONGGROUP
+//#define SEND_AMONGGROUP
 
 /* include files */
 #include <stdio.h>

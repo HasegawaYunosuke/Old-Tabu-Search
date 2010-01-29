@@ -107,7 +107,7 @@ void final_result_show(FILE * fp)
     fprintf(fp, "Running Time:%f\n",get_time());
     fprintf(fp, "Best Cost:%.2f\n",get_best_cost());
     fprintf(fp, "Search Count Num:%d\n",num_counter(SEARCH_COUNTER, CHECK));
-    //fprintf(fp, "Tunr Count Num:%2d\n",num_counter(TURN_COUNTER, CHECK));
+    fprintf(fp, "Tunr Count Num:%2d\n",num_counter(TURN_COUNTER, CHECK));
     fprintf(fp, "\nActive Modes--->\n");
     show_mode(fp);
     fprintf(fp, "<---Active Modes\n");

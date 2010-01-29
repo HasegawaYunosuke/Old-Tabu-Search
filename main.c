@@ -85,7 +85,6 @@ int main(int argc, char ** argv)
 
     /* finalize procedure */
     finalize();
-    printf("DOU?:%f\n",endiii - startiii);
 
     return 0;
 }

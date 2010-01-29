@@ -309,15 +309,15 @@ void add_2opt_share_tabulist(int * cities)
 {
     int i;
 
-    for(i = 0; i < 4; i++) {
-        share_tabulist_2opt[i][share_tabulist_2opt_index] = cities[i];
-    }
-
-    if(share_tabulist_2opt_index >= get_list_size(get_tsp_size())) {
+    if(share_tabulist_2opt_index == (get_list_size(get_tsp_size()) - 1)) {
         if(share_list_size_over_limit == NO) {
             share_list_size_over_limit = YES;
         }
         share_tabulist_2opt_index = 0;
+    }
+
+    for(i = 0; i < 4; i++) {
+        share_tabulist_2opt[i][share_tabulist_2opt_index] = cities[i];
     }
 
     share_tabulist_2opt_index++;
