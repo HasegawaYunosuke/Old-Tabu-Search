@@ -23,10 +23,10 @@ void close_loging_initial_path(void);
 #ifdef MPIMODE
 void mpi_comunication_log_manage(int type);
 void tabu_matching_loging(int type);
-#endif
-#endif
 #ifdef POLEDEBUG
 void close_loging_other_sol_path(void);
+#endif
+#endif
 #endif
 #ifdef CROSSOVER_BEF_AFT
 void close_loging_x_sol_path(void);
@@ -49,15 +49,14 @@ void finalize(void)
     if(modep->graph_mode == ON) {
         free(get_graph_data());
     }
-    free(get_main_base_data());
-    free(get_parameterp());
-    mannneri_finalize();
 
     #ifdef DEBUG
     close_loging_initial_path();
     #endif
+    #ifdef MPIMODE
     #ifdef POLEDEBUG
     close_loging_other_sol_path();
+    #endif
     #endif
     #ifdef CROSSOVER_BEF_AFT
     close_loging_x_sol_path();
@@ -65,6 +64,10 @@ void finalize(void)
     #ifdef DISTANCE_LOG
     close_distance_log();
     #endif
+    free(get_main_base_data());
+    free(get_parameterp());
+    mannneri_finalize();
+
     printf("Program is normally terminated.....\n");
 }
 
