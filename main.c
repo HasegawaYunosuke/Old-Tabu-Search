@@ -60,7 +60,6 @@ int main(int argc, char ** argv)
             /* counting turn-num */
             num_counter(TURN_COUNTER, ADD);
 
-
             /* search-turn terminate */
             if(loop_terminate() == YES) {break;}
         }

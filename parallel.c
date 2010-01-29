@@ -385,6 +385,7 @@ void best_MPI_recv(int * recv_process_number)
     int * other_sol_path = get_other_solution_path_data();
     int * other_list = get_same_group_list();
     int this_threads_index = 0;
+    int recvbuff_flag = 0;
     MPI_Status stat;
     MPI_Request req;
 
@@ -397,20 +398,24 @@ void best_MPI_recv(int * recv_process_number)
     pthread_mutex_init(&recv_sol_lock, NULL);
 
     for(;;) {
-        MPI_Recv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, BEST_SOLUTION, MPI_COMM_WORLD, &stat);
-        /*MPI_Irecv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, BEST_SOLUTION, MPI_COMM_WORLD, &req);
-        MPI_Wait(&req, &stat);*/
+        MPI_Iprobe(MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &recvbuff_flag, &stat);
+        if(recvbuff_flag == 1) {
+            MPI_Recv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, BEST_SOLUTION, MPI_COMM_WORLD, &stat);
+            /*MPI_Irecv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, BEST_SOLUTION, MPI_COMM_WORLD, &req);
+            MPI_Wait(&req, &stat);*/
 
-        pthread_mutex_lock(&recv_sol_lock);
-        for(i = 0; i < element_num; i++) {
-            other_sol_path[this_threads_index + i] = buffer[i];
-        }
-        pthread_mutex_unlock(&recv_sol_lock);
+            pthread_mutex_lock(&recv_sol_lock);
+            for(i = 0; i < element_num; i++) {
+                other_sol_path[this_threads_index + i] = buffer[i];
+            }
+            pthread_mutex_unlock(&recv_sol_lock);
 
 #ifdef DEBUG
-        mpi_comunication_log_manage(MPI_RECVADD);
-        output_other_sol_path();
+            mpi_comunication_log_manage(MPI_RECVADD);
+            output_other_sol_path();
 #endif
+        }
+        sleep(1);
     }
 }
 

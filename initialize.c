@@ -73,7 +73,7 @@ void initialize(int argc, char ** argv)
     }
 
     #ifdef MPIMODE
-    if(modep->parallel_mode == ON) {
+    //if(modep->parallel_mode == ON) {
         MPI_Init(&argc, &argv);
         /* DEL ST */
         startiii = MPI_Wtime();
@@ -91,7 +91,7 @@ void initialize(int argc, char ** argv)
         /* DEL ST */
         endiii = MPI_Wtime();
         /* DEL EN */
-    }
+    //}
     #endif
 
     #ifdef DEBUG
