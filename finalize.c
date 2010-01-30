@@ -117,6 +117,9 @@ void output_log(void)
     if(modep->parallel_mode == ON) {
         mpi_comunication_log_manage(CHECK);
         tabu_matching_loging(CHECK);
+        #ifdef SEND_AMONGGROUP
+        tabu_matching_loging(SHARE);
+        #endif
     }
     #endif
     #endif

@@ -26,6 +26,7 @@ void share_tabu_matching(int * cities);
 void share_flag_set(void);
 int share_tabulist_is_satisfactory(void);
 int * get_share_tabulist(void);
+int * get_all_share_tabulist(void);
 int get_send_recv_element_num(void);
 int * get_tabulist_data_buffer(void);
 int * get_tabulist_data(void);
@@ -369,6 +370,11 @@ void share_tabu_matching(int * cities)
 int share_tabulist_is_satisfactory(void)
 {
     return share_list_size_over_limit;
+}
+
+int * get_all_share_tabulist(void)
+{
+    return share_tabulist_2opt[0];
 }
 
 int alternative_type = UPPER;
