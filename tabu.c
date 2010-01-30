@@ -34,7 +34,6 @@ int * recv_format_to_base_format_share_tabulist(void);
 #endif
 
 /* grobal variable */
-struct 
 int * tabulist_2opt[4];
 int tabulist_2opt_index;
 int list_size = 1;
@@ -85,11 +84,11 @@ int is_2opt_tabu(int * cities1)
         pthread_join(matching_thread[i], NULL);
     }
 
-#ifdef DEBUG
     if(find_out_flag == YES) {
+#ifdef DEBUG
         tabu_matching_loging(MATCH);
-    }
 #endif
+    }
 
     return find_out_flag;
 }
@@ -360,7 +359,6 @@ void share_tabu_matching(int * cities)
             pthread_mutex_lock(&share_match_mutex);
             find_out_share_flag = YES;
             pthread_mutex_unlock(&share_match_mutex);
-            add_2opt_share_tabulist(cities);
         }
         if(find_out_flag == YES) {
             break;

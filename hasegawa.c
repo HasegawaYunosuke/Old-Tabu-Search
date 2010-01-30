@@ -144,7 +144,7 @@ int * two_opt_tabu(int * solution_path)
                     break;
                 }
 #ifdef MPIMODE
-            } while(permit_worse(bef_aft_distance(cities)) == NO || is_2opt_share_tabu(cities) == YES || is_2opt_tabu(cities) == YES);
+            } while(permit_worse(bef_aft_distance(cities)) == NO /*|| is_2opt_share_tabu(cities) == YES*/ || is_2opt_tabu(cities) == YES);
 #else
             } while(permit_worse(bef_aft_distance(cities)) == NO || is_2opt_tabu(cities) == YES);
 #endif
