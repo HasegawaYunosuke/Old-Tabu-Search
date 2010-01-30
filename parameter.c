@@ -3,6 +3,7 @@
 
 /* functions */
 int num_counter(int field_type, int use_type);
+int tabulist_counter(int field_type, int use_type);
 void mannneri_initialize(void);
 int search_is_done(int type);
 void set_parameter_data(int num_of_all_proc, int process_number, int name_length, char * process_name);
@@ -116,10 +117,12 @@ struct parameter {
     int * other_group_path;
     double all_cost;            /* solution_path's cost */
     double best_cost;
-    int turn_times;
-    int search_times;
-    int turn_count;
-    int search_count;
+    int turn_times;             /* !! Want to DEL (don't use this parameter) */
+    int search_times;           /* !! Want to DEL (don't use this parameter) */
+    int turn_count;             /* How many did the 'exchange branch' (turn) */
+    int search_count;           /* How many did the 'search' (init -> search -> init -> search) */
+    int local_tabu_count;       /* How many added the tabu as Local-Tabulist */
+    int share_tabu_count;       /* How many added the tabu as MPI-Share-Tabulist */
     int solution_data_flag;
     int search_is_done;
     int not_found_cities[4];
@@ -152,14 +155,45 @@ struct parameter * parameterp;
 struct parameter * get_parameterp(void);
 struct mode * get_modep(void);
 
-struct parameter * get_parameterp(void)
+/* This function is All Parameter's initialization */
+void initial_parameter(int tsp_size)
 {
-    return parameterp;
-}
+    /* allocate "pointer of struct" memory */
+    if((parameterp = malloc(sizeof(struct parameter))) == NULL) {
+        error_procedure("parameter malloc()");
+    }
 
-struct mode * get_modep(void)
-{
-    return modep;
+    parameterp->tsp_size = tsp_size;
+    parameterp->permit_worse = DEFAULT_PERMITWORSE;
+    parameterp->base_permit_worse = DEFAULT_PERMITWORSE;
+    parameterp->city_point = DEFAULT_CITYPOINT;
+    parameterp->best_cost = DBL_MAX;
+    parameterp->all_cost = DBL_MAX;
+    parameterp->turn_times = 0;
+    parameterp->search_times = 0;
+    parameterp->local_tabu_count = 0;
+    parameterp->share_tabu_count = 0;
+    parameterp->solution_data_flag = OFF;
+    parameterp->search_is_done = NO;
+    parameterp->not_found_loop = 0;
+    parameterp->not_found_def_aft_dis = (-1) * DBL_MAX;
+    parameterp->process_number = 0;
+    parameterp->num_of_all_proc = 1;
+    parameterp->MPI_group = 0;
+    parameterp->all_MPI_group = 0;
+    set_2opt_loop();
+
+    /* initilize manneri-functions */
+    mannneri_initialize();
+
+    create_historys();
+    /* create tabu list for 2-opt (only first procedure) */
+    if(modep->tabu2opt_mode == ON) {
+        create_2opt_tabulist(get_tsp_size(), INIT);
+#ifdef MPIMODE
+        initialize_share_tabulist();
+#endif
+    }
 }
 
 /* set all modes to OFF */
@@ -194,6 +228,7 @@ void set_parameter_data(int num_of_all_proc, int process_number, int name_length
     parameterp->other_group_stac_satisfaction_flag = OFF;
 }
 
+/* This function simply count the number of 'Turn' and 'Whole-search' */
 int num_counter(int field_type, int use_type)
 {
     int return_data = -1;
@@ -234,6 +269,42 @@ int num_counter(int field_type, int use_type)
     return return_data;
 }
 
+/* This function simply manage the tabulist's count.
+ * If the argument 'use_type' is set 'ADD', return Negative-Num (-1).
+ * But 'use_type' is set 'READONLY', return the number of each counted-number.
+ */
+int tabulist_counter(int field_type, int use_type)
+{
+    int return_num = -1;
+
+    switch(use_type) {
+        case ADD:
+            if(field_type == DEFAULT) {
+                parameterp->local_tabu_count++;
+            }
+            else if(field_type == SHARE) {
+                parameterp->share_tabu_count++;
+            }
+            break;
+        case READONLY:
+            if(field_type == DEFAULT) {
+                return_num = parameterp->local_tabu_count;
+            }
+            else if(field_type == SHARE) {
+                return_num = parameterp->share_tabu_count;
+            }
+            break;
+    }
+
+    return return_num;
+}
+
+/* This function must to use in case of Sharing Tabulist.
+ * 'readers' means the one chosen process at the each Groups.
+ * If the number of 'Groups' is 4, this func create the other 3 Reader's list.
+ * This func is called from 'group_reader_process()' at parallel.c
+ * This list can get by calling 'int * get_readers_list()'
+ */
 void create_readers_list(void)
 {
     int i, index = 0;
@@ -473,44 +544,6 @@ void set_tozaki_mode(void)
     modep->tozaki_mode = ON;
     modep->pole_mode = OFF;
     modep->hasegawa_mode = OFF;
-}
-
-void initial_parameter(int tsp_size)
-{
-    /* allocate "pointer of struct" memory */
-    if((parameterp = malloc(sizeof(struct parameter))) == NULL) {
-        error_procedure("parameter malloc()");
-    }
-
-    parameterp->tsp_size = tsp_size;
-    parameterp->permit_worse = DEFAULT_PERMITWORSE;
-    parameterp->base_permit_worse = DEFAULT_PERMITWORSE;
-    parameterp->city_point = DEFAULT_CITYPOINT;
-    parameterp->best_cost = DBL_MAX;
-    parameterp->all_cost = DBL_MAX;
-    parameterp->turn_times = 0;
-    parameterp->search_times = 0;
-    parameterp->solution_data_flag = OFF;
-    parameterp->search_is_done = NO;
-    parameterp->not_found_loop = 0;
-    parameterp->not_found_def_aft_dis = (-1) * DBL_MAX;
-    parameterp->process_number = 0;
-    parameterp->num_of_all_proc = 1;
-    parameterp->MPI_group = 0;
-    parameterp->all_MPI_group = 0;
-    set_2opt_loop();
-
-    /* initilize manneri-functions */
-    mannneri_initialize();
-
-    create_historys();
-    /* create tabu list for 2-opt (only first procedure) */
-    if(modep->tabu2opt_mode == ON) {
-        create_2opt_tabulist(get_tsp_size(), INIT);
-#ifdef MPIMODE
-        initialize_share_tabulist();
-#endif
-    }
 }
 
 int turn_loop_times(int type)
@@ -804,6 +837,16 @@ int * get_solution_path(void)
 int * get_ga_solution_path(void)
 {
     return parameterp->ga_solution_path;
+}
+
+struct parameter * get_parameterp(void)
+{
+    return parameterp;
+}
+
+struct mode * get_modep(void)
+{
+    return modep;
 }
 
 void set_all_cost(void)

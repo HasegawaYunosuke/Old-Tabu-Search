@@ -67,7 +67,6 @@ int main(int argc, char ** argv)
         #ifdef MPIMODE
         if(modep->parallel_mode == ON) {
             /* send data other node */
-            //best_MPI_send();
             #ifdef SEND_AMONGGROUP
             if(get_group_reader() == get_process_number() && check_other_group_data_satisfactory(TABU_LIST_SHARE)) {
                 group_reader_send(TABU_LIST_SHARE);

@@ -23,8 +23,10 @@ double get_all_cost_by_graph(int * cities);
 double get_best_cost(void);
 double get_time(void);
 int check_manneri(int type);
-int search_loop_times(int type);
 
+#ifdef DEBUG
+int tabulist_counter(int field_type, int use_type);
+#endif
 #ifdef DISTANCE_LOG
 void output_distance_log(void);
 #endif
@@ -108,6 +110,14 @@ void final_result_show(FILE * fp)
     fprintf(fp, "Best Cost:%.2f\n",get_best_cost());
     fprintf(fp, "Search Count Num:%d\n",num_counter(SEARCH_COUNTER, CHECK));
     fprintf(fp, "Tunr Count Num:%2d\n",num_counter(TURN_COUNTER, CHECK));
+#ifdef DEBUG
+    fprintf(fp, "Local Tabulist Num:%d\n",tabulist_counter(DEFAULT, READONLY));
+#ifdef MPIMODE
+    if(modep->parallel_mode == ON) {
+        fprintf(fp, "Share Tabulist Num:%d\n",tabulist_counter(SHARE, READONLY);
+    }
+#endif
+#endif
     fprintf(fp, "\nActive Modes--->\n");
     show_mode(fp);
     fprintf(fp, "<---Active Modes\n");

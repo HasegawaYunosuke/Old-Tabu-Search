@@ -38,6 +38,7 @@
 #define CHECK -1
 #define READONLY -2
 #define COUNT -3
+#define SHARE -4
 #define DEFAULT 0
 #define PERMITWORSE 10
 #define SMART2OPT 20

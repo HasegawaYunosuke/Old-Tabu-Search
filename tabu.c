@@ -6,11 +6,12 @@ int is_2opt_tabu(int * cities);
 void tabu_matching(int * cities);
 void add_2opt_tabulist(int * cities);
 void create_2opt_tabulist(int tsp_size, int mode);
-int get_list_size(int tsp_size);
+int get_list_size(int tsp_size, int type);
 void flag_set(void);
 int * mallocer_ip(int list_size);
 int get_tsp_size(void);
 void free_tabu(void);
+int tabulist_counter(int field_type, int use_type);
 #ifdef DEBUG
 void tabu_matching_loging(int type);
 #endif
@@ -33,6 +34,7 @@ int * recv_format_to_base_format_share_tabulist(void);
 #endif
 
 /* grobal variable */
+struct 
 int * tabulist_2opt[4];
 int tabulist_2opt_index;
 int list_size = 1;
@@ -123,10 +125,11 @@ void add_2opt_tabulist(int * cities)
         tabulist_2opt[i][tabulist_2opt_index] = cities[i];
     }
 
-    if(tabulist_2opt_index >= get_list_size(get_tsp_size())) {
+    if(tabulist_2opt_index >= get_list_size(get_tsp_size(), DEFAULT)) {
         tabulist_2opt_index = 0;
     }
 
+    tabulist_counter(DEFAULT, ADD);
     tabulist_2opt_index++;
 }
 
@@ -137,14 +140,14 @@ void create_2opt_tabulist(int tsp_size, int mode)
     /* 'list_size' is tabulist size (only once) */
     if(mode == INIT) {
         if(list_size == 1) {
-            list_size = get_list_size(tsp_size);
+            list_size = get_list_size(tsp_size, DEFAULT);
             for(i = 0; i < 4; i++) {
                 tabulist_2opt[i] = mallocer_ip(list_size);
             }
         }
     }
     else if(mode == CLEAR) {
-        list_size = get_list_size(tsp_size);
+        list_size = get_list_size(tsp_size, DEFAULT);
         for(i = 0; i < 4; i++) {
             for(j = 0; j < list_size; j++) {
                 tabulist_2opt[i][j] = 0;
@@ -155,9 +158,20 @@ void create_2opt_tabulist(int tsp_size, int mode)
     tabulist_2opt_index = 0;
 }
 
-int get_list_size(int tsp_size)
+int get_list_size(int tsp_size, int type)
 {
-    return (tsp_size * tsp_size);
+    int list_size;
+
+    switch(type) {
+        case DEFAULT:
+            list_size = (tsp_size * tsp_size);
+            break;
+        case SHARE:
+            list_size = tsp_size * tsp_size;
+            break;
+    }
+
+    return list_size;
 }
 
 void flag_set(void)
@@ -232,7 +246,7 @@ void create_2opt_share_tabulist(void)
 {
     int i;
 
-    share_list_size = get_list_size(get_tsp_size());
+    share_list_size = get_list_size(get_tsp_size(), SHARE);
     for(i = 0; i < 4; i++) {
         share_tabulist_2opt[i] = mallocer_ip(share_list_size);
     }
@@ -244,12 +258,11 @@ void create_2opt_share_tabulist(void)
 /* c1, c2, c3, c4, c1, c2, c3, c4, ... , c3, c4
  * All data-size is
  * {1/2 x list_size x 4} == list_size x 2 */
-
 void create_send_recv_tabulist(void)
 {
-    send_tabulist_data = mallocer_ip(get_list_size(get_tsp_size())  * 2);
-    recv_tabulist_data = mallocer_ip(get_list_size(get_tsp_size())  * 2);
-    recv_tabulist_data_buffer = mallocer_ip(get_list_size(get_tsp_size()) * 2);
+    send_tabulist_data = mallocer_ip(get_list_size(get_tsp_size(), SHARE)  * 2);
+    recv_tabulist_data = mallocer_ip(get_list_size(get_tsp_size(), SHARE)  * 2);
+    recv_tabulist_data_buffer = mallocer_ip(get_list_size(get_tsp_size(), SHARE) * 2);
 }
 
 int * get_tabulist_data_buffer(void)
@@ -264,7 +277,7 @@ int * get_tabulist_data(void)
 
 int get_send_recv_element_num(void)
 {
-    return (get_list_size(get_tsp_size()) * 2);
+    return (get_list_size(get_tsp_size(), SHARE) * 2);
 }
 
 /* adjust the data-format */
@@ -277,7 +290,7 @@ int * base_format_to_send_format_share_tabulist(int type)
         start_i = 0;
     }
     else if(type == DOWNER) {
-        start_i = get_list_size(get_tsp_size()) / 2;
+        start_i = get_list_size(get_tsp_size(), SHARE) / 2;
     }
 
     for(i = 0; i < element_num; i++) {
@@ -298,7 +311,7 @@ int * recv_format_to_base_format_share_tabulist(void)
         for(j = 0; j < 4; j++) {
             share_tabulist_2opt[j][i + share_tabulist_2opt_index] = recv_tabulist_data[j + 4 * i];
             share_tabulist_2opt_index++;
-            if(share_tabulist_2opt_index >= get_list_size(get_tsp_size())) {
+            if(share_tabulist_2opt_index >= get_list_size(get_tsp_size(), SHARE)) {
                 share_tabulist_2opt_index = 0;
             }
         }
@@ -309,7 +322,7 @@ void add_2opt_share_tabulist(int * cities)
 {
     int i;
 
-    if(share_tabulist_2opt_index == (get_list_size(get_tsp_size()) - 1)) {
+    if(share_tabulist_2opt_index == (get_list_size(get_tsp_size(), SHARE) - 1)) {
         if(share_list_size_over_limit == NO) {
             share_list_size_over_limit = YES;
         }
@@ -320,6 +333,7 @@ void add_2opt_share_tabulist(int * cities)
         share_tabulist_2opt[i][share_tabulist_2opt_index] = cities[i];
     }
 
+    tabulist_counter(SHARE, ADD);
     share_tabulist_2opt_index++;
 }
 

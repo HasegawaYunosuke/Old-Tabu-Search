@@ -104,6 +104,7 @@ void tabu_matching_loging(int type)
             break;
         case CHECK:
             loging_tabu_matched();
+            break;
     }
 }
 
