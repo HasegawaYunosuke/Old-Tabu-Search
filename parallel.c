@@ -1,6 +1,7 @@
 #include "header.h"
 
 int * mallocer_ip(int size);
+int get_all_search_is_done(void);
 void set_MPI_parameter(void);
 void set_MPI_group(void);
 void set_parameter_data(int num_of_all_proc, int process_number, int name_length, char * process_name);
@@ -129,17 +130,6 @@ void set_other_solution_path(void)
     set_other_solution_path_data(save_pointer);
 }
 
-void parallel_finalize(void)
-{
-    /*MPI_Barrier(MPI_COMM_WORLD);
-    MPI_Barrier(MPI_COMM_WORLD);
-    MPI_Barrier(MPI_COMM_WORLD);
-    MPI_Barrier(MPI_COMM_WORLD);*/
-    MPI_Finalize();
-    free(get_other_solution_path_data());
-    free(get_same_group_list());
-}
-
 /* If this process is appointed as a "group-reader",
  * this process have to send-and-recv something data to other-GROUP (reader). */
 void group_reader_process(void)
@@ -181,6 +171,9 @@ void group_reader_recv(int * argument)
     switch((*argument)) {
         case SOL_PATH_SHARE:
             for(;;) {
+                if(get_all_search_is_done() == YES) {
+                    exit(0);
+                }
                 MPI_Iprobe(MPI_ANY_SOURCE, GROUP_SOLUTION, MPI_COMM_WORLD, &recvbuff_flag, &stat);
                 if(recvbuff_flag == 1) {
                     MPI_Recv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, GROUP_SOLUTION, MPI_COMM_WORLD, &stat);
@@ -198,6 +191,9 @@ void group_reader_recv(int * argument)
             }
         case TABU_LIST_SHARE:
             for(;;) {
+                if(get_all_search_is_done() == YES) {
+                    exit(0);
+                }
                 MPI_Iprobe(MPI_ANY_SOURCE, GROUP_SOLUTION, MPI_COMM_WORLD, &recvbuff_flag, &stat);
                 if(recvbuff_flag == 1) {
                     MPI_Recv((void *)tabulist_buffer, element_num, MPI_INT, MPI_ANY_SOURCE, GROUP_SOLUTION, MPI_COMM_WORLD, &stat);
@@ -422,6 +418,9 @@ void best_MPI_recv(int * recv_process_number)
     pthread_mutex_init(&recv_sol_lock, NULL);
 
     for(;;) {
+        if(get_all_search_is_done() == YES) {
+            exit(0);
+        }
         MPI_Iprobe(MPI_ANY_SOURCE, BEST_SOLUTION, MPI_COMM_WORLD, &recvbuff_flag, &stat);
         if(recvbuff_flag == 1) {
             /* Blocking Recv */
@@ -710,3 +709,35 @@ void show_saved_other_sol(void)
     }
 }
 /* DEL EN */
+
+int get_all_search_is_done_flag = NO;
+
+int get_all_search_is_done(void)
+{
+    int * solution_path;
+    int return_num = NO;
+
+    if(get_all_search_is_done_flag == NO) {
+        sleep(1);
+        get_all_search_is_done_flag = YES;
+    }
+    solution_path = get_solution_path();
+
+    if(solution_path[0] == 0) {
+        return_num = YES;
+    }
+
+    return return_num;
+}
+
+void parallel_finalize(void)
+{
+    MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Barrier(MPI_COMM_WORLD);
+    /*MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Barrier(MPI_COMM_WORLD);*/
+    MPI_Finalize();
+    free(get_other_solution_path_data());
+    free(get_same_group_list());
+}
+
