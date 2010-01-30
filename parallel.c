@@ -193,7 +193,7 @@ void group_reader_recv(int * argument)
                         set_now_other_group_stac_index(stac_num - 1);
                     }
                 }
-                sleep(1);
+                usleep(100000);
             }
         case TABU_LIST_SHARE:
             for(;;) {
@@ -202,7 +202,7 @@ void group_reader_recv(int * argument)
                     MPI_Recv((void *)tabulist_buffer, element_num, MPI_INT, MPI_ANY_SOURCE, GROUP_SOLUTION, MPI_COMM_WORLD, &stat);
                     copy_to_share_tabulist(tabulist_buffer, element_num);
                 }
-                sleep(1);
+                usleep(100000);
             }
     }
 }
@@ -432,7 +432,7 @@ void best_MPI_recv(int * recv_process_number)
         }
 
         /* this sleep is Hummmmmm... */
-        sleep(1);
+        usleep(100000);
     }
 }
 
