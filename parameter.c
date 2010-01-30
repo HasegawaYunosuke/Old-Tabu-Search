@@ -824,7 +824,7 @@ void set_all_cost(void)
         set_best_solution_path_data();
         #ifdef MPIMODE
         if(modep->parallel_mode == ON) {
-            //best_MPI_send();
+            best_MPI_send();
         }
         #endif
     }
