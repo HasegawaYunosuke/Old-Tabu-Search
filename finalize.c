@@ -94,17 +94,17 @@ void output_log(void)
 
     #ifdef MPIMODE
     if(modep->parallel_mode == ON) {
-        sprintf(time_data,"log_data/%d.%d.%d_%d:%d:%d",lnp[0], lnp[1], lnp[2], lnp[3], lnp[4], lnp[5]);
+        sprintf(time_data,"log_data/%d.%d.%d_%d.%d.%d",lnp[0], lnp[1], lnp[2], lnp[3], lnp[4], lnp[5]);
     }
     #else
-    strftime(time_data, 63, "log_data/%Y.%m.%d_%H:%M:%S",date);
+    strftime(time_data, 63, "log_data/%Y.%m.%d_%H.%M.%S",date);
     #endif
 
     if(get_process_number() < 10) {
-        sprintf(logfilename, "%s.node:0%d.log",time_data,get_process_number());
+        sprintf(logfilename, "%s.node0%d.log",time_data,get_process_number());
     }
     else {
-        sprintf(logfilename, "%s.node:%d.log",time_data,get_process_number());
+        sprintf(logfilename, "%s.node%d.log",time_data,get_process_number());
     }
     if((fp = fopen(logfilename, "w")) == NULL) {
         error_procedure("can\'t find \"log_data\" directory");

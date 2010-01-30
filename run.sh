@@ -11,7 +11,7 @@ scrun -group=machinefile2,network=sctp -nodes=4x2 ./mpi.exe -f tsp_data/lin318.t
 fi
 if [ $1 == 3 ]
 then
-scrun -group=machinefile2,network=sctp -nodes=4x2 ./mpi.exe -f tsp_data/rat575.tsp -b -t 30
+scrun -group=machinefile5,network=sctp -nodes=8x2 ./mpi.exe -f tsp_data/rat575.tsp -b -m -t 30
 fi
 if [ $1 == 4 ]
 then
@@ -20,5 +20,5 @@ scrun -group=machinefile2,network=sctp -nodes=4x2 ./mpi.exe -f tsp_data/eil51.ts
 fi
 if [ $1 == 5 ]
 then
-scrun -group=machinefile2,network=sctp -nodes=4x2 ./nompi.exe -f tsp_data/rat575.tsp -b -t 30
+scrun -group=machinefile,network=sctp -nodes=4x2 ./nompi.exe -f tsp_data/rat575.tsp -b -t 30
 fi
