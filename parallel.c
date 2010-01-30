@@ -180,7 +180,7 @@ void group_reader_recv(int * argument)
     switch((*argument)) {
         case SOL_PATH_SHARE:
             for(;;) {
-                MPI_Iprobe(MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &recvbuff_flag, &stat);
+                MPI_Iprobe(MPI_ANY_SOURCE, GROUP_SOLUTION, MPI_COMM_WORLD, &recvbuff_flag, &stat);
                 if(recvbuff_flag == 1) {
                     MPI_Recv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, GROUP_SOLUTION, MPI_COMM_WORLD, &stat);
                     copy_to_group_data(buffer, element_num, stac_num);
@@ -197,7 +197,7 @@ void group_reader_recv(int * argument)
             }
         case TABU_LIST_SHARE:
             for(;;) {
-                MPI_Iprobe(MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &recvbuff_flag, &stat);
+                MPI_Iprobe(MPI_ANY_SOURCE, GROUP_SOLUTION, MPI_COMM_WORLD, &recvbuff_flag, &stat);
                 if(recvbuff_flag == 1) {
                     MPI_Recv((void *)tabulist_buffer, element_num, MPI_INT, MPI_ANY_SOURCE, GROUP_SOLUTION, MPI_COMM_WORLD, &stat);
                     copy_to_share_tabulist(tabulist_buffer, element_num);
@@ -397,7 +397,7 @@ void best_MPI_recv(int * recv_process_number)
     int * other_sol_path = get_other_solution_path_data();
     int * other_list = get_same_group_list();
     int this_threads_index = 0;
-    int recvbuff_flag = 0;
+    int recvbuff_flag = 1;
     MPI_Status stat;
     MPI_Request req;
 
@@ -410,7 +410,7 @@ void best_MPI_recv(int * recv_process_number)
     pthread_mutex_init(&recv_sol_lock, NULL);
 
     for(;;) {
-        MPI_Iprobe(MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &recvbuff_flag, &stat);
+        MPI_Iprobe(MPI_ANY_SOURCE, BEST_SOLUTION, MPI_COMM_WORLD, &recvbuff_flag, &stat);
         if(recvbuff_flag == 1) {
             /* Blocking Recv */
             MPI_Recv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, BEST_SOLUTION, MPI_COMM_WORLD, &stat);
