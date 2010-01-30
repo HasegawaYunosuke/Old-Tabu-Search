@@ -49,7 +49,8 @@ void group_reader_process(void);
 void create_readers_list(void);
 int * get_readers_list(void);
 void group_reader_recv(int * argument);
-void group_reader_send(int type);
+void group_reader_send(int * type);
+void group_reader_send_thread(int type);
 void set_other_group_sol_path(void);
 int * get_other_group_sol_path(void);
 void set_other_group_sol_path_data(int * pointer);
@@ -207,15 +208,26 @@ void group_reader_recv(int * argument)
     }
 }
 
-void group_reader_send(int type)
+void group_reader_send_thread(int type)
+{
+    pthread_t thread_tt;
+
+    pthread_create(&thread_tt,
+                    NULL,
+                    (void *)group_reader_send,
+                    (void *)&type);
+}
+
+void group_reader_send(int * type)
 {
     int * my_best_sol = get_best_solution_path();
     int * my_share_tabulist = get_share_tabulist();
     int element_num;
     int * list = get_readers_list();
     int send_node;
+    int type_test = TABU_LIST_SHARE;
 
-    switch(type) {
+    switch(type_test) {
         case SOL_PATH_SHARE:
             element_num = get_tsp_size() + DEFAULT_SENDPARAMETERNUM;
             send_node = list[random_num(DEFAULT_MPIGROUPNUM - 1)];
@@ -364,8 +376,8 @@ void best_MPI_send(void)
         for(i = 0; i < get_all_MPI_group_data() - 1; i++) {
             MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[i], BEST_SOLUTION, MPI_COMM_WORLD);
         }*/
-        /* Send it-self best-solution-path to Only-One process that chose by turn (Low-Cost)*/
 
+        /* Send it-self best-solution-path to Only-One process that chose by turn (Low-Cost)*/
         /* Blocking Send */
         MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[before_send_process_index], BEST_SOLUTION, MPI_COMM_WORLD);
 

@@ -29,7 +29,7 @@ void set_MPI_group(void);
 void best_MPI_send(void);
 int check_other_group_data_satisfactory(int type);
 #ifdef SEND_AMONGGROUP
-void group_reader_send(int type);
+void group_reader_send_thread(int type);
 int get_group_reader(void);
 int get_process_number(void);
 #endif
@@ -69,7 +69,7 @@ int main(int argc, char ** argv)
             /* send data other node */
             #ifdef SEND_AMONGGROUP
             if(get_group_reader() == get_process_number() && check_other_group_data_satisfactory(TABU_LIST_SHARE)) {
-                group_reader_send(TABU_LIST_SHARE);
+                group_reader_send_thread(TABU_LIST_SHARE);
             }
             #endif
         }

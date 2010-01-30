@@ -45,7 +45,7 @@ void finalize(void)
         parallel_finalize();
     }
     #endif
-
+/*
     if(modep->graph_mode == ON) {
         free(get_graph_data());
     }
@@ -66,7 +66,7 @@ void finalize(void)
     #endif
     free(get_main_base_data());
     free(get_parameterp());
-    mannneri_finalize();
+    mannneri_finalize();*/
 
     printf("Program is normally terminated.....\n");
 }
