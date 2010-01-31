@@ -52,6 +52,7 @@ int get_process_number(void);
 #ifdef SEND_AMONGGROUP
 void loging_share_tabulist(void);       /* local function */
 int ** get_all_share_tabulist(void);
+int get_share_tabulist_2opt_index(void);
 #endif
 #endif
 #ifdef POLEDEBUG
@@ -149,7 +150,7 @@ void loging_share_tabulist(void)
 {
     int i;
     int ** list = get_all_share_tabulist();
-    int share_list_size = tabulist_counter(SHARE, READONLY);
+    int share_list_size = get_share_tabulist_2opt_index();
 
     fprintf(debug_fp, "*** SHARE-TABU-LIST START ***\n");
     fprintf(debug_fp, "(list[0],[1],[2],[3])\n\n");

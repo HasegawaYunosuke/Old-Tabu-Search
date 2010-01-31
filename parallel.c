@@ -61,9 +61,11 @@ int get_now_other_group_stac_index(void);
 int get_send_recv_element_num(void);
 int * get_tabulist_data(void);
 int * get_tabulist_data_buffer(void);
-void copy_to_share_tabulist(int * tabulist_buffer, int element_num);
-int share_tabulist_is_satisfactory(void);
-int * get_share_tabulist(void);
+void copy_to_share_tabulist(void);
+#ifdef SEND_AMONGGROUP
+int * get_send_tabulist(void);
+int get_num_of_addtion_to_share_tabulist(int tsp_size);
+#endif
 /* DEL ST */
 void check_send_data(int * send_data, int send_num);
 void show_saved_other_sol(void);
@@ -197,7 +199,7 @@ void group_reader_recv(int * argument)
                 MPI_Iprobe(MPI_ANY_SOURCE, GROUP_SOLUTION, MPI_COMM_WORLD, &recvbuff_flag, &stat);
                 if(recvbuff_flag == 1) {
                     MPI_Recv((void *)tabulist_buffer, element_num, MPI_INT, MPI_ANY_SOURCE, GROUP_SOLUTION, MPI_COMM_WORLD, &stat);
-                    copy_to_share_tabulist(tabulist_buffer, element_num);
+                    copy_to_share_tabulist();
                 }
                 usleep(100000);
             }
@@ -217,7 +219,7 @@ void group_reader_send_thread(int type)
 void group_reader_send(int * type)
 {
     int * my_best_sol = get_best_solution_path();
-    int * my_share_tabulist = get_share_tabulist();
+    int * my_share_tabulist = get_send_tabulist();
     int element_num;
     int * list = get_readers_list();
     int send_node;
@@ -231,7 +233,7 @@ void group_reader_send(int * type)
             MPI_Send((void *)my_best_sol, element_num, MPI_INT, send_node, GROUP_SOLUTION, MPI_COMM_WORLD);
             break;
         case TABU_LIST_SHARE:
-            element_num = get_send_recv_element_num();
+            element_num = get_num_of_addtion_to_share_tabulist(get_tsp_size()) * 4;
             //send_node = list[random_num(DEFAULT_MPIGROUPNUM - 1)];
             for(i = 0; i < (DEFAULT_MPIGROUPNUM - 1); i++) {
                 MPI_Send((void *)my_share_tabulist, element_num, MPI_INT, list[i], GROUP_SOLUTION, MPI_COMM_WORLD);
@@ -251,16 +253,6 @@ void copy_to_group_data(int * buffer, int element_num, int stac_num)
     }
 }
 
-void copy_to_share_tabulist(int * tabulist_buffer, int element_num)
-{
-    int i;
-    int * share_tabulist;
-
-    share_tabulist = get_tabulist_data();
-    for(i = 0; i < element_num; i++) {
-        share_tabulist[i] = tabulist_buffer[i];
-    }
-}
 
 int decide_create_mode(void)
 {
@@ -308,9 +300,6 @@ int check_other_group_data_satisfactory(int type)
             if(get_other_group_stac_satisfaction() == ON) {
                 return_num = YES;
             }
-            break;
-        case TABU_LIST_SHARE:
-            return_num = share_tabulist_is_satisfactory();
             break;
     }
 
