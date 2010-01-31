@@ -83,10 +83,6 @@ int is_2opt_tabu(int * cities1)
     for(i = 0; i < 4; i++) {
         pthread_create(&matching_thread[i],
                         NULL,
-void group_reader_send_thread(int type);
-void group_reader_send_thread(int type);
-void group_reader_send_thread(int type);
-void group_reader_send_thread(int type);
                         (void *) tabu_matching,
                         (void *) cities[i]);
     }
