@@ -222,6 +222,7 @@ void group_reader_send(int * type)
     int * list = get_readers_list();
     int send_node;
     int type_test = TABU_LIST_SHARE;
+    int i;
 
     switch(type_test) {
         case SOL_PATH_SHARE:
@@ -231,8 +232,10 @@ void group_reader_send(int * type)
             break;
         case TABU_LIST_SHARE:
             element_num = get_send_recv_element_num();
-            send_node = list[random_num(DEFAULT_MPIGROUPNUM - 1)];
-            MPI_Send((void *)my_share_tabulist, element_num, MPI_INT, send_node, GROUP_SOLUTION, MPI_COMM_WORLD);
+            //send_node = list[random_num(DEFAULT_MPIGROUPNUM - 1)];
+            for(i = 0; i < (DEFAULT_MPIGROUPNUM - 1); i++) {
+                MPI_Send((void *)my_share_tabulist, element_num, MPI_INT, list[i], GROUP_SOLUTION, MPI_COMM_WORLD);
+            }
             break;
     }
 }

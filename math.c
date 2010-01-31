@@ -43,7 +43,7 @@ int get_num_of_addtion_to_local_tabulist(int tsp_size)
     int return_num;
     int minimum = 1000;
 
-    return_num = (int)((tsp_tsp_size * tsp_size * 0.02045) - (38.1085 * tsp_size) + 18850.25803);
+    return_num = (int)((tsp_size * tsp_size * 0.02045) - (38.1085 * tsp_size) + 18850.25803);
     if(return_num <= minimum) {
         return_num = minimum;
     }
@@ -65,7 +65,7 @@ int get_num_of_addtion_to_share_tabulist(int tsp_size)
     int return_num;
     int minimum = 100;
 
-    return_num = (int)((tsp_tsp_size * tsp_size * 0.00682) - (11.34651 * tsp_size) + 4618.14888);
+    return_num = (int)((tsp_size * tsp_size * 0.00682) - (11.34651 * tsp_size) + 4618.14888);
     if(return_num <= minimum) {
         return_num = minimum;
     }
