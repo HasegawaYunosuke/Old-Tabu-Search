@@ -285,7 +285,7 @@ void add_2opt_send_tabulist(int * cities)
     int i, check_sum = OFF;
 
     /* Automatically Send (if data is congested) */
-    if(send_share_tabulist_index > (max - 4)) {
+    if(send_share_tabulist_index >= (max - 4)) {
         for(i = 0; i < max; i++) {
             send_tabulist_data[i] = pre_send_tabulist_data[i];
         }

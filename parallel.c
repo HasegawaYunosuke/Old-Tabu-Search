@@ -160,8 +160,8 @@ void group_reader_recv(int * argument)
     int recvbuff_flag = 0;
     int arg = TABU_LIST_SHARE;
 
-    switch((*argument)) {
-    //switch(arg) {
+    //switch((*argument)) {
+    switch(arg) {
         case SOL_PATH_SHARE:
             element_num = get_tsp_size() + DEFAULT_SENDPARAMETERNUM;
             break;
@@ -170,8 +170,8 @@ void group_reader_recv(int * argument)
             break;
     }
 
-    switch((*argument)) {
-    //switch(arg) {
+    //switch((*argument)) {
+    switch(arg) {
         case SOL_PATH_SHARE:
             for(;;) {
                 if(get_all_search_is_done() == YES) {

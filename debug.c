@@ -113,7 +113,9 @@ void tabu_matching_loging(int type)
             break;
 #ifdef SEND_AMONGGROUP
         case SHARE:
-            loging_share_tabulist();
+            if(modep->parallel_mode == ON) {
+                loging_share_tabulist();
+            }
             break;
 #endif
     }
