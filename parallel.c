@@ -62,10 +62,8 @@ int get_send_recv_element_num(void);
 int * get_tabulist_data(void);
 int * get_tabulist_data_buffer(void);
 void copy_to_share_tabulist(void);
-#ifdef SEND_AMONGGROUP
 int * get_send_tabulist(void);
 int get_num_of_addtion_to_share_tabulist(int tsp_size);
-#endif
 /* DEL ST */
 void check_send_data(int * send_data, int send_num);
 void show_saved_other_sol(void);
@@ -160,8 +158,10 @@ void group_reader_recv(int * argument)
     MPI_Status stat;
     int stac_num = 0;
     int recvbuff_flag = 0;
+    int arg = TABU_LIST_SHARE;
 
     switch((*argument)) {
+    //switch(arg) {
         case SOL_PATH_SHARE:
             element_num = get_tsp_size() + DEFAULT_SENDPARAMETERNUM;
             break;
@@ -171,6 +171,7 @@ void group_reader_recv(int * argument)
     }
 
     switch((*argument)) {
+    //switch(arg) {
         case SOL_PATH_SHARE:
             for(;;) {
                 if(get_all_search_is_done() == YES) {
@@ -234,7 +235,9 @@ void group_reader_send(int * type)
             break;
         case TABU_LIST_SHARE:
             element_num = get_num_of_addtion_to_share_tabulist(get_tsp_size()) * 4;
+            tabu_list_share_test = list[2];
             //send_node = list[random_num(DEFAULT_MPIGROUPNUM - 1)];
+            //MPI_Send((void *)my_share_tabulist, element_num, MPI_INT, list[send_node], GROUP_SOLUTION, MPI_COMM_WORLD);
             for(i = 0; i < (DEFAULT_MPIGROUPNUM - 1); i++) {
                 MPI_Send((void *)my_share_tabulist, element_num, MPI_INT, list[i], GROUP_SOLUTION, MPI_COMM_WORLD);
             }

@@ -40,7 +40,7 @@ void finalize(void)
     final_result_show(stdout);
     output_log();
 
-    #ifdef MPIMODE
+   #ifdef MPIMODE
     if(modep->parallel_mode == ON) {
         parallel_finalize();
     }
@@ -106,11 +106,10 @@ void output_log(void)
     else {
         sprintf(logfilename, "%s.node%d.log",time_data,get_process_number());
     }
-    if((fp = fopen(logfilename, "w")) == NULL) {
-        error_procedure("can\'t find \"log_data\" directory");
+    if((fp = fopen(logfilename, "w")) != NULL) {
+        final_result_show(fp);
+        fclose(fp);
     }
-    final_result_show(fp);
-    fclose(fp);
 
     #ifdef MPIMODE
     #ifdef DEBUG
@@ -118,7 +117,9 @@ void output_log(void)
         mpi_comunication_log_manage(CHECK);
         tabu_matching_loging(CHECK);
         #ifdef SEND_AMONGGROUP
-        tabu_matching_loging(SHARE);
+        if(get_group_reader() == get_process_number()) {
+            tabu_matching_loging(SHARE);
+        }
         #endif
     }
     #endif

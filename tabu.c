@@ -13,9 +13,8 @@ int get_tsp_size(void);
 void free_tabu(void);
 int tabulist_counter(int field_type, int use_type);
 #ifdef MPIMODE
-int * get_tabulist_data_buffer(void);
 int * get_tabulist_data(void);
-#ifdef SEND_AMONGGROUP
+int * get_tabulist_data_buffer(void);
 void group_reader_send_thread(int type);
 void initialize_share_tabulist(void);
 void create_2opt_share_tabulist(void);
@@ -33,7 +32,6 @@ int get_num_of_addtion_to_share_tabulist(int tsp_size);
 int get_share_tabulist_2opt_index(void);
 void copy_to_share_tabulist(void);
 #endif
-#endif
 #ifdef DEBUG
 void tabu_matching_loging(int type);
 #endif
@@ -45,7 +43,6 @@ int list_size = 1;
 int find_out_flag;
 pthread_mutex_t match_mutex;
 #ifdef MPIMODE
-#ifdef SEND_AMONGGROUP
 int share_tabulist_2opt_index;
 int send_share_tabulist_index;          /* send_tabulist_data[]'s index and How many added the share-list by one's self */
 int find_out_share_flag = NO;
@@ -57,7 +54,6 @@ int * recv_tabulist_data;
 int * recv_tabulist_data_buffer;
 pthread_mutex_t share_match_mutex;      /* use only when share-tabulist's is under matching procedure */
 pthread_mutex_t share_tabulist_lock;
-#endif
 #endif
 
 int is_2opt_tabu(int * cities1)
@@ -113,7 +109,9 @@ void tabu_matching(int * cities)
             pthread_mutex_unlock(&match_mutex);
 #ifdef MPIMODE
 #ifdef SEND_AMONGGROUP
-            add_2opt_send_tabulist(cities);
+            if(get_group_reader() == get_process_number()) {
+                add_2opt_send_tabulist(cities);
+            }
 #endif
 #endif
         }
@@ -186,12 +184,10 @@ void flag_set(void)
     find_out_flag = NO;
 }
 
-#ifdef SEND_AMONGGROUP
 void share_flag_set(void)
 {
     find_out_share_flag = NO;
 }
-#endif
 
 void free_tabu(void)
 {
@@ -203,7 +199,6 @@ void free_tabu(void)
 }
 
 #ifdef MPIMODE
-#ifdef SEND_AMONGGROUP
 int is_2opt_share_tabu(int * cities1)
 {
     int i;
@@ -229,9 +224,7 @@ int is_2opt_share_tabu(int * cities1)
 
     return find_out_share_flag;
 }
-#endif
 
-#ifdef SEND_AMONGGROUP
 void initialize_share_tabulist(void)
 {
     create_2opt_share_tabulist();
@@ -239,9 +232,7 @@ void initialize_share_tabulist(void)
     pthread_mutex_init(&share_match_mutex, NULL);
     pthread_mutex_init(&share_tabulist_lock, NULL);
 }
-#endif
 
-#ifdef SEND_AMONGGROUP
 void create_2opt_share_tabulist(void)
 {
     int i;
@@ -255,9 +246,7 @@ void create_2opt_share_tabulist(void)
     share_tabulist_2opt_index = 0;
     send_share_tabulist_index= 0;
 }
-#endif
 
-#ifdef SEND_AMONGGROUP
 /* This send_recv buffer data-format is (c1, c2, c3, c4, c1, c2, c3, c4, ... , c3, c4) */
 void create_send_recv_tabulist(void)
 {
@@ -268,7 +257,6 @@ void create_send_recv_tabulist(void)
     recv_tabulist_data = mallocer_ip(send_recv_share_tabulist_size);
     recv_tabulist_data_buffer = mallocer_ip(send_recv_share_tabulist_size);
 }
-#endif
 
 int * get_tabulist_data_buffer(void)
 {
@@ -280,13 +268,12 @@ int * get_tabulist_data(void)
     return recv_tabulist_data;
 }
 
-#ifdef SEND_AMONGGROUP
+
 int get_send_recv_element_num(void)
 {
     return (get_num_of_addtion_to_share_tabulist(get_tsp_size()) * 4);
 }
-#endif
-#ifdef SEND_AMONGGROUP
+
 /*
  * If reaching maximum of the send_tabulist_data,
  * this func automatically send the data at parallel.c's MPI_Send() by pthread.
@@ -298,7 +285,7 @@ void add_2opt_send_tabulist(int * cities)
     int i, check_sum = OFF;
 
     /* Automatically Send (if data is congested) */
-    if(send_share_tabulist_index == (max - 1)) {
+    if(send_share_tabulist_index > (max - 4)) {
         for(i = 0; i < max; i++) {
             send_tabulist_data[i] = pre_send_tabulist_data[i];
         }
@@ -321,8 +308,7 @@ void add_2opt_send_tabulist(int * cities)
         }
     }
 }
-#endif
-#ifdef SEND_AMONGGROUP
+
 /* This func calling means Recieved Share data */
 void copy_to_share_tabulist(void)
 {
@@ -339,11 +325,11 @@ void copy_to_share_tabulist(void)
             share_tabulist_2opt[j][share_tabulist_2opt_index] = recv_tabulist_data_buffer[j + 4 * i];
         }
         share_tabulist_2opt_index++;
+        tabulist_counter(SHARE, ADD);
     }
     pthread_mutex_unlock(&share_tabulist_lock);
 }
-#endif
-#ifdef SEND_AMONGGROUP
+
 void add_2opt_share_tabulist(int * cities)
 {
     int i;
@@ -367,8 +353,7 @@ void add_2opt_share_tabulist(int * cities)
 
     tabulist_counter(SHARE, ADD);
 }
-#endif
-#ifdef SEND_AMONGGROUP
+
 void free_tabu_share(void)
 {
     int i;
@@ -380,8 +365,7 @@ void free_tabu_share(void)
     free(recv_tabulist_data);
     free(recv_tabulist_data_buffer);
 }
-#endif
-#ifdef SEND_AMONGGROUP
+
 void share_tabu_matching(int * cities)
 {
     int i;
@@ -404,26 +388,22 @@ void share_tabu_matching(int * cities)
         }
     }
 }
-#endif
-#ifdef SEND_AMONGGROUP
+
 /* This func is used at debug.c*/
 int get_share_tabulist_2opt_index(void)
 {
     return share_tabulist_2opt_index;
 }
-#endif
-#ifdef SEND_AMONGGROUP
+
 /* This func is used at debug.c*/
 int ** get_all_share_tabulist(void)
 {
     return share_tabulist_2opt;
 }
-#endif
-#ifdef SEND_AMONGGROUP
+
 /* This func is ONLY used at parallel.c's group_reader_send() */
 int * get_send_tabulist(void)
 {
     return send_tabulist_data;
 }
-#endif
 #endif

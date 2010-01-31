@@ -191,7 +191,9 @@ void initial_parameter(int tsp_size)
     if(modep->tabu2opt_mode == ON) {
         create_2opt_tabulist(get_tsp_size(), INIT);
 #ifdef MPIMODE
-        initialize_share_tabulist();
+        if(get_group_reader() == get_process_number()) {
+            initialize_share_tabulist();
+        }
 #endif
     }
 }

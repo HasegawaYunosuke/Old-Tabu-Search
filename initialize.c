@@ -45,6 +45,9 @@ void initialize(int argc, char ** argv)
     double * graph_data;
     pthread_t * MPI_recv_thread;
 
+
+    tabu_list_share_test = 0;
+
     /* comand-line short option check */
     option_checker(argc, argv);
 

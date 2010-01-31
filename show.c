@@ -115,6 +115,7 @@ void final_result_show(FILE * fp)
 #ifdef MPIMODE
     if(modep->parallel_mode == ON) {
         fprintf(fp, "Share Tabulist Num:%d\n",tabulist_counter(SHARE, READONLY));
+        fprintf(fp, "NumNum:%d\n",tabu_list_share_test);
     }
 #endif
 #endif
