@@ -101,11 +101,11 @@ int is_2opt_tabu(int * cities1)
 void tabu_matching(int * cities)
 {
     int i;
-    int start_i;
+    int start_i = 0;
 
-    if((start_i = list_size - DEFAULT_TABU_MATCH_NUM) < 0) {
+    /*if((start_i = list_size - DEFAULT_TABU_MATCH_NUM) < 0) {
         start_i = 0;
-    }
+    }*/
 
     for(i = start_i; i < list_size; i++) {
         if(tabulist_2opt[0][i] == cities[0] && tabulist_2opt[1][i] == cities[1] &&
