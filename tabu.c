@@ -234,6 +234,34 @@ int is_2opt_share_tabu(int * cities1)
     return find_out_share_flag;
 }
 
+void share_tabu_matching(int * cities)
+{
+    int i;
+    int start_i;
+    int now_saved_share_list;
+
+    pthread_mutex_lock(&share_tabulist_lock);
+    now_saved_share_list = share_tabulist_2opt_index;
+    pthread_mutex_unlock(&share_tabulist_lock);
+
+    if((start_i = now_saved_share_list - DEFAULT_SHARE_TABU_MATCH_NUM) < 0) {
+        start_i = 0;
+    }
+
+    for(i = start_i; i < now_saved_share_list; i++) {
+        if(share_tabulist_2opt[0][i] == cities[0] && share_tabulist_2opt[1][i] == cities[1] &&
+             share_tabulist_2opt[2][i] == cities[2] && share_tabulist_2opt[3][i] == cities[3]) {
+
+            pthread_mutex_lock(&share_match_mutex);
+            find_out_share_flag = YES;
+            pthread_mutex_unlock(&share_match_mutex);
+        }
+        if(find_out_share_flag == YES) {
+            break;
+        }
+    }
+}
+
 void initialize_share_tabulist(void)
 {
     create_2opt_share_tabulist();
@@ -373,34 +401,6 @@ void free_tabu_share(void)
     free(send_tabulist_data);
     free(recv_tabulist_data);
     free(recv_tabulist_data_buffer);
-}
-
-void share_tabu_matching(int * cities)
-{
-    int i;
-    int start_i;
-    int now_saved_share_list;
-
-    pthread_mutex_lock(&share_tabulist_lock);
-    now_saved_share_list = share_tabulist_2opt_index;
-    pthread_mutex_unlock(&share_tabulist_lock);
-
-    if((start_i = now_saved_share_list - DEFAULT_TABU_MATCH_NUM) < 0) {
-        start_i = 0;
-    }
-
-    for(i = start_i; i < now_saved_share_list; i++) {
-        if(share_tabulist_2opt[0][i] == cities[0] && share_tabulist_2opt[1][i] == cities[1] &&
-             share_tabulist_2opt[2][i] == cities[2] && share_tabulist_2opt[3][i] == cities[3]) {
-
-            pthread_mutex_lock(&share_match_mutex);
-            find_out_share_flag = YES;
-            pthread_mutex_unlock(&share_match_mutex);
-        }
-        if(find_out_share_flag == YES) {
-            break;
-        }
-    }
 }
 
 /* This func is used at debug.c*/
