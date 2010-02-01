@@ -5,6 +5,7 @@ void increase_test(void);
 /*DEL EN*/
 
 /* functions */
+int num_counter(int field_type, int use_type);
 void realtime_result(void);
 void turn_terminated_show(void);
 void turn_terminated_by_time_show(void);
@@ -22,15 +23,17 @@ double get_all_cost_by_graph(int * cities);
 double get_best_cost(void);
 double get_time(void);
 int check_manneri(int type);
-int search_loop_times(int type);
 
+#ifdef DEBUG
+int tabulist_counter(int field_type, int use_type);
+#endif
 #ifdef DISTANCE_LOG
 void output_distance_log(void);
 #endif
 
 void realtime_result(void)
 {
-    /* DEL ST 
+    /* DEL ST */
     if(modep->parallel_mode != YES) {
         printf("DEL:all_cost == %f,",get_all_cost_by_graph(get_solution_path()));
         printf("best == %.2f,",get_best_cost());
@@ -108,6 +111,17 @@ void final_result_show(FILE * fp)
     if(modep->pole_mode == ON) {
         fprintf(fp, "Search Count:%d\n",turn_loop_times(READONLY));
     }
+    printf(fp, "Search Count Num:%d\n",num_counter(SEARCH_COUNTER, CHECK));
+    fprintf(fp, "Tunr Count Num:%2d\n",num_counter(TURN_COUNTER, CHECK));
+#ifdef DEBUG
+    fprintf(fp, "Local Tabulist Num:%d\n",tabulist_counter(DEFAULT, READONLY));
+#ifdef MPIMODE
+    if(modep->parallel_mode == ON) {
+        fprintf(fp, "Share Tabulist Num:%d\n",tabulist_counter(SHARE, READONLY));
+        fprintf(fp, "NumNum:%d\n",tabu_list_share_test);
+    }
+#endif
+#endif
     fprintf(fp, "\nActive Modes--->\n");
     show_mode(fp);
     fprintf(fp, "<---Active Modes\n");

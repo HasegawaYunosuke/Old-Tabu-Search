@@ -37,17 +37,23 @@ void tabu_matching_init(void);
 void add_whole_check_num(void);
 void add_matched_num(void);
 void loging_tabu_matched(void);
+int * get_best_solution_path(void);
+int tabulist_counter(int field_type, int use_type);
 
 #ifdef MPIMODE
 void figure_of_match_num(int matched_num);
 void mpi_comunication_log_manage(int type);
-void mpi_comunication_log_init(void); /* local function */
-void mpi_send_num_add(void); /* local function */
-void mpi_recv_num_add(void); /* local function */
-void loging_mpi_com(void); /* local function */
+void mpi_comunication_log_init(void);   /* local function */
+void mpi_send_num_add(void);            /* local function */
+void mpi_recv_num_add(void);            /* local function */
+void loging_mpi_com(void);              /* local function */
 int get_num_of_all_proc(void);
-int * get_best_solution_path(void);
 int get_process_number(void);
+#ifdef SEND_AMONGGROUP
+void loging_share_tabulist(void);       /* local function */
+int ** get_all_share_tabulist(void);
+int get_share_tabulist_2opt_index(void);
+#endif
 #endif
 #ifdef POLEDEBUG
 void open_loging_other_sol_path(void);
@@ -104,6 +110,14 @@ void tabu_matching_loging(int type)
             break;
         case CHECK:
             loging_tabu_matched();
+            break;
+#ifdef SEND_AMONGGROUP
+        case SHARE:
+            if(modep->parallel_mode == ON) {
+                loging_share_tabulist();
+            }
+            break;
+#endif
     }
 }
 
@@ -133,6 +147,27 @@ void loging_tabu_matched(void)
 }
 
 #ifdef MPIMODE
+#ifdef SEND_AMONGGROUP
+void loging_share_tabulist(void)
+{
+    int i;
+    int ** list = get_all_share_tabulist();
+    int share_list_size = get_share_tabulist_2opt_index();
+
+    fprintf(debug_fp, "*** SHARE-TABU-LIST START ***\n");
+    fprintf(debug_fp, "(list[0],[1],[2],[3])\n\n");
+    for(i = 0; i < share_list_size; i++) {
+        fprintf(debug_fp, "list[%5d] == (",i);
+        fprintf(debug_fp, "%d,", list[0][i]);
+        fprintf(debug_fp, "%d,", list[1][i]);
+        fprintf(debug_fp, "%d,", list[2][i]);
+        fprintf(debug_fp, "%d", list[3][i]);
+        fprintf(debug_fp, ")\n");
+    }
+    fprintf(debug_fp, "*** SHARE-TABU-LIST END ***\n");
+}
+#endif
+
 void mpi_comunication_log_manage(int type)
 {
     switch(type) {

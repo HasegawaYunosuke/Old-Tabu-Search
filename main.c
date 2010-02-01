@@ -22,16 +22,8 @@ int loop_terminate(void);
 int search_terminate(void);
 void initial_path(void);
 void search(void);
+int num_counter(int field_type, int use_type);
 void finalize(void);
-#ifdef MPIMODE
-void set_MPI_group(void);
-void best_MPI_send(void);
-#ifdef SEND_AMONGGROUP
-void group_reader_send(int type);
-int get_group_reader(void);
-int get_process_number(void);
-#endif
-#endif
 
 int main(int argc, char ** argv)
 {
@@ -40,6 +32,8 @@ int main(int argc, char ** argv)
 
     /* timer start */
     timer(ON);
+
+    num_counter(INIT, INIT);
 
     /* whole-search loop */
     for(;;) {
@@ -51,21 +45,17 @@ int main(int argc, char ** argv)
             /* search */
             search();
 
-            realtime_result();
+            //realtime_result();
+
+            /* counting turn-num */
+            num_counter(TURN_COUNTER, ADD);
 
             /* search-turn terminate */
             if(loop_terminate() == YES) {break;}
         }
 
-        #ifdef MPIMODE
-        /* send data other node */
-        best_MPI_send();
-        #ifdef SEND_AMONGGROUP
-        if(get_group_reader() == get_process_number()) {
-            group_reader_send(DEFAULT);
-        }
-        #endif
-        #endif
+        /* counting turn-num */
+        num_counter(SEARCH_COUNTER, ADD);
 
         /* whole-search-terminate */
         if(search_terminate() == YES) {break;}
@@ -76,4 +66,3 @@ int main(int argc, char ** argv)
 
     return 0;
 }
-
