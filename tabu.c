@@ -13,6 +13,8 @@ int get_tsp_size(void);
 void free_tabu(void);
 int tabulist_counter(int field_type, int use_type);
 #ifdef MPIMODE
+int get_group_reader(void);
+int get_process_number(void);
 int * get_tabulist_data(void);
 int * get_tabulist_data_buffer(void);
 void group_reader_send_thread(int type);
@@ -99,8 +101,13 @@ int is_2opt_tabu(int * cities1)
 void tabu_matching(int * cities)
 {
     int i;
+    int start_i;
 
-    for(i = 0; i < list_size; i++) {
+    if((start_i = list_size - DEFAULT_TABU_MATCH_NUM) < 0) {
+        start_i = 0;
+    }
+
+    for(i = start_i; i < list_size; i++) {
         if(tabulist_2opt[0][i] == cities[0] && tabulist_2opt[1][i] == cities[1] &&
              tabulist_2opt[2][i] == cities[2] && tabulist_2opt[3][i] == cities[3]) {
 
@@ -214,12 +221,14 @@ int is_2opt_share_tabu(int * cities1)
 
     share_flag_set();
 
-    /* Check the cities that is tabu or not by using thread in oder to Speedy Procedure */
-    for(i = 0; i < 4; i++) {
-        pthread_create(&matching_thread[i], NULL, (void *) share_tabu_matching, (void *) cities[i]);
-    }
-    for(i = 0; i < 4; i++) {
-        pthread_join(matching_thread[i], NULL);
+    if(get_group_reader() == get_process_number()) {
+        /* Check the cities that is tabu or not by using thread in oder to Speedy Procedure */
+        for(i = 0; i < 4; i++) {
+            pthread_create(&matching_thread[i], NULL, (void *) share_tabu_matching, (void *) cities[i]);
+        }
+        for(i = 0; i < 4; i++) {
+            pthread_join(matching_thread[i], NULL);
+        }
     }
 
     return find_out_share_flag;
@@ -369,13 +378,18 @@ void free_tabu_share(void)
 void share_tabu_matching(int * cities)
 {
     int i;
+    int start_i;
     int now_saved_share_list;
 
     pthread_mutex_lock(&share_tabulist_lock);
     now_saved_share_list = share_tabulist_2opt_index;
     pthread_mutex_unlock(&share_tabulist_lock);
 
-    for(i = 0; i < now_saved_share_list; i++) {
+    if((start_i = now_saved_share_list - DEFAULT_TABU_MATCH_NUM) < 0) {
+        start_i = 0;
+    }
+
+    for(i = start_i; i < now_saved_share_list; i++) {
         if(share_tabulist_2opt[0][i] == cities[0] && share_tabulist_2opt[1][i] == cities[1] &&
              share_tabulist_2opt[2][i] == cities[2] && share_tabulist_2opt[3][i] == cities[3]) {
 
