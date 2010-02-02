@@ -22,7 +22,7 @@ if [ $1 == 5 ]
 then
 scrun -group=machinefile,network=sctp -nodes=4x2 ./nompi.exe -f tsp_data/rat575.tsp -b -t 30
 fi
-if [ $1 == 3 ]
+if [ $1 == 6 ]
 then
 scrun -group=machinefile2,network=sctp -nodes=4x2 ./mpi.exe -f tsp_data/rat575.tsp -b -m -t 1800
 fi
