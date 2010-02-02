@@ -161,8 +161,6 @@ int * create_graph_path(int * return_data, double * graph_data, int create_mode)
     double distance = DBL_MAX;
     double min_distance = DBL_MAX;
 
-    create_mode = DEFAULT;
-
     switch (create_mode) {
     #ifdef MPIMODE
         case GROUPCREATE:
