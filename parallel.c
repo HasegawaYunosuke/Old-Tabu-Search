@@ -379,14 +379,6 @@ void best_MPI_send(void)
         before_send_process_index++;
 #ifdef DEBUG
         mpi_comunication_log_manage(MPI_SENDADD);
-
-        /* DEL ST */
-        test_debug_log("+++ best_MPI_send() +++", -1);
-        for(i = 0; i < element_num; i++) {
-            test_debug_log("send_sol == ", my_best_sol[i]);
-        }
-        test_debug_log("+++++++++++++++++++++++", -1);
-        /* DEL EN */
 #endif
     }
 }

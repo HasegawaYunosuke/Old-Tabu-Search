@@ -203,7 +203,7 @@ int * create_graph_path(int * return_data, double * graph_data, int create_mode)
                 now_city = mini_index;
             }
             #ifdef DEBUG
-            loging_initial_path(return_data, create_mode);
+            //loging_initial_path(return_data, create_mode);
             #endif
             break;
     }
