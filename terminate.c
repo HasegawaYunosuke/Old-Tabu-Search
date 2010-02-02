@@ -29,10 +29,9 @@ int loop_terminate(void)
         return_num = YES;
         set_tabu_mode(OFF);
         if(modep->hasegawa_mode == ON || modep->tozaki_mode == ON) {
-            /* this comment-out makes 'list' bigger because permit worse is simply increase */
-            /*if((num_counter(SEARCH_COUNTER, CHECK) % 3) == 0) {
+            if((num_counter(SEARCH_COUNTER, CHECK) % 3) == 0) {
                 create_2opt_tabulist(get_tsp_size(), CLEAR);
-            }*/
+            }
             set_middle_mannneri(OFF);
         }
     }
