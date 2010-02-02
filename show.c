@@ -111,7 +111,7 @@ void final_result_show(FILE * fp)
     if(modep->pole_mode == ON) {
         fprintf(fp, "Search Count:%d\n",turn_loop_times(READONLY));
     }
-    printf(fp, "Search Count Num:%d\n",num_counter(SEARCH_COUNTER, CHECK));
+    fprintf(fp, "Search Count Num:%d\n",num_counter(SEARCH_COUNTER, CHECK));
     fprintf(fp, "Tunr Count Num:%2d\n",num_counter(TURN_COUNTER, CHECK));
 #ifdef DEBUG
     fprintf(fp, "Local Tabulist Num:%d\n",tabulist_counter(DEFAULT, READONLY));

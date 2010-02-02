@@ -31,6 +31,10 @@ void close_loging_other_sol_path(void);
 #ifdef CROSSOVER_BEF_AFT
 void close_loging_x_sol_path(void);
 #endif
+#ifdef DISTANCE_LOG
+void close_distance_log(void);
+void output_distance_log(void);
+#endif
 
 /* global variable */
 int * lnp;
@@ -91,6 +95,10 @@ void output_log(void)
 
     timer = get_start_time();
     date = localtime(&timer);
+    
+    #ifdef DISTANCE_LOG
+    output_distance_log();
+    #endif
 
     #ifdef MPIMODE
     if(modep->parallel_mode == ON) {

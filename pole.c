@@ -97,12 +97,12 @@ int * pole_search(int * solution_path)
                     #ifdef CROSSOVER_BEF_AFT
                     output_x_sol_path(solution_path, solution_path_b, 0);
                     #endif
-                    order_one_cross(solution_path, solution_path_b);
-                    //pmx_one_cross(solution_path, solution_path_b);
+                    //order_one_cross(solution_path, solution_path_b);
+                    pmx_one_cross(solution_path, solution_path_b);
                     #ifdef CROSSOVER_BEF_AFT
                     output_x_sol_path(solution_path, solution_path_b, 1);
                     #endif
-                    create_2opt_tabulist(get_tsp_size(), CLEAR);
+                    //create_2opt_tabulist(get_tsp_size(), CLEAR);
                     set_tabu_mode(OFF);
                     initialize_history();
                 }
