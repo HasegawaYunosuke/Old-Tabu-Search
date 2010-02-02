@@ -788,7 +788,7 @@ void set_now_parcentage(double before, double after)
 /* return num is YES or NO */
 int check_parcentage(double bef_aft_distance)
 {
-    int return_num = NO;
+    int return_num = YES;
     double best_cost = get_best_cost();
     double after_all_cost;
 
@@ -799,9 +799,19 @@ int check_parcentage(double bef_aft_distance)
         after_all_cost = get_all_cost_by_euclid(get_solution_path()) - bef_aft_distance;
     }
 
-    if(((get_worse_permit() / 100 + 1) * best_cost) > after_all_cost) {
+    if(((get_worse_permit() / 100 + 1) * best_cost) < after_all_cost) {
+        return_num = NO;
+    }
+
+#ifdef MPIMODE
+    /* Optimistic Permit Procedure ( Use only MERGEMODE initial_path creating ) */
+    if((((get_worse_permit() + 0.01 * num_counter(SEARCH_COUNTER, CHECK)) / 100 + 1) * best_cost) < after_all_cost) {
+        return_num = NO;
+    }
+    else {
         return_num = YES;
     }
+#endif
 
     return return_num;
 }
