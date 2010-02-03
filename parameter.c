@@ -803,16 +803,6 @@ int check_parcentage(double bef_aft_distance)
         return_num = NO;
     }
 
-#ifdef MPIMODE
-    /* Optimistic Permit Procedure ( Use only MERGEMODE initial_path creating ) */
-    if((((get_worse_permit() + 0.01 * num_counter(SEARCH_COUNTER, CHECK)) / 100 + 1) * best_cost) < after_all_cost) {
-        return_num = NO;
-    }
-    else {
-        return_num = YES;
-    }
-#endif
-
     return return_num;
 }
 

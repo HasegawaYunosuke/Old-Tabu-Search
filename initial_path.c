@@ -161,6 +161,8 @@ int * create_graph_path(int * return_data, double * graph_data, int create_mode)
     double distance = DBL_MAX;
     double min_distance = DBL_MAX;
 
+    create_mode = DEFAULT;
+
     switch (create_mode) {
     #ifdef MPIMODE
         case GROUPCREATE:
@@ -203,7 +205,7 @@ int * create_graph_path(int * return_data, double * graph_data, int create_mode)
                 now_city = mini_index;
             }
             #ifdef DEBUG
-            loging_initial_path(return_data, create_mode);
+            //loging_initial_path(return_data, create_mode);
             #endif
             break;
     }

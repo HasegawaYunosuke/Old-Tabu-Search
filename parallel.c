@@ -379,14 +379,6 @@ void best_MPI_send(void)
         before_send_process_index++;
 #ifdef DEBUG
         mpi_comunication_log_manage(MPI_SENDADD);
-
-        /* DEL ST */
-        test_debug_log("+++ best_MPI_send() +++", -1);
-        for(i = 0; i < element_num; i++) {
-            test_debug_log("send_sol == ", my_best_sol[i]);
-        }
-        test_debug_log("+++++++++++++++++++++++", -1);
-        /* DEL EN */
 #endif
     }
 }
@@ -433,7 +425,7 @@ void best_MPI_recv(int * recv_process_number)
 
 #ifdef DEBUG
             mpi_comunication_log_manage(MPI_RECVADD);
-            output_other_sol_path();
+            //output_other_sol_path();
 #endif
         }
 
@@ -727,9 +719,9 @@ int get_all_search_is_done(void)
 
 void parallel_finalize(void)
 {
+    MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Barrier(MPI_COMM_WORLD);
     /*MPI_Barrier(MPI_COMM_WORLD);
-    MPI_Barrier(MPI_COMM_WORLD);
-    MPI_Barrier(MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD);*/
     MPI_Finalize();
     free(get_other_solution_path_data());
