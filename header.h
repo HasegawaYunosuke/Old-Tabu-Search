@@ -1,10 +1,10 @@
-#define MPIMODE
+/* #define MPIMODE */
 #define LINUXUSER
-#define DEBUG
-#define POLEDEBUG
+//#define DEBUG
+//#define POLEDEBUG
 //#define CROSSOVER_BEF_AFT
 #define DISTANCE_LOG
-//#define SEND_AMONGGROUP
+#define SEND_AMONGGROUP
 
 /* include files */
 #include <stdio.h>
@@ -67,16 +67,16 @@
 #define DEFAULT_2OPTLOOP 100
 #define DEFAULT_HISTORYSIZE 20
 #define DEFAULT_SAMEPERCENTAGE 20
-#define DEFAULT_NOTFOUNDLOOP 575
+#define DEFAULT_NOTFOUNDLOOP 500
 #define DEFAULT_MPIGROUPNUM 4
 #define DEFAULT_MIDDLEMANNNERI 100
 #define DEFAULT_SENDPARAMETERNUM 10
 #define DEFAULT_GROUP_DATASTOCKNUM 10
 #define DEFAULT_TABU_MATCH_NUM 10000
-#define DEFAULT_SHARE_TABU_MATCH_NUM 50
+#define DEFAULT_SHARE_TABU_MATCH_NUM 15
 #define GA_CROSS_POINT 10
 #define GA_COUNTER 100
-
+#define TABU_CLEAR_COUNT 5
 /* grobal variable */
 struct mode {
     int visual_mode;

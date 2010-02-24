@@ -62,6 +62,8 @@ void transform_solution_path(int * other_solution_path, int * return_path);
 void output_x_sol_path(int *path_a, int *path_b, int before_after);
 #endif
 
+int get_tabu_clear_count(void);
+
 /* global variable */
 int create_mode;
 
@@ -97,12 +99,14 @@ int * pole_search(int * solution_path)
                     #ifdef CROSSOVER_BEF_AFT
                     output_x_sol_path(solution_path, solution_path_b, 0);
                     #endif
-                    //order_one_cross(solution_path, solution_path_b);
-                    pmx_one_cross(solution_path, solution_path_b);
+                    order_one_cross(solution_path, solution_path_b);
+                    //pmx_one_cross(solution_path, solution_path_b);
                     #ifdef CROSSOVER_BEF_AFT
                     output_x_sol_path(solution_path, solution_path_b, 1);
                     #endif
-                    //create_2opt_tabulist(get_tsp_size(), CLEAR);
+                    if(get_tabu_clear_count() == TABU_CLEAR_COUNT){
+                        create_2opt_tabulist(get_tsp_size(), CLEAR);
+                        }
                     set_tabu_mode(OFF);
                     initialize_history();
                 }

@@ -12,6 +12,7 @@ int * mallocer_ip(int list_size);
 int get_tsp_size(void);
 void free_tabu(void);
 int tabulist_counter(int field_type, int use_type);
+void set_tabu_clear_count(void);
 #ifdef MPIMODE
 int get_group_reader(void);
 int get_process_number(void);
@@ -166,7 +167,7 @@ void create_2opt_tabulist(int tsp_size, int mode)
             }
         }
     }
-
+    set_tabu_clear_count();
     tabulist_2opt_index = 0;
 }
 
@@ -190,12 +191,12 @@ void flag_set(void)
 {
     find_out_flag = NO;
 }
-
+#ifdef SEND_AMONGGROUP
 void share_flag_set(void)
 {
     find_out_share_flag = NO;
 }
-
+#endif
 void free_tabu(void)
 {
     int i;

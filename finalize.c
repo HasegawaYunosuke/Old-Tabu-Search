@@ -72,7 +72,7 @@ void finalize(void)
     free(get_parameterp());
     mannneri_finalize();
 
-    printf("Program is normally terminated.....\n");
+    //printf("Program is normally terminated.....\n");
 }
 
 void set_logfile_name(int * buffer, int element_num)
