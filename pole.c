@@ -96,25 +96,37 @@ int * pole_search(int * solution_path)
                    }
                 }
                  if(get_ga_mode() == ON){
+                 
+                 /* Output before crossover path */
                     #ifdef CROSSOVER_BEF_AFT
                     output_x_sol_path(solution_path, solution_path_b, 0);
                     #endif
+                    
+                 /* Choose way of crossover*/                    
                     //order_one_cross(solution_path, solution_path_b);
                     pmx_one_cross(solution_path, solution_path_b);
+                    
+                 /* Output after crossover path */    
                     #ifdef CROSSOVER_BEF_AFT
                     output_x_sol_path(solution_path, solution_path_b, 1);
 					exit(0);
                     #endif
+                    
+                 /* Clear Tabulist */    
                     if(get_tabu_clear_count() == TABU_CLEAR_COUNT){
                         create_2opt_tabulist(get_tsp_size(), CLEAR);
                         }
+                        
                     set_tabu_mode(OFF);
                     initialize_history();
                 }
              }
         }
+        
         solution_path = two_opt(solution_path);
         //solution_path_b = simple_two_opt(solution_path_b);
+
+        /* Set GA solution_path*/
         if(get_ga_mode() == ON){
             set_ga_solution_path(solution_path_b);
         }
@@ -134,6 +146,7 @@ int * pole_search(int * solution_path)
     return solution_path;
 }
 
+/*transform other_solution_path type */
 void transform_solution_path(int * other_solution_path, int * return_path)
 {
     int tsp_size = get_tsp_size();
