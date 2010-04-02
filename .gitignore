@@ -1,6 +1,7 @@
 nohup.out
 a.out
-machinefile
+machinefile*
+.node*
 tags
 *~
 *.exe

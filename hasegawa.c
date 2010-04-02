@@ -41,6 +41,9 @@ int check_manneri(int type);
 void add_2opt_tabulist(int * cities);
 int not_found_looping(int * cities, int * indexs, int type);
 void set_middle_mannneri(int on_or_off);
+#ifdef MPIMODE
+int is_2opt_share_tabu(int * cities1);
+#endif
 
 int * hasegawa_search(int * solution_path)
 {
@@ -140,7 +143,11 @@ int * two_opt_tabu(int * solution_path)
                     not_found_looping(cities, indexs, READONLY);
                     break;
                 }
+#ifdef MPIMODE
+            } while(permit_worse(bef_aft_distance(cities)) == NO || is_2opt_tabu(cities) == YES || is_2opt_share_tabu(cities) == YES);
+#else
             } while(permit_worse(bef_aft_distance(cities)) == NO || is_2opt_tabu(cities) == YES);
+#endif
             not_found_looping(cities, indexs, INIT);
             exchange_branch(solution_path, indexs);
         }

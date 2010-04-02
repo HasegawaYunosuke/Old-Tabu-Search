@@ -40,28 +40,30 @@ int timer(int sign)
         start_time = now_time;
 
         #ifdef MPIMODE
-        /* temporaly data defines */
-        MPI_Status stat;
-        int element_num = 6;
-        int root_process_number = 0;
-        int buffer[element_num];
-        time_t tmm;
-        struct tm *tms;
+        if(modep->parallel_mode == ON) {
+            /* temporaly data defines */
+            MPI_Status stat;
+            int element_num = 6;
+            int root_process_number = 0;
+            int buffer[element_num];
+            time_t tmm;
+            struct tm *tms;
 
-        if(get_process_number() != root_process_number) {
-            MPI_Bcast((void *)buffer, element_num, MPI_INT, root_process_number, MPI_COMM_WORLD);
-            set_logfile_name(buffer, element_num);
-        }
-        else {
-            (void)time(&tmm); tms = gmtime(&tmm);
-            buffer[0] = 1900 + tms->tm_year;
-            buffer[1] = tms->tm_mon + 1;
-            buffer[2] = tms->tm_mday;
-            buffer[3] = tms->tm_hour;
-            buffer[4] = tms->tm_min;
-            buffer[5] = tms->tm_sec;
-            MPI_Bcast((void *)buffer, element_num, MPI_INT, root_process_number, MPI_COMM_WORLD);
-            set_logfile_name(buffer, element_num);
+            if(get_process_number() != root_process_number) {
+                MPI_Bcast((void *)buffer, element_num, MPI_INT, root_process_number, MPI_COMM_WORLD);
+                set_logfile_name(buffer, element_num);
+            }
+            else {
+                (void)time(&tmm); tms = gmtime(&tmm);
+                buffer[0] = 1900 + tms->tm_year;
+                buffer[1] = tms->tm_mon + 1;
+                buffer[2] = tms->tm_mday;
+                buffer[3] = tms->tm_hour;
+                buffer[4] = tms->tm_min;
+                buffer[5] = tms->tm_sec;
+                MPI_Bcast((void *)buffer, element_num, MPI_INT, root_process_number, MPI_COMM_WORLD);
+                set_logfile_name(buffer, element_num);
+            }
         }
         #endif
 

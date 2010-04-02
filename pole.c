@@ -62,6 +62,8 @@ void transform_solution_path(int * other_solution_path, int * return_path);
 void output_x_sol_path(int *path_a, int *path_b, int before_after);
 #endif
 
+int get_tabu_clear_count(void);
+
 /* global variable */
 int create_mode;
 
@@ -103,7 +105,9 @@ int * pole_search(int * solution_path)
                     output_x_sol_path(solution_path, solution_path_b, 1);
 					exit(0);
                     #endif
-                    create_2opt_tabulist(get_tsp_size(), CLEAR);
+                    if(get_tabu_clear_count() == TABU_CLEAR_COUNT){
+                        create_2opt_tabulist(get_tsp_size(), CLEAR);
+                        }
                     set_tabu_mode(OFF);
                     initialize_history();
                 }

@@ -103,8 +103,34 @@ void close_loging_x_sol_path(void)
 
 #ifdef DISTANCE_LOG
 void output_distance_log(void)
-{
-    fprintf(dis_log_fp, "Search: %d, All Cost:%f, Best Cost:%f\n", turn_loop_times(READONLY), get_all_cost_by_graph(get_solution_path()), get_best_cost());
+{/*
+    fprintf(dis_log_fp, "*******************************************************\n");
+    fprintf(dis_log_fp, "TSP Size:%5d\n",get_tsp_size());
+    fprintf(dis_log_fp, "All Proces Num:%2d\n",get_num_of_all_proc());
+    fprintf(dis_log_fp, "Process Number:%2d\n",get_process_number());
+    fprintf(dis_log_fp, "Process Name:%s\n",get_process_name());
+    fprintf(dis_log_fp, "MPI Group:%2d\n",get_MPI_group_data());
+    fprintf(dis_log_fp, "Running Time:%f\n",get_time());
+    fprintf(dis_log_fp, "Best Cost:%.2f\n",get_best_cost());
+    if(modep->pole_mode == ON) {
+            fprintf(dis_log_fp, "Search Count:%d\n",turn_loop_times(READONLY));
+                 }
+                 fprintf(dis_log_fp, "Search Count Num:%d\n",num_counter(SEARCH_COUNTER, CHECK));
+                 fprintf(dis_log_fp, "Tunr Count Num:%2d\n",num_counter(TURN_COUNTER, CHECK));
+#ifdef DEBUG
+                 fprintf(dis_log_fp, "Local Tabulist Num:%d\n",tabulist_counter(DEFAULT, READONLY));
+#ifdef MPIMODE
+                 if(modep->parallel_mode == ON) {
+                     fprintf(dis_log_fp, "Share Tabulist Num:%d\n",tabulist_counter(SHARE, READONLY));
+                     fprintf(dis_log_fp, "NumNum:%d\n",tabu_list_share_test);
+                 }
+#endif
+#endif
+                 fprintf(dis_log_fp, "\nActive Modes--->\n");
+                 show_mode(dis_log_fp);
+                 fprintf(dis_log_fp, "<---Active Modes\n");
+                 fprintf(dis_log_fp, "*******************************************************\n");*/
+        fprintf(dis_log_fp, "Search: %d, All Cost:%f, Best Cost:%f\n", turn_loop_times(READONLY), get_all_cost_by_graph(get_solution_path()), get_best_cost());
 }
 
 void open_distance_log(void)
@@ -118,7 +144,24 @@ void open_distance_log(void)
     if((dis_log_fp = fopen(dis_log_name, "a")) == NULL) {
         error_procedure("can't find \"result_log\" directory");
     }
-    fprintf(dis_log_fp, "*******************************************************\n");
+    //fprintf(dis_log_fp, "*******************************************************\n");
+    //fprintf(dis_log_fp, "TSP Size:%5d\n",get_tsp_size());
+    //fprintf(dis_log_fp, "All Proces Num:%2d\n",get_num_of_all_proc());
+    //fprintf(dis_log_fp, "Process Number:%2d\n",get_process_number());
+    //fprintf(dis_log_fp, "Process Name:%s\n",get_process_name());
+    //fprintf(dis_log_fp, "MPI Group:%2d\n",get_MPI_group_data());
+    //fprintf(dis_log_fp, "Running Time:%f\n",get_time());
+    //fprintf(dis_log_fp, "\nActive Modes--->\n");
+    //show_mode(dis_log_fp);
+    //fprintf(dis_log_fp, "<---Active Modes\n");
+    //fprintf(dis_log_fp, "*******************************************************\n\n");
+
+    fprintf(dis_log_fp, "*** DISTANCE LOG START ***\n");
+}
+
+void close_distance_log(void)
+{
+    /*fprintf(dis_log_fp, "*******************************************************\n");                       
     fprintf(dis_log_fp, "TSP Size:%5d\n",get_tsp_size());
     fprintf(dis_log_fp, "All Proces Num:%2d\n",get_num_of_all_proc());
     fprintf(dis_log_fp, "Process Number:%2d\n",get_process_number());
@@ -127,14 +170,8 @@ void open_distance_log(void)
     fprintf(dis_log_fp, "Running Time:%f\n",get_time());
     fprintf(dis_log_fp, "\nActive Modes--->\n");
     show_mode(dis_log_fp);
-    fprintf(dis_log_fp, "<---Active Modes\n");
     fprintf(dis_log_fp, "*******************************************************\n\n");
-        
-    fprintf(dis_log_fp, "*** DISTANCE LOG START ***\n");
-}
-
-void close_distance_log(void)
-{
+*/
     fprintf(dis_log_fp, "*** DISTANCE LOG END ***\n");
     fclose(dis_log_fp);
 }

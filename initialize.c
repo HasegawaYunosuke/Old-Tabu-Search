@@ -45,6 +45,9 @@ void initialize(int argc, char ** argv)
     double * graph_data;
     pthread_t * MPI_recv_thread;
 
+
+    tabu_list_share_test = 0;
+
     /* comand-line short option check */
     option_checker(argc, argv);
 
@@ -91,8 +94,12 @@ void initialize(int argc, char ** argv)
     #ifdef DEBUG
     open_loging_initial_path();
     #endif
+    #ifdef MPIMODE
     #ifdef POLEDEBUG
-    open_loging_other_sol_path();
+    if(modep->parallel_mode == ON) {
+        open_loging_other_sol_path();
+    }
+    #endif
     #endif
     #ifdef DEBUG
     tabu_matching_loging(INIT);
@@ -107,8 +114,10 @@ void initialize(int argc, char ** argv)
     /* Communication among Group-Readers */
     #ifdef MPIMODE
     #ifdef SEND_AMONGGROUP
-    if(get_group_reader() == get_process_number()) {
-        group_reader_process();
+    if(modep->parallel_mode == ON) {
+        if(get_group_reader() == get_process_number()) {
+            group_reader_process();
+        }
     }
     #endif
     #endif

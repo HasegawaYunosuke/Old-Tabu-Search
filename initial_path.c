@@ -42,7 +42,7 @@ void initial_path(void)
 
         if(modep->pole_mode == ON){
             set_ga_solution_path(initial_graph_path(get_graph_data()));
-            } 
+        } 
    }
 }
 /* global variable */
@@ -161,19 +161,21 @@ int * create_graph_path(int * return_data, double * graph_data, int create_mode)
     double distance = DBL_MAX;
     double min_distance = DBL_MAX;
 
+    create_mode = DEFAULT;
+
     switch (create_mode) {
     #ifdef MPIMODE
         case GROUPCREATE:
             buff = get_other_group_sol_path();
             adjust_group_sol_to_return(buff, return_data, random_num(DEFAULT_GROUP_DATASTOCKNUM - 1));
             #ifdef DEBUG
-            loging_initial_path(return_data, create_mode);
+            //loging_initial_path(return_data, create_mode);
             #endif
             break;
         case MERGECREATE:
             return_data = get_merge_route();
             #ifdef DEBUG
-            loging_initial_path(return_data, create_mode);
+            //loging_initial_path(return_data, create_mode);
             #endif
             break;
     #endif
@@ -203,7 +205,7 @@ int * create_graph_path(int * return_data, double * graph_data, int create_mode)
                 now_city = mini_index;
             }
             #ifdef DEBUG
-            loging_initial_path(return_data, create_mode);
+            //loging_initial_path(return_data, create_mode);
             #endif
             break;
     }

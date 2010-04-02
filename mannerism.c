@@ -13,12 +13,16 @@ void set_counter(void);
 double get_best_cost(void);
 int get_have_been_mid_mode(void);
 void set_have_been_mid_mode(void);
+int get_tabu_clear_count(void);
+void set_tabu_clear_count(void);
+
 
 /* global variable */
 struct mid_manneri_parameter {
     int solution_count;
     double best_distance;
     int have_been_mid_mode;
+    int tabu_clear_count;
 };
 
 struct mid_manneri_parameter * mid_parameterp;
@@ -117,7 +121,15 @@ int get_counter(void)
 
     return mid_parameterp->solution_count;
 }
-
+int get_tabu_clear_count(void)
+{
+    mid_parameterp->tabu_clear_count++;
+    return mid_parameterp->tabu_clear_count;
+}
+void set_tabu_clear_count(void)
+{
+    mid_parameterp->tabu_clear_count = 0;
+}
 void mannneri_finalize(void)
 {
     free(mid_parameterp);

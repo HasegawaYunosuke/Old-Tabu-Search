@@ -1,10 +1,10 @@
 /* #define MPIMODE */
 #define LINUXUSER
-#define DEBUG
+//#define DEBUG
 //#define POLEDEBUG
-#define CROSSOVER_BEF_AFT
-//#define DISTANCE_LOG
-//#define SEND_AMONGGROUP
+//#define CROSSOVER_BEF_AFT
+#define DISTANCE_LOG
+#define SEND_AMONGGROUP
 
 /* include files */
 #include <stdio.h>
@@ -38,6 +38,7 @@
 #define CHECK -1
 #define READONLY -2
 #define COUNT -3
+#define SHARE -4
 #define DEFAULT 0
 #define PERMITWORSE 10
 #define SMART2OPT 20
@@ -48,10 +49,14 @@
 #define LONGMODE 60
 #define WHOLE 70
 #define MATCH 80
-#define MERGECREATE 100
-#define GROUPCREATE 101
-#define MPI_SENDADD 301
-#define MPI_RECVADD 302
+#define UPPER 90
+#define DOWNER 95
+#define TURN_COUNTER 100
+#define SEARCH_COUNTER 101
+#define MERGECREATE 300
+#define GROUPCREATE 301
+#define MPI_SENDADD 302
+#define MPI_RECVADD 303
 
 /* macro parameter */
 #define TSPMAXSIZE 2000
@@ -62,14 +67,16 @@
 #define DEFAULT_2OPTLOOP 100
 #define DEFAULT_HISTORYSIZE 20
 #define DEFAULT_SAMEPERCENTAGE 20
-#define DEFAULT_NOTFOUNDLOOP 1000
+#define DEFAULT_NOTFOUNDLOOP 500
 #define DEFAULT_MPIGROUPNUM 4
 #define DEFAULT_MIDDLEMANNNERI 100
 #define DEFAULT_SENDPARAMETERNUM 10
 #define DEFAULT_GROUP_DATASTOCKNUM 10
+#define DEFAULT_TABU_MATCH_NUM 10000
+#define DEFAULT_SHARE_TABU_MATCH_NUM 15
 #define GA_CROSS_POINT 10
 #define GA_COUNTER 100
-
+#define TABU_CLEAR_COUNT 5
 /* grobal variable */
 struct mode {
     int visual_mode;
@@ -90,3 +97,7 @@ struct mode {
 struct mode * modep;
 pthread_mutex_t mutex;
 pthread_t visual_thread;
+/* DEL ST */
+double startiii, endiii;
+int tabu_list_share_test;
+/* DEL EN */
