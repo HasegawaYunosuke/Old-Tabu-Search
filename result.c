@@ -11,6 +11,7 @@ void output_x_sol_path(int *path_a, int *path_b, int before_after);
 void open_loging_x_sol_path(void);
 void close_loging_x_sol_path(void);
 
+int * get_main_base_data(void);
 /* global variable */
 char x_sol_log_name[128];
 FILE * x_sol_fp;
@@ -42,7 +43,8 @@ FILE * dis_log_fp;
 #ifdef CROSSOVER_BEF_AFT
 void output_x_sol_path(int *path_a, int *path_b, int before_after)
 {
-    int i;
+    int i , j;
+    int * euclid_data  = get_main_base_data();
 
     fprintf(x_sol_fp, "*** CROSSOVER LOG START ***\n");
 
@@ -51,29 +53,28 @@ void output_x_sol_path(int *path_a, int *path_b, int before_after)
 
         fprintf(x_sol_fp, "=== PARENT A ===\n");
         for(i = 0; i <= get_tsp_size(); i++) {
-            fprintf(x_sol_fp, "No.%3d> city(%3d)\n",i, path_a[i]);
+            j = path_a[i];
+            fprintf(x_sol_fp, "%3d %3d %3d %3d\n",i, j,euclid_data[j * 2], euclid_data[j * 2 + 1]);
         }
-
+/*
         fprintf(x_sol_fp, "=== PARENT B ===\n");
         for(i = 0; i <= get_tsp_size(); i++) {
             fprintf(x_sol_fp, "No.%3d> city(%3d)\n",i, path_b[i]);
-        }
+        }*/
     }
 
     else {
         fprintf(x_sol_fp, "=== AFTER CROSSOVER ===\n\n");
-int get_num_of_all_proc(void);
-int get_process_number(void);
-int get_MPI_group_data(void);
         fprintf(x_sol_fp, "=== CHILD A ===\n");
         for(i = 0; i <= get_tsp_size(); i++) {
-            fprintf(x_sol_fp, "No.%3d> city(%3d)\n",i, path_a[i]);
+            j = path_a[i];
+            fprintf(x_sol_fp, "%3d %3d %3d %3d\n",i, j,euclid_data[j * 2], euclid_data[j * 2 + 1]);
         }
-
+/*
         fprintf(x_sol_fp, "=== CHILD B ===\n");
         for(i = 0; i <= get_tsp_size(); i++) {
             fprintf(x_sol_fp, "No.%3d> city(%3d)\n",i, path_b[i]);
-        }
+        }*/
     }
 
     fprintf(x_sol_fp, "*** CROSSOVER LOG END ***\n");
