@@ -18,6 +18,13 @@ void read_data_set(char * tspfilename);
 void option_checker(int argc, char ** argv)
 {
     int opt;
+    /* long option's define */
+
+    static struct option loption[] = {
+        {"help", no_argument, NULL, 'h'},
+        {"time", required_argument, NULL, 't'},
+        {"file", required_argument, NULL, 'f'}
+    };
 
     /* check the number of argument */
     if(argc == 1) {
@@ -28,7 +35,7 @@ void option_checker(int argc, char ** argv)
     set_mode();
 
     /* check short options */
-    while((opt = getopt(argc, argv, "mbev:plzt:f:h")) != -1) {
+    while((opt = getopt_long(argc, argv, "mbev:plzt:f:h", loption, NULL)) != -1) {
         switch(opt) {
             case 'b':
                 set_tabu2opt_mode();

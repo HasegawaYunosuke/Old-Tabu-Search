@@ -1,7 +1,8 @@
 /*
     *** READ ME ***
 
-    This program is made by Yunosuke Hasegawa, Yuya Tanaka, Takashi Waki, and Yoshihito Tozaki.
+    This program is made by Yunosuke Hasegawa, Yuya Tanaka, Takashi Waki, and Yoshihito Tozaki,
+    as 2010's Graduation. In addition to this base-codes, it's re-coded as 2011's Graduation-Research by Y.H.
     The role of this program is solving TSP using Tabu-Search that is one of the most famous meta-heuristic method.
     Written by C language, and Java. (Java only use in case of "graphical-mode")
     I'll show you to how to compile it. You would find out some C-document.
@@ -11,7 +12,6 @@
 
     If compile is terminated by something error, please complain to writer.
 */
-//test
 
 /* header files */
 #include "header.h"
@@ -29,6 +29,7 @@ int main(int argc, char ** argv)
 {
     /* all in one initialize */
     initialize(argc, argv);
+    exit(0);
 
     /* timer start */
     timer(ON);

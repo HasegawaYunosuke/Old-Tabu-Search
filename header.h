@@ -4,7 +4,7 @@
 //#define POLEDEBUG
 //#define CROSSOVER_BEF_AFT
 #define DISTANCE_LOG
-#define SEND_AMONGGROUP
+//#define SEND_AMONGGROUP
 
 /* include files */
 #include <stdio.h>
@@ -18,6 +18,7 @@
 #include <pthread.h>
 #include <float.h>
 #include <limits.h>
+#include <getopt.h>
 #ifdef MPIMODE
 #include <mpi.h>
 #define BEST_SOLUTION 101
