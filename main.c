@@ -29,7 +29,6 @@ int main(int argc, char ** argv)
 {
     /* all in one initialize */
     initialize(argc, argv);
-    exit(0);
 
     /* timer start */
     timer(ON);
