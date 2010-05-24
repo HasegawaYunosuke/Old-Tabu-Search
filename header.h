@@ -3,7 +3,6 @@
 //#define DEBUG
 //#define POLEDEBUG
 //#define CROSSOVER_BEF_AFT
-//#define DISTANCE_LOG
 //#define SEND_AMONGGROUP
 
 /* include files */
@@ -98,5 +97,4 @@ pthread_mutex_t mutex;
 pthread_t visual_thread;
 /* DEL ST */
 double startiii, endiii;
-int tabu_list_share_test;
 /* DEL EN */

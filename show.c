@@ -27,9 +27,6 @@ int check_manneri(int type);
 #ifdef DEBUG
 int tabulist_counter(int field_type, int use_type);
 #endif
-#ifdef DISTANCE_LOG
-void output_distance_log(void);
-#endif
 
 void realtime_result(void)
 {
@@ -66,9 +63,6 @@ void realtime_result(void)
         printf("\n");
     }
     /* DEL EN */
-#ifdef DISTANCE_LOG
-    output_distance_log();
-#endif
 }
 
 void turn_terminated_show(void)
@@ -100,17 +94,17 @@ void search_terminated_by_time_show(void)
 
 void final_result_show(FILE * fp)
 {
-    //fprintf(fp, "*******************************************************\n");
-    //fprintf(fp, "TSP Size:%5d\n",get_tsp_size());
-    //fprintf(fp, "All Proces Num:%2d\n",get_num_of_all_proc());
-    //fprintf(fp, "Process Number:%2d\n",get_process_number());
-    //fprintf(fp, "Process Name:%s\n",get_process_name());
-    //fprintf(fp, "MPI Group:%2d\n",get_MPI_group_data());
-    //fprintf(fp, "Running Time:%f\n",get_time());
+    fprintf(fp, "*******************************************************\n");
+    fprintf(fp, "TSP Size:%5d\n",get_tsp_size());
+    fprintf(fp, "All Proces Num:%2d\n",get_num_of_all_proc());
+    fprintf(fp, "Process Number:%2d\n",get_process_number());
+    fprintf(fp, "Process Name:%s\n",get_process_name());
+    fprintf(fp, "MPI Group:%2d\n",get_MPI_group_data());
+    fprintf(fp, "Running Time:%f\n",get_time());
     fprintf(fp, "%.2f\n",get_best_cost());
     /*if(modep->pole_mode == ON) {
         fprintf(fp, "Search Count:%d\n",turn_loop_times(READONLY));
-    }
+    }*/
     fprintf(fp, "Search Count Num:%d\n",num_counter(SEARCH_COUNTER, CHECK));
     fprintf(fp, "Tunr Count Num:%2d\n",num_counter(TURN_COUNTER, CHECK));
 #ifdef DEBUG
@@ -118,7 +112,6 @@ void final_result_show(FILE * fp)
 #ifdef MPIMODE
     if(modep->parallel_mode == ON) {
         fprintf(fp, "Share Tabulist Num:%d\n",tabulist_counter(SHARE, READONLY));
-        fprintf(fp, "NumNum:%d\n",tabu_list_share_test);
     }
 #endif
 #endif
@@ -126,7 +119,7 @@ void final_result_show(FILE * fp)
     show_mode(fp);
     fprintf(fp, "<---Active Modes\n");
     fprintf(fp, "*******************************************************\n");
-*/}
+}
 
 void show_mode(FILE * fp)
 {

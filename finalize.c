@@ -31,10 +31,6 @@ void close_loging_other_sol_path(void);
 #ifdef CROSSOVER_BEF_AFT
 void close_loging_x_sol_path(void);
 #endif
-#ifdef DISTANCE_LOG
-void close_distance_log(void);
-void output_distance_log(void);
-#endif
 
 /* global variable */
 int * lnp;
@@ -56,15 +52,12 @@ void finalize(void)
     close_loging_initial_path();
     #endif
     #ifdef MPIMODE
-    #ifdef POLEDEBUG
-    close_loging_other_sol_path();
-    #endif
+        #ifdef POLEDEBUG
+        close_loging_other_sol_path();
+        #endif
     #endif
     #ifdef CROSSOVER_BEF_AFT
     close_loging_x_sol_path();
-    #endif
-    #ifdef DISTANCE_LOG
-    close_distance_log();
     #endif
     free(get_main_base_data());
     free(get_parameterp());
@@ -93,10 +86,6 @@ void output_log(void)
 
     timer = get_start_time();
     date = localtime(&timer);
-    
-    #ifdef DISTANCE_LOG
-    output_distance_log();
-    #endif
 
     #ifdef MPIMODE
     if(modep->parallel_mode == ON) {
@@ -118,16 +107,16 @@ void output_log(void)
     }
 
     #ifdef MPIMODE
-    #ifdef DEBUG
-    if(modep->parallel_mode == ON) {
-        mpi_comunication_log_manage(CHECK);
-        tabu_matching_loging(CHECK);
-        #ifdef SEND_AMONGGROUP
-        if(get_group_reader() == get_process_number()) {
-            tabu_matching_loging(SHARE);
+        #ifdef DEBUG
+        if(modep->parallel_mode == ON) {
+            mpi_comunication_log_manage(CHECK);
+            tabu_matching_loging(CHECK);
+            #ifdef SEND_AMONGGROUP
+            if(get_group_reader() == get_process_number()) {
+                tabu_matching_loging(SHARE);
+            }
+            #endif
         }
         #endif
-    }
-    #endif
     #endif
 }

@@ -140,7 +140,8 @@ void add_matched_num(void)
 void loging_tabu_matched(void)
 {
     fprintf(debug_fp, "*** TABU-LIST matched debug START ***\n");
-    fprintf(debug_fp, "tabu_matched / whole matched : %d/%d\n",tabu_matching_log.matched_num,tabu_matching_log.all_check_num);
+    fprintf(debug_fp, "tabu_matched / whole matched : %d/%d\n",
+        tabu_matching_log.matched_num, tabu_matching_log.all_check_num);
     tabu_matching_log.all_check_num = 0;
     tabu_matching_log.matched_num = 0;
     fprintf(debug_fp, "*** TABU-LIST matched debug END ***\n");

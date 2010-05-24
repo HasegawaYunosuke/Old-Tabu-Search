@@ -29,11 +29,12 @@ void search(void)
     }
     else if(modep->pole_mode == ON) {
         solution_path = pole_search(solution_path);
-#ifdef POLEDEBUG
-#ifdef MPIMODE
+
+    #ifdef MPIMODE
+        #ifdef POLEDEBUG
         output_other_sol_path();
-#endif
-#endif
+        #endif
+    #endif
     }
     else {
         error_procedure("Un-define-search()-mode is choiced");

@@ -32,9 +32,6 @@ void open_loging_other_sol_path(void);
 #ifdef CROSSOVER_BEF_AFT
 void open_loging_x_sol_path(void);
 #endif
-#ifdef DISTANCE_LOG
-void open_distance_log(void);
-#endif
 void initialize(int argc, char ** argv)
 {
     int i;
@@ -44,9 +41,6 @@ void initialize(int argc, char ** argv)
     int * other_list;
     double * graph_data;
     pthread_t * MPI_recv_thread;
-
-
-    tabu_list_share_test = 0;
 
     /* comand-line short option check */
     option_checker(argc, argv);
@@ -99,9 +93,6 @@ void initialize(int argc, char ** argv)
     tabu_matching_loging(INIT);
         #ifdef CROSSOVER_BEF_AFT
         open_loging_x_sol_path();
-        #endif
-        #ifdef DISTANCE_LOG
-        open_distance_log();
         #endif
     #endif
 
