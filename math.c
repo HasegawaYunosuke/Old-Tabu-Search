@@ -6,9 +6,9 @@ double make_distance(int x1, int y1, int x2, int y2);
 int random_num(int maximum);
 int get_num_of_addtion_to_local_tabulist(int tsp_size);
 #ifdef MPIMODE
-#ifdef SEND_AMONGGROUP
+//#ifdef SEND_AMONGGROUP
 int get_num_of_addtion_to_share_tabulist(int tsp_size);
-#endif
+//#endif
 #endif
 
 double make_distance(int x1, int y1, int x2, int y2)
@@ -52,7 +52,7 @@ int get_num_of_addtion_to_local_tabulist(int tsp_size)
 }
 
 #ifdef MPIMODE
-#ifdef SEND_AMONGGROUP
+//#ifdef SEND_AMONGGROUP
 /*
  * This func is leaded by Examination of few times.
  * Based on the number of added share-tabu-list ( Duplicative added to local-tabu-list ) at Examination in 1 min.
@@ -72,5 +72,5 @@ int get_num_of_addtion_to_share_tabulist(int tsp_size)
 
     return return_num;
 }
-#endif
+//#endif
 #endif

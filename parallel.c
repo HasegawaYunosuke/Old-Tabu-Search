@@ -232,7 +232,6 @@ void group_reader_send(int * type)
             break;
         case TABU_LIST_SHARE:
             element_num = get_num_of_addtion_to_share_tabulist(get_tsp_size()) * 4;
-            tabu_list_share_test = list[2];
             //send_node = list[random_num(DEFAULT_MPIGROUPNUM - 1)];
             //MPI_Send((void *)my_share_tabulist, element_num, MPI_INT, list[send_node], GROUP_SOLUTION, MPI_COMM_WORLD);
             for(i = 0; i < (DEFAULT_MPIGROUPNUM - 1); i++) {

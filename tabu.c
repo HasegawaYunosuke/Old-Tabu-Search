@@ -192,12 +192,12 @@ void flag_set(void)
     find_out_flag = NO;
 }
 #ifdef MPIMODE
-    #ifdef SEND_AMONGGROUP
+//#ifdef SEND_AMONGGROUP
 void share_flag_set(void)
 {
     find_out_share_flag = NO;
 }
-    #endif
+//#endif
 #endif
 void free_tabu(void)
 {
