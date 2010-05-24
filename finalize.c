@@ -41,8 +41,8 @@ void finalize(void)
     output_log();
 
    #ifdef MPIMODE
+    sleep(5);
     if(modep->parallel_mode == ON) {
-        sleep(5);
         parallel_finalize();
     }
     #endif
