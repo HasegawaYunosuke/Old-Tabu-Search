@@ -141,22 +141,13 @@ void open_distance_log(void)
     else {
          sprintf(dis_log_name, "result_log/distance_log.%d.log",get_process_number());
     }
+
     if((dis_log_fp = fopen(dis_log_name, "a")) == NULL) {
         error_procedure("can't find \"result_log\" directory");
     }
-    //fprintf(dis_log_fp, "*******************************************************\n");
-    //fprintf(dis_log_fp, "TSP Size:%5d\n",get_tsp_size());
-    //fprintf(dis_log_fp, "All Proces Num:%2d\n",get_num_of_all_proc());
-    //fprintf(dis_log_fp, "Process Number:%2d\n",get_process_number());
-    //fprintf(dis_log_fp, "Process Name:%s\n",get_process_name());
-    //fprintf(dis_log_fp, "MPI Group:%2d\n",get_MPI_group_data());
-    //fprintf(dis_log_fp, "Running Time:%f\n",get_time());
-    //fprintf(dis_log_fp, "\nActive Modes--->\n");
-    //show_mode(dis_log_fp);
-    //fprintf(dis_log_fp, "<---Active Modes\n");
-    //fprintf(dis_log_fp, "*******************************************************\n\n");
-
-    fprintf(dis_log_fp, "*** DISTANCE LOG START ***\n");
+    else {
+        fprintf(dis_log_fp, "*** DISTANCE LOG START ***\n");
+    }
 }
 
 void close_distance_log(void)

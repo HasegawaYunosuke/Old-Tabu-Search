@@ -19,7 +19,6 @@ char * get_process_name(void);
 int not_found_looping(int * cities, int * indexs, int type);
 void set_search_time(double search_time);
 void set_tabu2opt_mode(void);
-void set_euclid_mode(void);
 void set_visual_mode(int mode);
 int get_realtime_visual_mode(void);
 void set_parallel_mode(void);
@@ -207,7 +206,6 @@ void set_mode(void)
     }
 
     /* default modes */
-    modep->graph_mode = ON;
     modep->hasegawa_mode = ON;
     modep->tabu_mode = OFF;
     modep->only2opt_mode = ON;
@@ -418,6 +416,7 @@ int get_num_of_all_proc(void)
 
 int get_process_number(void)
 {
+    /* default (or non-parallel) process_number is 0 */
     return parameterp->process_number;
 }
 
@@ -505,12 +504,6 @@ void set_tabu2opt_mode(void)
 {
     modep->only2opt_mode = OFF;
     modep->tabu2opt_mode = ON;
-}
-
-void set_euclid_mode(void)
-{
-    modep->euclid_mode = ON;
-    modep->graph_mode = OFF;
 }
 
 void set_visual_mode(int mode)
@@ -792,12 +785,7 @@ int check_parcentage(double bef_aft_distance)
     double best_cost = get_best_cost();
     double after_all_cost;
 
-    if(modep->euclid_mode == OFF) {
-        after_all_cost = get_all_cost_by_graph(get_solution_path()) - bef_aft_distance;
-    }
-    else {
-        after_all_cost = get_all_cost_by_euclid(get_solution_path()) - bef_aft_distance;
-    }
+    after_all_cost = get_all_cost_by_graph(get_solution_path()) - bef_aft_distance;
 
     if(((get_worse_permit() / 100 + 1) * best_cost) < after_all_cost) {
         return_num = NO;
@@ -855,13 +843,7 @@ void set_all_cost(void)
 {
     double all_cost = 0;
 
-    if(modep->graph_mode == ON) {
-        all_cost = get_all_cost_by_graph(get_solution_path());
-    }
-    else if(modep->euclid_mode == ON) {
-        all_cost = get_all_cost_by_euclid(get_solution_path());
-    }
-
+    all_cost = get_all_cost_by_graph(get_solution_path());
     parameterp->all_cost = all_cost;
 
     if(all_cost < parameterp->best_cost) {

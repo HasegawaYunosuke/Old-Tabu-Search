@@ -80,65 +80,54 @@ int * pole_search(int * solution_path)
     solution_path_c = mallocer_ip(tsp_size + 1);
 
     /* Search Graph-Data */
-    if(modep->graph_mode == ON) {
-        if(check_manneri(SHORTMODE) == YES) {
-            set_tabu_mode(ON);
-            set_have_been_mid_mode();
-            if(check_manneri(MIDDLEMODE) == YES){
-                set_counter();
-                if(modep->parallel_mode == ON){
-                other_solution_path = get_other_solution_path_data();
-                 transform_solution_path(other_solution_path, solution_path_c);
-                   if(check_other_solution_path_data(solution_path_c) == YES) {
-                        for(i = 0; i < tsp_size + 1; i++){
-                            solution_path_b[i] = solution_path_c[i];
-                        }
-                   }
-                }
-                 if(get_ga_mode() == ON){
-                 
-                 /* Output before crossover path */
-                    #ifdef CROSSOVER_BEF_AFT
-                    output_x_sol_path(solution_path, solution_path_b, 0);
-                    #endif
-                    
-                 /* Choose way of crossover*/                    
-                    //order_one_cross(solution_path, solution_path_b);
-                    pmx_one_cross(solution_path, solution_path_b);
-                    
-                 /* Output after crossover path */    
-                    #ifdef CROSSOVER_BEF_AFT
-                    output_x_sol_path(solution_path, solution_path_b, 1);
-					exit(0);
-                    #endif
-                    
-                 /* Clear Tabulist */    
-                    if(get_tabu_clear_count() == TABU_CLEAR_COUNT){
-                        create_2opt_tabulist(get_tsp_size(), CLEAR);
-                        }
-                        
-                    set_tabu_mode(OFF);
-                    initialize_history();
-                }
-             }
-        }
-        
-        solution_path = two_opt(solution_path);
-        //solution_path_b = simple_two_opt(solution_path_b);
+    if(check_manneri(SHORTMODE) == YES) {
+        set_tabu_mode(ON);
+        set_have_been_mid_mode();
+        if(check_manneri(MIDDLEMODE) == YES){
+            set_counter();
+            if(modep->parallel_mode == ON){
+            other_solution_path = get_other_solution_path_data();
+             transform_solution_path(other_solution_path, solution_path_c);
+               if(check_other_solution_path_data(solution_path_c) == YES) {
+                    for(i = 0; i < tsp_size + 1; i++){
+                        solution_path_b[i] = solution_path_c[i];
+                    }
+               }
+            }
+             if(get_ga_mode() == ON){
 
-        /* Set GA solution_path*/
-        if(get_ga_mode() == ON){
-            set_ga_solution_path(solution_path_b);
-        }
+             /* Output before crossover path */
+                #ifdef CROSSOVER_BEF_AFT
+                output_x_sol_path(solution_path, solution_path_b, 0);
+                #endif
+
+             /* Choose way of crossover */
+                //order_one_cross(solution_path, solution_path_b);
+                pmx_one_cross(solution_path, solution_path_b);
+
+             /* Output after crossover path */
+                #ifdef CROSSOVER_BEF_AFT
+                output_x_sol_path(solution_path, solution_path_b, 1);
+                exit(0);
+                #endif
+
+             /* Clear Tabulist */
+                if(get_tabu_clear_count() == TABU_CLEAR_COUNT){
+                    create_2opt_tabulist(get_tsp_size(), CLEAR);
+                    }
+
+                set_tabu_mode(OFF);
+                initialize_history();
+            }
+         }
     }
 
-    /* Search Euclid-Data (non-available) */
-    else if(modep->euclid_mode == ON) {
-        error_procedure("pole_search() non-available");
-    }
-    /* Error */
-    else {
-        error_procedure("pole_search()");
+    solution_path = two_opt(solution_path);
+    //solution_path_b = simple_two_opt(solution_path_b);
+
+    /* Set GA solution_path*/
+    if(get_ga_mode() == ON){
+        set_ga_solution_path(solution_path_b);
     }
 
     free(solution_path_c);

@@ -3,8 +3,8 @@
 //#define DEBUG
 //#define POLEDEBUG
 //#define CROSSOVER_BEF_AFT
-#define DISTANCE_LOG
-#define SEND_AMONGGROUP
+//#define DISTANCE_LOG
+//#define SEND_AMONGGROUP
 
 /* include files */
 #include <stdio.h>
@@ -82,8 +82,6 @@
 struct mode {
     int visual_mode;
     int realtime_visual_mode;
-    int graph_mode;
-    int euclid_mode;
     int parallel_mode;
     int hasegawa_mode;
     int pole_mode;

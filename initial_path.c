@@ -33,40 +33,14 @@ void set_ga_solution_path(int * solution_path);
 
 void initial_path(void)
 {
-    /* create initial-path by each mode */
-    if(modep->euclid_mode == ON) {
-        set_solution_path(initial_euclid_path(get_main_base_data()));
+    /* create initial-path */
+    set_solution_path(initial_graph_path(get_graph_data()));
+    if(modep->pole_mode == ON){
+        set_ga_solution_path(initial_graph_path(get_graph_data()));
     }
-    else {
-        set_solution_path(initial_graph_path(get_graph_data()));
-
-        if(modep->pole_mode == ON){
-            set_ga_solution_path(initial_graph_path(get_graph_data()));
-        }
-   }
 }
 /* global variable */
 int create_mode = DEFAULT;
-
-
-int * initial_euclid_path(int * euclid_data)
-{
-    int * return_data;
-
-    /* first time procedure (mainly, alocate memory) */
-    if(search_loop_times(READONLY) == 0 && turn_loop_times(READONLY) == 0) {
-        /* +10 is for something parameter */
-        return_data = mallocer_ip(euclid_data[0] + 10);
-        set_best_solution_path(mallocer_ip(euclid_data[0] + 10));
-        srand(time(NULL));
-        /* set return_data[0] to 'TSP-example-size' */
-        return_data[0] = euclid_data[0];
-    }
-
-    /* create the initial path */
-    return create_euclid_path(return_data, euclid_data, create_mode);
-}
-
 int * return_data;
 
 int * initial_graph_path(double * graph_data)

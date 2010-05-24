@@ -144,10 +144,7 @@ void group_reader_process(void)
     create_readers_list();
 
     /* reader's reciev_process */
-    pthread_create(&group_reader_thread,
-                    NULL,
-                    (void *)group_reader_recv,
-                    (void *)&argument);
+    pthread_create(&group_reader_thread, NULL, (void *)group_reader_recv, (void *)&argument);
 }
 
 void group_reader_recv(int * argument)

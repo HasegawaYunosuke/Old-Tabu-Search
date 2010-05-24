@@ -67,20 +67,10 @@ typedef struct _thread_arg {
 
 int * tozaki_search(int * solution_path)
 {
-	int * return_data;
-	
-    /* Search Euclid-Data */
-    if(modep->euclid_mode == ON) {
-        return_data = copy_euclid_search(solution_path);
-    }
-    /* Search Graph-Data (non-available) */
-    else if(modep->graph_mode == ON) {
-		return_data = copy_graph_search(solution_path);
-    }
-    /* Error */
-    else {
-        error_procedure("tozaki_search()");
-    }
+    int * return_data;
+
+    return_data = copy_graph_search(solution_path);
+
     return return_data;
 }
 
@@ -310,12 +300,7 @@ int * copy_two_opt_only(int * solution_path)
 {
     int indexs[4];
 
-    if(modep->graph_mode = ON) {
-        copy_get_min_exchange_indexs(solution_path, indexs);
-    }
-    else {
-        error_procedure("copy_two_opt_only()'s 2-opt only mode");
-    }
+    copy_get_min_exchange_indexs(solution_path, indexs);
 
     copy_exchange_branch(solution_path, indexs);
 
@@ -374,12 +359,7 @@ int copy_check_parcentage(double bef_aft_distance, double * worse)
     double best_cost = get_best_cost();
     double after_all_cost;
 
-    if(modep->euclid_mode == OFF) {
-        after_all_cost = get_all_cost_by_graph(get_solution_path()) - bef_aft_distance;
-    }
-    else {
-        after_all_cost = get_all_cost_by_euclid(get_solution_path()) - bef_aft_distance;
-    }
+    after_all_cost = get_all_cost_by_graph(get_solution_path()) - bef_aft_distance;
 
     if(((get_worse_permit() / 100 + 1) * best_cost) > after_all_cost) {
         return_num = YES;
@@ -393,14 +373,8 @@ double copy_bef_aft_distance(int * cities,double * worse)
 {
     double before, after;
 
-    if(modep->euclid_mode == ON) {
-        before = copy_get_distance(cities[0],cities[1],cities[2],cities[3]);
-        after = copy_get_distance(cities[0],cities[2],cities[1],cities[3]);
-    }
-    else if(modep->graph_mode == ON) {
-        before = copy_get_cost(cities[0],cities[1],cities[2],cities[3]);
-        after = copy_get_cost(cities[0],cities[2],cities[1],cities[3]);
-    }
+    before = copy_get_cost(cities[0],cities[1],cities[2],cities[3]);
+    after = copy_get_cost(cities[0],cities[2],cities[1],cities[3]);
     set_now_parcentage(before, after, worse);
 
     return (before - after);

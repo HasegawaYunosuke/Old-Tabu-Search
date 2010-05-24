@@ -126,9 +126,7 @@ void insert_newest(int newest, int oldest)
 
 void set_newest_data(int index)
 {
-    if(modep->graph_mode == ON) {
-        historyp[index].distance = get_all_cost_by_graph(get_solution_path());
-    }
+    historyp[index].distance = get_all_cost_by_graph(get_solution_path());
     historyp[index].loop_times = turn_loop_times(READONLY);
     historyp[index].search_times = search_loop_times(READONLY);
 }

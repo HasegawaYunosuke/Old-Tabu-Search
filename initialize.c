@@ -61,18 +61,12 @@ void initialize(int argc, char ** argv)
     set_main_base_data(main_base_data);
 
     /* change data type ( Euclid -> Graph ) */
-    if(modep->graph_mode == ON) {
-        graph_data = make_graph(main_base_data);
-    }
+    graph_data = make_graph(main_base_data);
 
     /* create thread for visual-mode */
     if(modep->visual_mode == ON) {
         pthread_mutex_init(&mutex, NULL);
-        pthread_create(&visual_thread,
-                        NULL,
-                        (void *) visualizer,
-                        (void *) &visual_arg);
-//        pthread_join(visual_thread, NULL);
+        pthread_create(&visual_thread, NULL, (void *) visualizer, (void *) &visual_arg);
     }
 
     #ifdef MPIMODE
@@ -95,33 +89,32 @@ void initialize(int argc, char ** argv)
     open_loging_initial_path();
     #endif
     #ifdef MPIMODE
-    #ifdef POLEDEBUG
-    if(modep->parallel_mode == ON) {
-        open_loging_other_sol_path();
-    }
-    #endif
+        #ifdef POLEDEBUG
+        if(modep->parallel_mode == ON) {
+            open_loging_other_sol_path();
+        }
+        #endif
     #endif
     #ifdef DEBUG
     tabu_matching_loging(INIT);
-    #endif
-    #ifdef CROSSOVER_BEF_AFT
-    open_loging_x_sol_path();
-    #endif
-    #ifdef DISTANCE_LOG
-    open_distance_log();
+        #ifdef CROSSOVER_BEF_AFT
+        open_loging_x_sol_path();
+        #endif
+        #ifdef DISTANCE_LOG
+        open_distance_log();
+        #endif
     #endif
 
     /* Communication among Group-Readers */
     #ifdef MPIMODE
-    #ifdef SEND_AMONGGROUP
-    if(modep->parallel_mode == ON) {
-        if(get_group_reader() == get_process_number()) {
-            group_reader_process();
+        #ifdef SEND_AMONGGROUP
+        if(modep->parallel_mode == ON) {
+            if(get_group_reader() == get_process_number()) {
+                group_reader_process();
+            }
         }
-    }
+        #endif
     #endif
-    #endif
-
 }
 
 double * make_graph(int * main_base_data)

@@ -49,18 +49,7 @@ int * hasegawa_search(int * solution_path)
 {
     int * return_data;
 
-    /* Search Euclid-Data */
-    if(modep->euclid_mode == ON) {
-        return_data = euclid_search(solution_path);
-    }
-    /* Search Graph-Data (non-available) */
-    else if(modep->graph_mode == ON) {
-        return_data = graph_search(solution_path);
-    }
-    /* Error */
-    else {
-        error_procedure("hasegawa_search()");
-    }
+    return_data = graph_search(solution_path);
 
     return return_data;
 }
@@ -160,12 +149,7 @@ int * two_opt_only(int * solution_path)
 {
     int indexs[4];
 
-    if(modep->graph_mode = ON) {
-        get_min_exchange_indexs(solution_path, indexs);
-    }
-    else {
-        error_procedure("two_opt_only()");
-    }
+    get_min_exchange_indexs(solution_path, indexs);
 
     exchange_branch(solution_path, indexs);
 
@@ -245,14 +229,8 @@ double bef_aft_distance(int * cities)
 {
     double before, after;
 
-    if(modep->euclid_mode == ON) {
-        before = get_distance(cities[0],cities[1],cities[2],cities[3]);
-        after = get_distance(cities[0],cities[2],cities[1],cities[3]);
-    }
-    else if(modep->graph_mode == ON) {
-        before = get_cost(cities[0],cities[1],cities[2],cities[3]);
-        after = get_cost(cities[0],cities[2],cities[1],cities[3]);
-    }
+    before = get_cost(cities[0],cities[1],cities[2],cities[3]);
+    after = get_cost(cities[0],cities[2],cities[1],cities[3]);
 
     set_now_parcentage(before, after);
 

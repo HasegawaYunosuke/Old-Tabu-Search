@@ -67,7 +67,7 @@ void realtime_result(void)
     }
     /* DEL EN */
 #ifdef DISTANCE_LOG
-output_distance_log();
+    output_distance_log();
 #endif
 }
 
@@ -132,8 +132,6 @@ void show_mode(FILE * fp)
 {
     show_on_off(fp,modep->visual_mode, "Visual_Mode");
     show_on_off(fp,modep->realtime_visual_mode, "Realtime-Visual_Mode");
-    show_on_off(fp,modep->graph_mode, "Graph_Mode");
-    show_on_off(fp,modep->euclid_mode, "Euclid_Mode");
     show_on_off(fp,modep->parallel_mode, "Parallel_Mode");
     show_on_off(fp,modep->hasegawa_mode, "Hasegawa_Mode");
     show_on_off(fp,modep->pole_mode, "Pole_Mode");

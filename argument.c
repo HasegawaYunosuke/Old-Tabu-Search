@@ -19,7 +19,6 @@ void option_checker(int argc, char ** argv)
 {
     int opt;
     /* long option's define */
-
     static struct option loption[] = {
         {"help", no_argument, NULL, 'h'},
         {"time", required_argument, NULL, 't'},
@@ -35,16 +34,13 @@ void option_checker(int argc, char ** argv)
     set_mode();
 
     /* check short options */
-    while((opt = getopt_long(argc, argv, "mbev:plzt:f:h", loption, NULL)) != -1) {
+    while((opt = getopt_long(argc, argv, "mbv:plzt:f:h", loption, NULL)) != -1) {
         switch(opt) {
             case 'b':
                 set_tabu2opt_mode();
                 break;
             case 'm':
                 set_parallel_mode();
-                break;
-            case 'e':
-                set_euclid_mode();
                 break;
             case 'v':
                 set_visual_mode(atoi(optarg));

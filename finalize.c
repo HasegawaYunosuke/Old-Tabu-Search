@@ -50,9 +50,7 @@ void finalize(void)
     }
     #endif
 
-    if(modep->graph_mode == ON) {
-        free(get_graph_data());
-    }
+    free(get_graph_data());
 
     #ifdef DEBUG
     close_loging_initial_path();
