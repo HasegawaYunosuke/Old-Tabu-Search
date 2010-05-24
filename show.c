@@ -6,7 +6,6 @@ void increase_test(void);
 
 /* functions */
 int num_counter(int field_type, int use_type);
-void realtime_result(void);
 void turn_terminated_show(void);
 void turn_terminated_by_time_show(void);
 void search_terminated_by_time_show(void);
@@ -27,43 +26,6 @@ int check_manneri(int type);
 #ifdef DEBUG
 int tabulist_counter(int field_type, int use_type);
 #endif
-
-void realtime_result(void)
-{
-    /* DEL ST 
-    if(modep->parallel_mode != YES) {
-        printf("DEL:all_cost == %f,",get_all_cost_by_graph(get_solution_path()));
-        printf("best == %.2f,",get_best_cost());
-        if(modep->tabu_mode == ON) {
-            printf("tabu ON,");
-        }
-        else {
-            printf("tabu OFF,");
-        }
-        printf("mannneri(S,M,L) == (");
-        if(check_manneri(SHORTMODE) == YES) {
-            printf(" ON,");
-        }
-        else {
-            printf("OFF,");
-        }
-        if(check_manneri(MIDDLEMODE) == YES) {
-            printf(" ON,");
-        }
-        else {
-            printf("OFF,");
-        }
-        printf("OFF)");
-
-        if(get_ga_mode() == ON){
-        printf(" GA");
-        set_ga_mode(OFF); 
-        }
-
-        printf("\n");
-    }
-    /* DEL EN */
-}
 
 void turn_terminated_show(void)
 {

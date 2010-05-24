@@ -45,8 +45,6 @@ int main(int argc, char ** argv)
             /* search */
             search();
 
-            //realtime_result();
-
             /* counting turn-num */
             num_counter(TURN_COUNTER, ADD);
 
