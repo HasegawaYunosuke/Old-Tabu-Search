@@ -717,8 +717,7 @@ void parallel_finalize(void)
 {
     MPI_Barrier(MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD);
-    /*MPI_Barrier(MPI_COMM_WORLD);
-    MPI_Barrier(MPI_COMM_WORLD);*/
+    MPI_Barrier(MPI_COMM_WORLD);
     MPI_Finalize();
     free(get_other_solution_path_data());
     free(get_same_group_list());

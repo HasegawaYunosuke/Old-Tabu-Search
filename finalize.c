@@ -40,8 +40,7 @@ void finalize(void)
     final_result_show(stdout);
     output_log();
 
-   #ifdef MPIMODE
-    sleep(5);
+    #ifdef MPIMODE
     if(modep->parallel_mode == ON) {
         parallel_finalize();
     }
@@ -77,6 +76,10 @@ void set_logfile_name(int * buffer, int element_num)
     }
 }
 
+/*DEL*/
+int get_process_number(void);
+/*DEL*/
+
 void output_log(void)
 {
     char time_data[64];
@@ -103,6 +106,7 @@ void output_log(void)
         sprintf(logfilename, "%s.node%d.log",time_data,get_process_number());
     }
     if((fp = fopen(logfilename, "w")) != NULL) {
+        //sleep(get_process_number());
         final_result_show(fp);
         fclose(fp);
     }
