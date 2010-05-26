@@ -106,7 +106,6 @@ void output_log(void)
         sprintf(logfilename, "%s.node%d.log",time_data,get_process_number());
     }
     if((fp = fopen(logfilename, "w")) != NULL) {
-        //sleep(get_process_number());
         final_result_show(fp);
         fclose(fp);
     }
