@@ -13,10 +13,16 @@ time_t get_start_time(void);
 void error_procedure(char * message);
 int * mallocer_ip(int size);
 int search_loop_times(int type);
+void create_filename(char * logfilename);
+void free_tabu(void);
 
 #ifdef MPIMODE
 void parallel_finalize(void);
+void MPI_final_result_show(FILE * fp, int * recv_data, int send_data_num);
 void set_logfile_name(int * buffer, int element_num);
+int get_process_number(void);
+int get_num_of_all_proc(void);
+void init_send_final_data(int * send_data, int send_data_num);
 #endif
 #ifdef DEBUG
 void close_loging_initial_path(void);
@@ -37,16 +43,8 @@ int * lnp;
 
 void finalize(void)
 {
-    final_result_show(stdout);
+    //final_result_show(stdout);
     output_log();
-
-    #ifdef MPIMODE
-    if(modep->parallel_mode == ON) {
-        parallel_finalize();
-    }
-    #endif
-
-    free(get_graph_data());
 
     #ifdef DEBUG
     close_loging_initial_path();
@@ -59,11 +57,18 @@ void finalize(void)
     #ifdef CROSSOVER_BEF_AFT
     close_loging_x_sol_path();
     #endif
+
     free(get_main_base_data());
     free(get_parameterp());
+    free(get_graph_data());
+    free_tabu();
     mannneri_finalize();
 
-    //printf("Program is normally terminated.....\n");
+    #ifdef MPIMODE
+    if(modep->parallel_mode == ON) {
+        parallel_finalize();
+    }
+    #endif
 }
 
 void set_logfile_name(int * buffer, int element_num)
@@ -76,39 +81,33 @@ void set_logfile_name(int * buffer, int element_num)
     }
 }
 
-/*DEL*/
-int get_process_number(void);
-/*DEL*/
-
 void output_log(void)
 {
-    char time_data[64];
-    char logfilename[128];
-    time_t timer;
-    struct tm * date;
     FILE * fp;
+    char logfilename[128];
+    int send_data_num = 8;
+    int send_data[send_data_num]; /* ProcNum, GroupNum, BestCost, SearchCount, TurnCount, Local/ShareTabuListNum */
+    int recv_data[256];
 
-    timer = get_start_time();
-    date = localtime(&timer);
+    create_filename(logfilename);
 
     #ifdef MPIMODE
-    if(modep->parallel_mode == ON) {
-        sprintf(time_data,"log_data/%d.%d.%d_%d.%d.%d",lnp[0], lnp[1], lnp[2], lnp[3], lnp[4], lnp[5]);
+    init_send_final_data(send_data, send_data_num);
+    MPI_Allgather(send_data, send_data_num,
+        MPI_INT, recv_data, send_data_num, MPI_INT, MPI_COMM_WORLD);
+    if(get_process_number() == 0) {
+        if((fp = fopen(logfilename, "w")) != NULL) {
+            MPI_final_result_show(fp, recv_data, send_data_num);
+            MPI_final_result_show(stdout, recv_data, send_data_num);
+            fclose(fp);
+        }
     }
     #else
-    strftime(time_data, 63, "log_data/%Y.%m.%d_%H.%M.%S",date);
-    #endif
-
-    if(get_process_number() < 10) {
-        sprintf(logfilename, "%s.node0%d.log",time_data,get_process_number());
-    }
-    else {
-        sprintf(logfilename, "%s.node%d.log",time_data,get_process_number());
-    }
     if((fp = fopen(logfilename, "w")) != NULL) {
         final_result_show(fp);
         fclose(fp);
     }
+    #endif
 
     #ifdef MPIMODE
         #ifdef DEBUG
@@ -123,4 +122,27 @@ void output_log(void)
         }
         #endif
     #endif
+}
+
+void create_filename(char * logfilename)
+{
+    char time_data[64];
+    time_t timer;
+    struct tm * date;
+
+    date = localtime(&timer);
+    #ifdef MPIMODE
+    if(modep->parallel_mode == ON) {
+        sprintf(time_data,"log_data/%d.%d.%d_%d.%d.%d",lnp[0], lnp[1], lnp[2], lnp[3], lnp[4], lnp[5]);
+    }
+    #else
+    strftime(time_data, 63, "log_data/%Y.%m.%d_%H.%M.%S",date);
+    #endif
+
+    if(get_process_number() < 10) {
+        sprintf(logfilename, "%s.node0%d.log",time_data,get_process_number());
+    }
+    else {
+        sprintf(logfilename, "%s.node%d.log",time_data,get_process_number());
+    }
 }

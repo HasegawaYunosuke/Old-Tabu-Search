@@ -64,11 +64,9 @@ void set_mode(void);
 void set_solution_data_flag(void);
 int get_solution_data_flag(void);
 double get_all_cost_by_graph(int * solution_path);
-double get_all_cost_by_euclid(int * solution_path);
 double get_best_cost(void);
 int now_index(int target, int maximum);
 int * mallocer_ip(int size);
-
 void set_counter(void);
 int * get_ga_solution_path(void);
 void set_ga_solution_path(int * solution_path);
@@ -77,6 +75,7 @@ void set_start_time(time_t start_time);
 time_t get_start_time(void);
 
 #ifdef MPIMODE
+void init_send_final_data(int * send_data, int send_data_num);
 void initialize_share_tabulist(void);
 void create_readers_list(void);
 int * get_readers_list(void);
@@ -392,6 +391,29 @@ int get_group_reader(void)
 int get_MPI_group_data(void)
 {
     return parameterp->MPI_group;
+}
+
+void init_send_final_data(int * send_data, int send_data_num)
+{
+    int i;
+
+    /* del st */
+    if(send_data_num != 8) {
+        error_procedure("init_send_final_data()");
+    }
+    /* del en */
+    else {
+        /* send_data[] = {ProcNum, GroupNum, BestCost, SearchCount, TurnCount, Local/ShareTabuListNum} */
+        send_data[0] = get_process_number();
+        send_data[1] = get_MPI_group_data();
+        send_data[2] = (int)(get_best_cost() * 10);
+
+        /* del st */
+        for(i = 3; i < send_data_num; i++) {
+            send_data[i] = 0;
+        }
+        /* del en */
+    }
 }
 
 int get_all_MPI_group_data(void)
@@ -874,18 +896,6 @@ double get_all_cost_by_graph(int * cities)
 
         all_cost += get_graph_cost(cities[now], cities[next]);
     }
-
-    return all_cost;
-}
-
-double get_all_cost_by_euclid(int * cities)
-{
-    int tsp_size = cities[0];
-    double all_cost = 0;
-
-    /* DEL ST */
-    error_procedure("get_all_cost_by_euclid() is non-avairable");
-    /* DEL EN */
 
     return all_cost;
 }

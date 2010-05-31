@@ -114,14 +114,13 @@ int * two_opt_tabu(int * solution_path)
     /* (1) First, this fucn exchange branch by "2-opt" only toward better without using tabu-list */
     if(get_tabu_mode() == OFF) {
         solution_path = two_opt_only(solution_path);
-
         if(check_manneri(SHORTMODE) == YES) {
             set_tabu_mode(ON);
         }
     }
     /* (2) Second, permit exchange toward worse, and use tabu-list */
     else {
-        if(turn_loop_times(READONLY) % 3 == 0) {
+        if(turn_loop_times(READONLY) % 2 == 0) {
             solution_path = two_opt_only(solution_path);
         }
         else {
@@ -150,7 +149,6 @@ int * two_opt_only(int * solution_path)
     int indexs[4];
 
     get_min_exchange_indexs(solution_path, indexs);
-
     exchange_branch(solution_path, indexs);
 
     return solution_path;
@@ -201,7 +199,6 @@ void choice_4indexs(int type, int * return_data, int * solution_path)
     /* 'type-Default' means just-randomly choice */
     if(type == DEFAULT) {
         a = random_num(max);
-
         do {
             b = random_num(max);
         } while(b == prev_index(a, max) || b == a || b == next_index(a, max));

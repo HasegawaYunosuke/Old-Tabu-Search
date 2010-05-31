@@ -16,6 +16,7 @@ int get_tsp_size(void);
 int get_num_of_all_proc(void);
 int get_process_number(void);
 int get_MPI_group_data(void);
+void MPI_final_result_show(FILE * fp, int * recv_data, int send_data_num);
 char * get_process_name(void);
 int * get_solution_path(void);
 double get_all_cost_by_graph(int * cities);
@@ -82,6 +83,45 @@ void final_result_show(FILE * fp)
     fprintf(fp, "<---Active Modes\n");
     fprintf(fp, "*******************************************************\n");
 }
+
+#ifdef MPIMODE
+void MPI_final_result_show(FILE * fp, int * recv_data, int send_data_num)
+{
+    int i;
+    int min_dis = recv_data[2];
+    int min_proc = recv_data[0];
+
+    fprintf(fp, "*******************************************************\n");
+    fprintf(fp, "TSP Size:%5d\n",get_tsp_size());
+    fprintf(fp, "All Proces Num:%2d\n",get_num_of_all_proc());
+    fprintf(fp, "Running Time:%f\n",get_time());
+    fprintf(fp, "(ProcNum, GroupNum, BestCost)--->\n");
+    for(i = 0; i < get_num_of_all_proc(); i++) {
+        if(min_dis > recv_data[i * send_data_num + 2]) {
+            min_proc = recv_data[i * send_data_num];
+            min_dis = recv_data[i * send_data_num + 2];
+        }
+    }
+    for(i = 0; i < get_num_of_all_proc(); i++) {
+        if(i != min_proc) {
+            fprintf(fp, "  (PN, GN, BC) == (%2d, %d, %.1f)\n",
+                recv_data[i * send_data_num],
+                recv_data[i * send_data_num + 1],
+                (double)recv_data[i * send_data_num + 2] / 10);
+        }
+        else {
+            fprintf(fp, "* (PN, GN, BC) == (%2d, %d, %.1f)\n",
+                recv_data[i * send_data_num],
+                recv_data[i * send_data_num + 1],
+                (double)recv_data[i * send_data_num + 2] / 10);
+        }
+    }
+    fprintf(fp, "\nActive Modes--->\n");
+    show_mode(fp);
+    fprintf(fp, "<---Active Modes\n");
+    fprintf(fp, "*******************************************************\n");
+}
+#endif
 
 void show_mode(FILE * fp)
 {

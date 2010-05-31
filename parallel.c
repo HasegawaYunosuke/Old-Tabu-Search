@@ -64,6 +64,7 @@ int * get_tabulist_data_buffer(void);
 void copy_to_share_tabulist(void);
 int * get_send_tabulist(void);
 int get_num_of_addtion_to_share_tabulist(int tsp_size);
+void free_tabu_share(void);
 /* DEL ST */
 void check_send_data(int * send_data, int send_num);
 void show_saved_other_sol(void);
@@ -172,7 +173,7 @@ void group_reader_recv(int * argument)
         case SOL_PATH_SHARE:
             for(;;) {
                 if(get_all_search_is_done() == YES) {
-                    exit(0);
+                    return;
                 }
                 MPI_Iprobe(MPI_ANY_SOURCE, GROUP_SOLUTION, MPI_COMM_WORLD, &recvbuff_flag, &stat);
                 if(recvbuff_flag == 1) {
@@ -192,7 +193,8 @@ void group_reader_recv(int * argument)
         case TABU_LIST_SHARE:
             for(;;) {
                 if(get_all_search_is_done() == YES) {
-                    exit(0);
+                    free_tabu_share();
+                    return;
                 }
                 MPI_Iprobe(MPI_ANY_SOURCE, GROUP_SOLUTION, MPI_COMM_WORLD, &recvbuff_flag, &stat);
                 if(recvbuff_flag == 1) {
@@ -402,7 +404,7 @@ void best_MPI_recv(int * recv_process_number)
 
     for(;;) {
         if(get_all_search_is_done() == YES) {
-            exit(0);
+            return;
         }
         MPI_Iprobe(MPI_ANY_SOURCE, BEST_SOLUTION, MPI_COMM_WORLD, &recvbuff_flag, &stat);
         if(recvbuff_flag == 1) {
@@ -715,11 +717,12 @@ int get_all_search_is_done(void)
 
 void parallel_finalize(void)
 {
-    MPI_Barrier(MPI_COMM_WORLD);
-    MPI_Barrier(MPI_COMM_WORLD);
+
     MPI_Barrier(MPI_COMM_WORLD);
     MPI_Finalize();
+
     free(get_other_solution_path_data());
     free(get_same_group_list());
+    //free_tabu_share();
 }
 
