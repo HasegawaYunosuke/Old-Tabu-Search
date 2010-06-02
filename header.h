@@ -5,6 +5,7 @@
 //#define CROSSOVER_BEF_AFT
 #define SEND_AMONGGROUP
 #define NO_TWOOPTONLY       /* NO_TWOOPTONLY available in case of MPI*/
+#define ORDER_GA            /* Better GA (Pole's examination) */
 
 /* include files */
 #include <stdio.h>

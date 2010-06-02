@@ -92,8 +92,11 @@ void ga_procedure(int * solution_path, int * solution_path_b, int * solution_pat
             #endif
 
             /* Choose way of crossover */
-            //order_one_cross(solution_path, solution_path_b);
+            #ifdef ORDER_GA
+            order_one_cross(solution_path, solution_path_b);
+            #else
             pmx_one_cross(solution_path, solution_path_b);
+            #endif
 
             /* Output after crossover path */
             #ifdef CROSSOVER_BEF_AFT
