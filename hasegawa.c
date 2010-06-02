@@ -43,10 +43,8 @@ int not_found_looping(int * cities, int * indexs, int type);
 void set_middle_mannneri(int on_or_off);
 #ifdef MPIMODE
 int is_2opt_share_tabu(int * cities1);
-    #ifdef NO_TWOOPTONLY
 int get_group_reader(void);
 int get_process_number(void);
-    #endif
 #endif
 
 int * hasegawa_search(int * solution_path)
@@ -115,11 +113,19 @@ int * two_opt_tabu(int * solution_path)
     int indexs[4], cities[4];
     int loop_times = 0;
 
-    #ifdef NO_TWOOPTONLY
-        #ifdef MPIMODE
+    #ifdef MPIMODE
+        #ifdef NONLEADER_NOT_USE_TWOOPTONLY
         if(get_group_reader() != get_process_number()) {
             set_tabu_mode(ON);
         }
+        #endif
+        #ifdef LEADER_NOT_USE_TWOOPTONLY
+        if(get_group_reader() == get_process_number()) {
+            set_tabu_mode(ON);
+        }
+        #endif
+        #ifdef BOTH_NOT_USE_TWOOPTONLY
+        set_tabu_mode(ON);
         #endif
     #endif
 
