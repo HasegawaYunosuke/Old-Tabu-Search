@@ -1,7 +1,7 @@
 /* #define MPIMODE */
 #define LINUXUSER
-#define DEBUG
-#define POLEDEBUG
+//#define DEBUG
+//#define POLEDEBUG
 //#define CROSSOVER_BEF_AFT
 #define SEND_AMONGGROUP
 

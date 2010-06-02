@@ -32,6 +32,10 @@ void open_loging_other_sol_path(void);
 #ifdef CROSSOVER_BEF_AFT
 void open_loging_x_sol_path(void);
 #endif
+
+/* grobal variable */
+pthread_t * MPI_recv_thread;
+
 void initialize(int argc, char ** argv)
 {
     int i;
@@ -40,7 +44,6 @@ void initialize(int argc, char ** argv)
     int * main_base_data;
     int * other_list;
     double * graph_data;
-    pthread_t * MPI_recv_thread;
 
     /* comand-line short option check */
     option_checker(argc, argv);
@@ -63,6 +66,7 @@ void initialize(int argc, char ** argv)
         pthread_create(&visual_thread, NULL, (void *) visualizer, (void *) &visual_arg);
     }
 
+    /* Communication among Group */
     #ifdef MPIMODE
     if(modep->parallel_mode == ON) {
         MPI_Init(&argc, &argv);
@@ -106,6 +110,11 @@ void initialize(int argc, char ** argv)
         }
         #endif
     #endif
+}
+
+void free_MPI_recv_thread(void)
+{
+    free(MPI_recv_thread);
 }
 
 double * make_graph(int * main_base_data)

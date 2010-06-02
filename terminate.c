@@ -5,8 +5,6 @@
 int search_is_done(int type);
 int loop_terminate(void);
 void turn_terminated_show(void);
-void turn_terminated_by_time_show(void);
-void search_terminated_by_time_show(void);
 int search_terminate(void);
 int turn_loop_times(int type);
 int search_loop_times(int type);
@@ -36,11 +34,9 @@ int loop_terminate(void)
         }
     }
     if(timer(CHECK) == OFF) {
-        if(modep->pole_mode == OFF)
-            {
+        if(modep->pole_mode == OFF) {
             turn_loop_times(INIT);
-            }
-        turn_terminated_by_time_show();
+        }
         return_num = YES;
     }
 
@@ -54,12 +50,10 @@ int search_terminate(void)
     if(timer(CHECK) == OFF) {
         if(modep->visual_mode == ON) {
             tell_terminate_to_visualize();
-            //pthread_join(visual_thread, NULL);
         }
         if(modep->parallel_mode == ON) {
             tell_terminate_to_parallel();
         }
-        search_terminated_by_time_show();
         return_num = YES;
         search_is_done(INIT);
     }

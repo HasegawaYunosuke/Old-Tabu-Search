@@ -7,6 +7,7 @@ int tabulist_counter(int field_type, int use_type);
 void mannneri_initialize(void);
 int search_is_done(int type);
 void set_parameter_data(int num_of_all_proc, int process_number, int name_length, char * process_name);
+void free_parameterp(void);
 int get_num_of_all_proc(void);
 int get_process_number(void);
 int get_name_length(void);
@@ -185,6 +186,7 @@ void initial_parameter(int tsp_size)
     mannneri_initialize();
 
     create_historys();
+
     /* create tabu list for 2-opt (only first procedure) */
     if(modep->tabu2opt_mode == ON) {
         create_2opt_tabulist(get_tsp_size(), INIT);
@@ -194,6 +196,27 @@ void initial_parameter(int tsp_size)
         }
 #endif
     }
+}
+
+void free_parameterp(void)
+{
+    free(parameterp->main_base_data);
+    free(parameterp->graph_data);
+    free(parameterp->solution_path);
+    free(parameterp->best_solution_path);
+#ifdef MPIMODE
+    if(modep->parallel_mode == ON) {
+        free(parameterp->other_solution_path);
+        free(parameterp->other_group_path);
+        free(parameterp->same_group_list);
+        free(parameterp->process_name);
+        free_merge_branchs();
+        if(modep->pole_mode == ON) {
+            free(parameterp->ga_solution_path);
+        }
+    }
+#endif
+    free(parameterp);
 }
 
 /* set all modes to OFF */

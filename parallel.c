@@ -193,7 +193,6 @@ void group_reader_recv(int * argument)
         case TABU_LIST_SHARE:
             for(;;) {
                 if(get_all_search_is_done() == YES) {
-                    free_tabu_share();
                     return;
                 }
                 MPI_Iprobe(MPI_ANY_SOURCE, GROUP_SOLUTION, MPI_COMM_WORLD, &recvbuff_flag, &stat);
@@ -717,12 +716,7 @@ int get_all_search_is_done(void)
 
 void parallel_finalize(void)
 {
-
     MPI_Barrier(MPI_COMM_WORLD);
     MPI_Finalize();
-
-    free(get_other_solution_path_data());
-    free(get_same_group_list());
-    //free_tabu_share();
 }
 

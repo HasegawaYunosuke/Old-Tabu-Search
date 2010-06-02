@@ -41,10 +41,10 @@ void initial_path(void)
 }
 /* global variable */
 int create_mode = DEFAULT;
-int * return_data;
 
 int * initial_graph_path(double * graph_data)
 {
+    int * return_data;
     int malloc_size = (int)graph_data[0];
     int create_mode = DEFAULT;
 
@@ -61,7 +61,7 @@ int * initial_graph_path(double * graph_data)
     create_mode = decide_create_mode();
 #endif
 
-    /* create the initial path */
+    /* create the initial path (DEAFAULT is Nearest-Neighbor) */
     return_data = create_graph_path(return_data, graph_data, create_mode);
 
     return return_data;
@@ -178,9 +178,6 @@ int * create_graph_path(int * return_data, double * graph_data, int create_mode)
                 min_distance = DBL_MAX;
                 now_city = mini_index;
             }
-            #ifdef DEBUG
-            //loging_initial_path(return_data, create_mode);
-            #endif
             break;
     }
 

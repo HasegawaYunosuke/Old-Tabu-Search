@@ -7,8 +7,6 @@ void increase_test(void);
 /* functions */
 int num_counter(int field_type, int use_type);
 void turn_terminated_show(void);
-void turn_terminated_by_time_show(void);
-void search_terminated_by_time_show(void);
 void final_result_show(FILE * fp);
 void show_mode(FILE *);
 void show_on_off(FILE *, int on_off, char * buffer);
@@ -33,24 +31,6 @@ void turn_terminated_show(void)
     /* DEL ST */
     if(modep->parallel_mode != YES) {
         //printf("Turn is terminated by turn_loop_times()\n");
-    }
-    /* DEL EN */
-}
-
-void turn_terminated_by_time_show(void)
-{
-    /* DEL ST */
-    if(modep->parallel_mode != YES) {
-       // printf("Turn is terminated by timer()\n");
-    }
-    /* DEL EN */
-}
-
-void search_terminated_by_time_show(void)
-{
-    /* DEL ST */
-    if(modep->parallel_mode != YES) {
-       // printf("Search is terminated by timer()\n");
     }
     /* DEL EN */
 }

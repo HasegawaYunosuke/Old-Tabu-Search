@@ -15,6 +15,8 @@ int * mallocer_ip(int size);
 int search_loop_times(int type);
 void create_filename(char * logfilename);
 void free_tabu(void);
+void free_parameterp(void);
+void free_historyp(void);
 
 #ifdef MPIMODE
 void parallel_finalize(void);
@@ -23,6 +25,8 @@ void set_logfile_name(int * buffer, int element_num);
 int get_process_number(void);
 int get_num_of_all_proc(void);
 void init_send_final_data(int * send_data, int send_data_num);
+void free_tabu_share(void);
+void free_MPI_recv_thread(void);
 #endif
 #ifdef DEBUG
 void close_loging_initial_path(void);
@@ -58,17 +62,16 @@ void finalize(void)
     close_loging_x_sol_path();
     #endif
 
-    free(get_main_base_data());
-    free(get_parameterp());
-    free(get_graph_data());
-    free_tabu();
-    mannneri_finalize();
-
+    //mannneri_finalize();
+    //free_historyp();
+    //free_tabu();
     #ifdef MPIMODE
     if(modep->parallel_mode == ON) {
-        parallel_finalize();
+        //free_MPI_recv_thread();
+        //parallel_finalize();
     }
     #endif
+    //free_parameterp();
 }
 
 void set_logfile_name(int * buffer, int element_num)

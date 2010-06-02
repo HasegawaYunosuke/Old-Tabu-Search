@@ -36,6 +36,7 @@ void insert_newest(int newest, int oldest);
 void set_newest_data(int index);
 int check_fill(void);
 int check_historical_similar(void);
+void free_historyp(void);
 
 /* grobal variable */
 struct history * historyp;
@@ -226,4 +227,9 @@ int many_sames(int same)
     else {
         return NO;
     }
+}
+
+void free_historyp(void)
+{
+    free(historyp);
 }

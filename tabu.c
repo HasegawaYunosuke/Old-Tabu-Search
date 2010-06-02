@@ -206,6 +206,11 @@ void free_tabu(void)
     for(i = 0; i < 4; i++) {
         free(tabulist_2opt[i]);
     }
+#ifdef MPIMODE
+    if(get_group_reader() == get_process_number()) {
+        free_tabu_share();
+    }
+#endif
 }
 
 #ifdef MPIMODE
