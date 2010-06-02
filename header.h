@@ -4,6 +4,7 @@
 //#define POLEDEBUG
 //#define CROSSOVER_BEF_AFT
 #define SEND_AMONGGROUP
+#define NO_TWOOPTONLY       /* NO_TWOOPTONLY available in case of MPI*/
 
 /* include files */
 #include <stdio.h>
