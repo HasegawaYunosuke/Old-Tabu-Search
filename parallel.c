@@ -716,7 +716,7 @@ int get_all_search_is_done(void)
 
 void parallel_finalize(void)
 {
-    MPI_Barrier(MPI_COMM_WORLD);
+    //MPI_Barrier(MPI_COMM_WORLD);
     MPI_Finalize();
 }
 

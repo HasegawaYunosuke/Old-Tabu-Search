@@ -25,7 +25,6 @@ void set_logfile_name(int * buffer, int element_num);
 int get_process_number(void);
 int get_num_of_all_proc(void);
 void init_send_final_data(int * send_data, int send_data_num);
-void free_tabu_share(void);
 void free_MPI_recv_thread(void);
 #endif
 #ifdef DEBUG
@@ -62,16 +61,16 @@ void finalize(void)
     close_loging_x_sol_path();
     #endif
 
-    //mannneri_finalize();
-    //free_historyp();
-    //free_tabu();
+    mannneri_finalize();
+    free_historyp();
+    free_tabu();
     #ifdef MPIMODE
     if(modep->parallel_mode == ON) {
-        //free_MPI_recv_thread();
-        //parallel_finalize();
+        free_MPI_recv_thread();
+        parallel_finalize();
     }
     #endif
-    //free_parameterp();
+    free_parameterp();
 }
 
 void set_logfile_name(int * buffer, int element_num)
