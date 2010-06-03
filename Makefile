@@ -32,6 +32,6 @@ mpi:
 	cat header.h | grep -v "define MPIMODE" >> header.buf
 	mv header.buf header.h
 	rm *.o
-	cp mpi.exe mpi1.v4.exe
-	cp mpi.exe mpi2.v4.exe
-	cp mpi.exe mpi3.v4.exe
+	cp mpi.exe mpi1.v4db.exe
+	cp mpi.exe mpi2.v4db.exe
+	cp mpi.exe mpi3.v4db.exe

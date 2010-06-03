@@ -41,6 +41,7 @@ void initialize_matched(int * matched);
 int * get_matchedA(void);
 int * get_matchedB(void);
 void get_route_by_matched(int * sol_path, int * matchedB, int * temp_path);
+void get_startpoint_by_matched(int * sol_path, int * matchedB, int * temp_path, int * starti_and_maximum);
 void initialize_leftovers_path(int * sol_path, int maximum, int * used_cities);
 double * get_graph_data(void);
 int check_manneri(int type);
@@ -64,6 +65,7 @@ int * get_tabulist_data_buffer(void);
 void copy_to_share_tabulist(void);
 int * get_send_tabulist(void);
 int get_num_of_addtion_to_share_tabulist(int tsp_size);
+int get_orderGA_start_point(int * sol_path, int * other_sol, int choice, int * starti_and_maximum);
 void free_tabu_share(void);
 /* DEL ST */
 void check_send_data(int * send_data, int send_num);
@@ -506,6 +508,41 @@ void merge_route(int * sol_path, int * other_sol, int choice)
     /* Substitute merged data into "sol_path" mainly based other_sol,
        and make initial-path by something method (now, NB) */
     get_route_by_matched(sol_path, get_matchedB(), temp_path);
+}
+
+int get_orderGA_start_point(int * sol_path, int * other_sol, int choice, int * starti_and_maximum)
+{
+    int * branchsA = get_branchA();
+    int * branchsB = get_branchB();
+    int * temp_path = get_temp_path();
+
+    /* Adjust the basic-data (other_sol) to merge-formatted-data (temp_path) */
+    adjust_branchs(branchsB, other_sol, temp_path, choice);
+    /* Substitute city-num of basic-data ([sol|temp]_path)
+       into branchs-formatted-array (branchs[A|B]) */
+    set_branch_data(branchsA, sol_path); set_branch_data(branchsB, temp_path);
+    sort_branch_data(branchsA); sort_branch_data(branchsB);
+    /* Check each branches-formatted-data wheater Match or Not-Match */
+    check_matching(branchsA, branchsB);
+    get_startpoint_by_matched(sol_path, get_matchedB(), temp_path, starti_and_maximum);
+}
+
+void get_startpoint_by_matched(int * sol_path, int * matchedB, int * temp_path, int * starti_and_maximum)
+{
+    int i, start_i;
+    int maximum = 0;
+    int max_i = 0;
+    int size = get_tsp_size();
+
+    /* Get the maximum-num of the part of match-array */
+    how_long_matched(&maximum, &max_i, matchedB, size);
+
+#ifdef DEBUG
+    figure_of_match_num(maximum);
+#endif
+
+    start_i = max_i + 1 - maximum;
+    starti_and_maximum[0] = start_i; starti_and_maximum[1] = maximum;
 }
 
 void how_long_matched(int * maximum, int * max_i, int * matchedB, int size)
