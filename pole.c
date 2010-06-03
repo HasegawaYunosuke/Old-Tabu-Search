@@ -33,6 +33,7 @@ void initialize_history(void);
 void set_have_been_mid_mode(void);
 int check_other_solution_path_data(int *other_sol_path);
 void transform_solution_path(int * other_solution_path, int * return_path);
+int get_orderGA_start_point(int * sol_path, int * other_sol, int choice, int * starti_and_maximum);
 
 #ifdef CROSSOVER_BEF_AFT
 void output_x_sol_path(int *path_a, int *path_b, int before_after);
@@ -167,31 +168,41 @@ int *order_one_cross(int * init_path_a, int * init_path_b)
     double * graph_data = get_graph_data();
     int i, j;
     int tsp_size = graph_data[0];
-
     int path_a[tsp_size];
     int path_b[tsp_size];
     int path_c[tsp_size];
     int path_d[tsp_size];
+    int starti_and_maximum[2];
+
  //    int *child;   
 //    child = mallocer_ip(tsp_size + 1);
 //    child[0] = tsp_size;
+int start_point = rand() % (tsp_size - 1);
 
-    int start_point = rand() % (tsp_size - 1);
+    #ifdef MPIMODE
+        #ifdef MERGE_GA
+        get_orderGA_start_point(sol_path, other_sol,choice, starti_and_maximum);
+        if((starti_and_maximum[0] + GA_CROSS_POINT) < tsp_size) {
+            start_point = starti_and_maximum[0];
+        }
+        #endif
+    #endif
 
     j = 0;
 
     for(i = start_point; i < tsp_size; i++) {
         path_a[j] = init_path_a[i + 1];
         j++;
-        }
+    }
 
     for(i = 0; i != start_point; i++) {
         path_a[j] = init_path_a[i + 1];
         j++;
     }
 
-    for(i = 0; i< tsp_size; i++)
+    for(i = 0; i< tsp_size; i++) {
         path_b[i] = init_path_b[i + 1];
+    }
 //    for(i = 0; i< tsp_size; i++) 
 //        child[i + 1] = path_a[i];
     path_to_order(path_a, graph_data);
@@ -200,14 +211,22 @@ int *order_one_cross(int * init_path_a, int * init_path_b)
     int cross_point = /*rand() %*/ (/*tsp_size*/ GA_CROSS_POINT);
     cross_point = tsp_size - cross_point - 1;
 
+    #ifdef MPIMODE
+        #ifdef MERGE_GA
+        if((starti_and_maximum[0] + starti_and_maximum[1]) < tsp_size) {
+            cross_point = starti_and_maximum[0] + starti_and_maximum[1];
+        }
+        #endif
+    #endif
+
     for (i = 0; i < cross_point; i++){
-    path_c[i] = path_a[i];
-    path_d[i] = path_b[i];
+        path_c[i] = path_a[i];
+        path_d[i] = path_b[i];
     }
 
     for (i = cross_point; i < tsp_size; i++){
-    path_c[i] = path_b[i];
-    path_d[i] = path_a[i];
+        path_c[i] = path_b[i];
+        path_d[i] = path_a[i];
     }
 
     order_to_path(path_c, graph_data);
