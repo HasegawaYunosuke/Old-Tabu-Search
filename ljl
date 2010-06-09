@@ -1,0 +1,101 @@
+diff --git a/Makefile b/Makefile
+index 2e938a1..d073c55 100644
+--- a/Makefile
++++ b/Makefile
+@@ -32,6 +32,3 @@ mpi:
+ 	cat header.h | grep -v "define MPIMODE" >> header.buf
+ 	mv header.buf header.h
+ 	rm *.o
+-	cp mpi.exe mpi1.v4db.exe
+-	cp mpi.exe mpi2.v4db.exe
+-	cp mpi.exe mpi3.v4db.exe
+diff --git a/hasegawa.c b/hasegawa.c
+index efd3046..116e31e 100644
+--- a/hasegawa.c
++++ b/hasegawa.c
+@@ -138,7 +138,7 @@ int * two_opt_tabu(int * solution_path)
+     }
+     /* (2) Second, permit exchange toward worse, and use tabu-list */
+     else {
+-        if(turn_loop_times(READONLY) % 2 == 0) {
++        if(turn_loop_times(READONLY) % 4 != 0) {
+             solution_path = two_opt_only(solution_path);
+         }
+         else {
+diff --git a/header.h b/header.h
+index 6802888..7bbf16f 100644
+--- a/header.h
++++ b/header.h
+@@ -5,11 +5,11 @@
+ //#define CROSSOVER_BEF_AFT
+ #define SEND_AMONGGROUP
+ #define ORDER_GA            /* Better GA (Pole's examination) */
+-#define MERGE_GA
++//#define MERGE_GA
+ 
+-//#define NONLEADER_NOT_USE_TWOOPTONLY        /* !Only one choice! NONLEADER_NOT_USE_TWOOPTONLY available in case of MPI*/
++#define NONLEADER_NOT_USE_TWOOPTONLY        /* !Only one choice! NONLEADER_NOT_USE_TWOOPTONLY available in case of MPI*/
+ //#define BOTH_NOT_USE_TWOOPTONLY             /* !Only one choice! BOTH_NOT_USE_TWOOPTONLY available in case of MPI*/
+-#define LEADER_NOT_USE_TWOOPTONLY           /* !Only one choice! LEADER_NOT_USE_TWOOPTONLY available in case of MPI*/
++//#define LEADER_NOT_USE_TWOOPTONLY           /* !Only one choice! LEADER_NOT_USE_TWOOPTONLY available in case of MPI*/
+ 
+ /* include files */
+ #include <stdio.h>
+diff --git a/initialize.c b/initialize.c
+index 94c318d..059fe6f 100644
+--- a/initialize.c
++++ b/initialize.c
+@@ -75,10 +75,7 @@ void initialize(int argc, char ** argv)
+         MPI_recv_thread = (pthread_t *)malloc(recv_thread_num * sizeof(pthread_t));
+         other_list = get_same_group_list();
+         for(i = 0; i < recv_thread_num; i++) {
+-            pthread_create(&MPI_recv_thread[i],
+-                            NULL,
+-                            (void *)best_MPI_recv,
+-                            (void *)&other_list[i]);
++            pthread_create(&MPI_recv_thread[i], NULL, (void *)best_MPI_recv, (void *)&other_list[i]);
+         }
+     }
+     #endif
+diff --git a/nohuprun.sh b/nohuprun.sh
+index 66c774a..6b3478f 100755
+--- a/nohuprun.sh
++++ b/nohuprun.sh
+@@ -1,8 +1,8 @@
+ #!/bin/bash
+ 
+ #ln -s  /home/share/pole/tsp.repo machinefile
+-scrun -group=machinefile,network=sctp -nodes=8x2 ./mpi1.v2db.exe -f tsp_data/rat575.tsp -l -m -p -t 10
+-sleep 5
+-scrun -group=machinefile,network=sctp -nodes=8x2 ./mpi1.v3db.exe -f tsp_data/rat575.tsp -l -m -p -t 10
+-sleep 5
+-scrun -group=machinefile,network=sctp -nodes=8x2 ./mpi1.v4db.exe -f tsp_data/rat575.tsp -l -m -p -t 10
++scrun -group=machinefile,network=sctp -nodes=8x2 ./mpi.exe -f tsp_data/rat575.tsp -l -m -p -t 7200
++#sleep 5
++#scrun -group=machinefile,network=sctp -nodes=8x2 ./mpi1.v3db.exe -f tsp_data/rat575.tsp -l -m -p -t 1800
++#sleep 5
++#scrun -group=machinefile,network=sctp -nodes=8x2 ./mpi1.v4db.exe -f tsp_data/rat575.tsp -l -m -p -t 1800
+diff --git a/parallel.c b/parallel.c
+index d608598..10d7a9d 100644
+--- a/parallel.c
++++ b/parallel.c
+@@ -412,10 +412,6 @@ void best_MPI_recv(int * recv_process_number)
+             /* Blocking Recv */
+             MPI_Recv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, BEST_SOLUTION, MPI_COMM_WORLD, &stat);
+ 
+-            /* Non-Blocking Recv (Low-Speed) */
+-            //MPI_Irecv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, BEST_SOLUTION, MPI_COMM_WORLD, &req);
+-            //MPI_Wait(&req, &stat);
+-
+             pthread_mutex_lock(&recv_sol_lock);
+             for(i = 0; i < element_num; i++) {
+                 other_sol_path[this_threads_index + i] = buffer[i];
+diff --git a/true_nohup.sh b/true_nohup.sh
+new file mode 100755
+index 0000000..6f4e75a
+--- /dev/null
++++ b/true_nohup.sh
+@@ -0,0 +1,3 @@
++#!/bin/bash
++
++./nohuprun.sh &

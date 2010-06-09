@@ -412,10 +412,6 @@ void best_MPI_recv(int * recv_process_number)
             /* Blocking Recv */
             MPI_Recv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, BEST_SOLUTION, MPI_COMM_WORLD, &stat);
 
-            /* Non-Blocking Recv (Low-Speed) */
-            //MPI_Irecv((void *)buffer, element_num, MPI_INT, MPI_ANY_SOURCE, BEST_SOLUTION, MPI_COMM_WORLD, &req);
-            //MPI_Wait(&req, &stat);
-
             pthread_mutex_lock(&recv_sol_lock);
             for(i = 0; i < element_num; i++) {
                 other_sol_path[this_threads_index + i] = buffer[i];

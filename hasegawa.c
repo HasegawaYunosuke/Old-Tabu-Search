@@ -138,7 +138,7 @@ int * two_opt_tabu(int * solution_path)
     }
     /* (2) Second, permit exchange toward worse, and use tabu-list */
     else {
-        if(turn_loop_times(READONLY) % 2 == 0) {
+        if(turn_loop_times(READONLY) % 4 != 0) {
             solution_path = two_opt_only(solution_path);
         }
         else {
