@@ -112,6 +112,7 @@ int * two_opt_tabu(int * solution_path)
 {
     int indexs[4], cities[4];
     int loop_times = 0;
+    int two_opt_probability = 2;
 
     #ifdef MPIMODE
         #ifdef NONLEADER_NOT_USE_TWOOPTONLY
@@ -138,7 +139,14 @@ int * two_opt_tabu(int * solution_path)
     }
     /* (2) Second, permit exchange toward worse, and use tabu-list */
     else {
-        if(turn_loop_times(READONLY) % 4 != 0) {
+#ifdef MPIMODE
+        if(get_group_reader() != get_process_number()) {
+            two_opt_probability = get_process_number() + 1;
+        }
+        if(turn_loop_times(READONLY) % two_opt_probability != 0) {
+#else
+        if(turn_loop_times(READONLY) % 2 != 0) {
+#endif
             solution_path = two_opt_only(solution_path);
         }
         else {

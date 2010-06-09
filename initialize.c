@@ -18,6 +18,7 @@ int * get_same_group_list(void);
 int get_all_MPI_group_data(void);
 int get_process_number(void);
 int get_group_reader(void);
+void free_MPI_recv_thread(void);
 #ifdef SEND_AMONGGROUP
 void group_reader_process(void);
 #endif
