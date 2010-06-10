@@ -49,6 +49,9 @@ int is_this_ok_same_group_list(int * list, int all_process);
 void how_long_matched(int * maximum, int * max_i, int * matchedB, int size);
 void group_reader_process(void);
 void create_readers_list(void);
+void MPI_same_group_tabulist_init(int recv_thread_num);
+void create_same_group_tabulist(int tsp_size);
+void insert_data_to_same_group_tabulist(double graph_data, int tsp_size);
 int * get_readers_list(void);
 void group_reader_recv(int * argument);
 void group_reader_send(int * type);
@@ -205,6 +208,15 @@ void group_reader_recv(int * argument)
                 usleep(100000);
             }
     }
+}
+
+void MPI_same_group_tabulist_init(int recv_thread_num)
+{
+    int tsp_size = get_tsp_size();
+    double * graph_data = get_graph_data();
+
+    create_same_group_tabulist(tsp_size);
+    insert_data_to_same_group_tabulist(graph_data, tsp_size);
 }
 
 void group_reader_send_thread(int type)
