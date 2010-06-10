@@ -26,6 +26,7 @@ int get_process_number(void);
 int get_num_of_all_proc(void);
 void init_send_final_data(int * send_data, int send_data_num);
 void free_MPI_recv_thread(void);
+void free_same_group_tabulist(void);
 #endif
 #ifdef DEBUG
 void close_loging_initial_path(void);
@@ -68,6 +69,7 @@ void finalize(void)
     if(modep->parallel_mode == ON) {
         free_MPI_recv_thread();
         parallel_finalize();
+        free_same_group_tabulist();
     }
     #endif
     free_parameterp();

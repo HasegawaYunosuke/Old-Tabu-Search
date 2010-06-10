@@ -24,11 +24,11 @@ void initialize_share_tabulist(void);
 void create_2opt_share_tabulist(void);
 void create_send_recv_tabulist(void);
 void create_same_group_tabulist(int tsp_size);
-void insert_data_to_same_group_tabulist(double graph_data, int tsp_size);
+void insert_data_to_same_group_tabulist(double * graph_data, int tsp_size);
 void graph_data_to_dis_of_selected_city_and_pre_cities(int tsp_size, double * graph_data, double * distance_of_selected_city, int * pre_sorted_cities);
 void bubble_sort(int tsp_size, double * distance_of_selected_city, int * pre_sorted_cities);
 void insert_data_to_near_cities(int selected_city, int * pre_sorted_cities);
-void free_same_group_tabulist(int tsp_size);
+void free_same_group_tabulist(void);
 int is_2opt_share_tabu(int * cities1);
 void add_2opt_share_tabulist(int * cities); /* It's only save the Other Group's tabulist */
 void add_2opt_send_tabulist(int * cities);
@@ -209,18 +209,19 @@ void create_same_group_tabulist(int tsp_size)
     }
 }
 
-void free_same_group_tabulist(int tsp_size)
+void free_same_group_tabulist(void)
 {
     int i;
+    int tsp_size = get_tsp_size();
 
     for(i = 0; i < tsp_size; i++) {
-        free(MPI_same_group_tabulistp[i].near_cities)
+        free(MPI_same_group_tabulistp[i].near_cities);
         free(MPI_same_group_tabulistp[i].visited_cities);
     }
     free(MPI_same_group_tabulistp);
 }
 
-void insert_data_to_same_group_tabulist(double graph_data, int tsp_size)
+void insert_data_to_same_group_tabulist(double * graph_data, int tsp_size)
 {
     int * pre_sorted_cities;
     double * distance_of_selected_city;
@@ -237,7 +238,6 @@ void insert_data_to_same_group_tabulist(double graph_data, int tsp_size)
         insert_data_to_near_cities(selected_city, pre_sorted_cities);
     }
 
-    free(sorted_cities);
     free(pre_sorted_cities);
     free(distance_of_selected_city);
 }

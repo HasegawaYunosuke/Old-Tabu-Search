@@ -51,7 +51,7 @@ void group_reader_process(void);
 void create_readers_list(void);
 void MPI_same_group_tabulist_init(int recv_thread_num);
 void create_same_group_tabulist(int tsp_size);
-void insert_data_to_same_group_tabulist(double graph_data, int tsp_size);
+void insert_data_to_same_group_tabulist(double * graph_data, int tsp_size);
 int * get_readers_list(void);
 void group_reader_recv(int * argument);
 void group_reader_send(int * type);
