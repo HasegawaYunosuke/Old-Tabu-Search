@@ -14,12 +14,12 @@ int * read_data(void);
 
 #ifdef MPIMODE
 void best_MPI_recv(int * recv_process_number);
-void MPI_same_group_tabulist_init(int recv_thread_num);
 int * get_same_group_list(void);
 int get_all_MPI_group_data(void);
 int get_process_number(void);
 int get_group_reader(void);
 void free_MPI_recv_thread(void);
+void MPI_same_group_tabulist_init(int recv_thread_num);
 #ifdef SEND_AMONGGROUP
 void group_reader_process(void);
 #endif
@@ -76,7 +76,9 @@ void initialize(int argc, char ** argv)
         recv_thread_num = get_all_MPI_group_data() - 1;
         MPI_recv_thread = (pthread_t *)malloc(recv_thread_num * sizeof(pthread_t));
         other_list = get_same_group_list();
+        #ifdef SAMEGROUP_COMUNICATION
         MPI_same_group_tabulist_init(recv_thread_num);
+        #endif
         for(i = 0; i < recv_thread_num; i++) {
             pthread_create(&MPI_recv_thread[i], NULL, (void *)best_MPI_recv, (void *)&other_list[i]);
         }

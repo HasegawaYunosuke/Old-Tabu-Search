@@ -45,6 +45,7 @@ void set_middle_mannneri(int on_or_off);
 int is_2opt_share_tabu(int * cities1);
 int get_group_reader(void);
 int get_process_number(void);
+void add_MPI_same_group_tabulist(int add_mode, int * add_data);
 #endif
 
 int * hasegawa_search(int * solution_path)
@@ -163,6 +164,11 @@ int * two_opt_tabu(int * solution_path)
             } while(permit_worse(bef_aft_distance(cities)) == NO || is_2opt_tabu(cities) == YES);
 #endif
             not_found_looping(cities, indexs, INIT);
+            #ifdef MPIMODE
+                #ifdef SAMEGROUP_COMUNICATION
+                add_MPI_same_group_tabulist(FOUR_CITIES, cities);
+                #endif
+            #endif
             exchange_branch(solution_path, indexs);
         }
     }

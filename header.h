@@ -6,6 +6,7 @@
 #define SEND_AMONGGROUP
 #define ORDER_GA            /* Better GA (Pole's examination) */
 //#define MERGE_GA
+#define SAMEGROUP_COMUNICATION
 
 #define NONLEADER_NOT_USE_TWOOPTONLY        /* !Only one choice! NONLEADER_NOT_USE_TWOOPTONLY available in case of MPI*/
 //#define BOTH_NOT_USE_TWOOPTONLY             /* !Only one choice! BOTH_NOT_USE_TWOOPTONLY available in case of MPI*/
@@ -59,6 +60,8 @@
 #define DOWNER 95
 #define TURN_COUNTER 100
 #define SEARCH_COUNTER 101
+#define INITIAL_PATH 102
+#define FOUR_CITIES 103
 #define MERGECREATE 300
 #define GROUPCREATE 301
 #define MPI_SENDADD 302

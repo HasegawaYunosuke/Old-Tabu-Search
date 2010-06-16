@@ -13,8 +13,6 @@ void show_on_off(FILE *, int on_off, char * buffer);
 int get_tsp_size(void);
 int get_num_of_all_proc(void);
 int get_process_number(void);
-int get_MPI_group_data(void);
-void MPI_final_result_show(FILE * fp, int * recv_data, int send_data_num);
 char * get_process_name(void);
 int * get_solution_path(void);
 double get_all_cost_by_graph(int * cities);
@@ -22,6 +20,11 @@ double get_best_cost(void);
 double get_time(void);
 int check_manneri(int type);
 
+#ifdef MPIMODE
+int get_MPI_group_data(void);
+void MPI_final_result_show(FILE * fp, int * recv_data, int send_data_num);
+void show_chart_of_all_proc_result(FILE * showfp, int * recv_data, int send_data_num, int min_proc);
+#endif
 #ifdef DEBUG
 int tabulist_counter(int field_type, int use_type);
 #endif
@@ -75,31 +78,57 @@ void MPI_final_result_show(FILE * fp, int * recv_data, int send_data_num)
     fprintf(fp, "TSP Size:%5d\n",get_tsp_size());
     fprintf(fp, "All Proces Num:%2d\n",get_num_of_all_proc());
     fprintf(fp, "Running Time:%f\n",get_time());
-    fprintf(fp, "(ProcNum, GroupNum, BestCost)--->\n");
     for(i = 0; i < get_num_of_all_proc(); i++) {
         if(min_dis > recv_data[i * send_data_num + 2]) {
             min_proc = recv_data[i * send_data_num];
             min_dis = recv_data[i * send_data_num + 2];
         }
     }
+    show_chart_of_all_proc_result(fp, recv_data, send_data_num, min_proc);
+    fprintf(fp, "\nActive Modes--->\n");
+    show_mode(fp);
+    fprintf(fp, "<---Active Modes\n");
+    fprintf(fp, "*******************************************************\n");
+}
+
+void show_chart_of_all_proc_result(FILE * showfp, int * recv_data, int send_data_num, int min_proc)
+{
+    int i;
+#ifdef SAMEGROUP_COMUNICATION
+    fprintf(showfp, "(ProcNum, GroupNum, BestCost, AddedTabu/All[%])--->\n");
     for(i = 0; i < get_num_of_all_proc(); i++) {
         if(i != min_proc) {
-            fprintf(fp, "  (PN, GN, BC) == (%2d, %d, %.1f)\n",
+            fprintf(showfp, "  (PN, GN, BC, T/A) == (%2d, %d, %.1f, %.1f\%)\n",
+                recv_data[i * send_data_num],
+                recv_data[i * send_data_num + 1],
+                (double)recv_data[i * send_data_num + 2] / 10,
+                (double)recv_data[i * send_data_num + 6] / 10);
+        }
+        else {
+            fprintf(showfp, "* (PN, GN, BC, T/A) == (%2d, %d, %.1f, %.1f\%)\n",
+                recv_data[i * send_data_num],
+                recv_data[i * send_data_num + 1],
+                (double)recv_data[i * send_data_num + 2] / 10,
+                (double)recv_data[i * send_data_num + 6] / 10);
+        }
+    }
+#else
+    fprintf(showfp, "(ProcNum, GroupNum, BestCost)--->\n");
+    for(i = 0; i < get_num_of_all_proc(); i++) {
+        if(i != min_proc) {
+            fprintf(showfp, "  (PN, GN, BC) == (%2d, %d, %.1f)\n",
                 recv_data[i * send_data_num],
                 recv_data[i * send_data_num + 1],
                 (double)recv_data[i * send_data_num + 2] / 10);
         }
         else {
-            fprintf(fp, "* (PN, GN, BC) == (%2d, %d, %.1f)\n",
+            fprintf(showfp, "* (PN, GN, BC) == (%2d, %d, %.1f)\n",
                 recv_data[i * send_data_num],
                 recv_data[i * send_data_num + 1],
                 (double)recv_data[i * send_data_num + 2] / 10);
         }
     }
-    fprintf(fp, "\nActive Modes--->\n");
-    show_mode(fp);
-    fprintf(fp, "<---Active Modes\n");
-    fprintf(fp, "*******************************************************\n");
+#endif
 }
 #endif
 

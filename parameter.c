@@ -76,6 +76,7 @@ void set_start_time(time_t start_time);
 time_t get_start_time(void);
 
 #ifdef MPIMODE
+double get_added_MPI_same_group_tabulist_per_all(void);
 void init_send_final_data(int * send_data, int send_data_num);
 void initialize_share_tabulist(void);
 void create_readers_list(void);
@@ -426,7 +427,8 @@ void init_send_final_data(int * send_data, int send_data_num)
     }
     /* del en */
     else {
-        /* send_data[] = {ProcNum, GroupNum, BestCost, SearchCount, TurnCount, Local/ShareTabuListNum} */
+        /* send_data[] = {ProcNum, GroupNum, BestCost, SearchCount, TurnCount,
+            Local/ShareTabuListNum, AddedSameGroupTabu/AllSpace} */
         send_data[0] = get_process_number();
         send_data[1] = get_MPI_group_data();
         send_data[2] = (int)(get_best_cost() * 10);
@@ -436,6 +438,8 @@ void init_send_final_data(int * send_data, int send_data_num)
             send_data[i] = 0;
         }
         /* del en */
+
+        send_data[6] = (int)(get_added_MPI_same_group_tabulist_per_all() * 10);
     }
 }
 

@@ -24,6 +24,7 @@ int decide_create_mode(void);
 int * get_merge_route(void);
 int * get_other_group_sol_path(void);
 void adjust_group_sol_to_return(int * all_path, int * return_data, int choice_index);
+void add_MPI_same_group_tabulist(int add_mode, int * add_data);
 #endif
 #ifdef DEBUG
 void loging_initial_path(int * path, int create_mode);
@@ -35,6 +36,11 @@ void initial_path(void)
 {
     /* create initial-path */
     set_solution_path(initial_graph_path(get_graph_data()));
+    #ifdef MPIMODE
+        #ifdef SAMEGROUP_COMUNICATION
+        add_MPI_same_group_tabulist(INITIAL_PATH, get_solution_path());
+        #endif
+    #endif
     if(modep->pole_mode == ON){
         set_ga_solution_path(initial_graph_path(get_graph_data()));
     }
