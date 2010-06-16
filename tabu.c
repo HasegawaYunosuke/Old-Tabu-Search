@@ -238,8 +238,19 @@ void add_MPI_same_group_tabulist(int add_mode, int * add_data)
     int data_size = get_tsp_size();
     int i, target_city, next_city;
 
-    if(add_mode == INITIAL_PATH) {
+    if(add_mode == SOL_PATH) {
         for(i = 1; i <= data_size; i++) {
+            if(i == data_size) {
+                target_city = add_data[i]; next_city = add_data[1];
+            }
+            else {
+                target_city = add_data[i]; next_city = add_data[i + 1];
+            }
+            add_branch_to_MPI_same_group_tabulist(target_city, next_city);
+        }
+    }
+    else if(add_mode == OTHER_SOL_PATH) {
+        for(i = 0; i < data_size; i++) {
             if(i == data_size) {
                 target_city = add_data[i]; next_city = add_data[1];
             }

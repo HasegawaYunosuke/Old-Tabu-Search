@@ -38,7 +38,7 @@ void initial_path(void)
     set_solution_path(initial_graph_path(get_graph_data()));
     #ifdef MPIMODE
         #ifdef SAMEGROUP_COMUNICATION
-        add_MPI_same_group_tabulist(INITIAL_PATH, get_solution_path());
+        add_MPI_same_group_tabulist(SOL_PATH, get_solution_path());
         #endif
     #endif
     if(modep->pole_mode == ON){

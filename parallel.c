@@ -15,6 +15,7 @@ int * get_other_solution_path_data(void);
 int get_num_of_all_proc(void);
 int get_process_number(void);
 int get_tsp_size(void);
+void add_MPI_same_group_tabulist(int add_mode, int * add_data);
 int get_all_MPI_group_data(void);
 int * get_same_group_list(void);
 char * get_process_name(void);
@@ -368,7 +369,7 @@ void best_MPI_send(void)
 
     if(check_manneri(FIRST_MIDDLEMODED) == YES) {
         /* DEL ST */
-        check_send_data(my_best_sol, element_num);
+        //check_send_data(my_best_sol, element_num);
         /* DEL EN */
 
         if(before_send_process_index >= (get_all_MPI_group_data() - 2)) {
@@ -428,6 +429,9 @@ void best_MPI_recv(int * recv_process_number)
             for(i = 0; i < element_num; i++) {
                 other_sol_path[this_threads_index + i] = buffer[i];
             }
+            #ifdef SAMEGROUP_COMUNICATION
+            add_MPI_same_group_tabulist(OTHER_SOL_PATH, buffer);
+            #endif
             pthread_mutex_unlock(&recv_sol_lock);
 
 #ifdef DEBUG
