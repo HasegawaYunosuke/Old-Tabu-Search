@@ -207,13 +207,13 @@ void create_same_group_tabulist(int tsp_size)
         MPI_same_group_tabulistp[str_city].visited_cities = mallocer_ip(tabulist_num + 1);
     }
 
-    /* initialize the data (city-number to ZERO, visited-city to NO, both array's [0] is tabulist_num) */
+    /* initialize the data (city-number and visited-city to ZERO, both array's [0] is tabulist_num) */
     for(str_city = 0; str_city <= tsp_size; str_city++) {
         MPI_same_group_tabulistp[str_city].near_cities[0] = tabulist_num;
         MPI_same_group_tabulistp[str_city].visited_cities[0] = tabulist_num;
         for(memb_city = 1; memb_city <= tabulist_num; memb_city++) {
-            MPI_same_group_tabulistp[str_city].near_cities[memb_city] = -1;
-            MPI_same_group_tabulistp[str_city].visited_cities[memb_city] = NO;
+            MPI_same_group_tabulistp[str_city].near_cities[memb_city] = 0;
+            MPI_same_group_tabulistp[str_city].visited_cities[memb_city] = 0;
         }
     }
 
@@ -274,11 +274,10 @@ void add_branch_to_MPI_same_group_tabulist(int target_city, int next_city)
     /* find out whether "next_city" is exist or not (target --> next, next --> target ) */
     for(j = 0; j < 2; j++) {
         for(i = 1; i <= list_size; i++) {
-            if((next_city == MPI_same_group_tabulistp[target_city].near_cities[i])
-                && (MPI_same_group_tabulistp[target_city].visited_cities[i] == NO)) {
-                    MPI_same_group_tabulistp[target_city].visited_cities[i] = YES;
-                    MPI_same_group_tabulist_counter.added_city_num++;
-                    break;
+            if(next_city == MPI_same_group_tabulistp[target_city].near_cities[i]) {
+                MPI_same_group_tabulistp[target_city].visited_cities[i]++;
+                MPI_same_group_tabulist_counter.added_city_num++;
+                break;
             }
         }
         /* swap "next_city" <---> "target_city" */
