@@ -27,6 +27,9 @@ int get_num_of_all_proc(void);
 void init_send_final_data(int * send_data, int send_data_num);
 void free_MPI_recv_thread(void);
 void free_same_group_tabulist(void);
+#ifdef SAMEGROUP_COMUNICATION_DEBUG
+void MPI_same_group_tabulist_output(char * logfilename);
+#endif
 #endif
 #ifdef DEBUG
 void close_loging_initial_path(void);
@@ -111,6 +114,12 @@ void output_log(void)
         final_result_show(fp);
         fclose(fp);
     }
+    #endif
+
+    #ifdef MPIMODE
+        #ifdef SAMEGROUP_COMUNICATION_DEBUG
+        MPI_same_group_tabulist_output(logfilename);
+        #endif
     #endif
 
     #ifdef MPIMODE

@@ -44,6 +44,9 @@ int get_send_recv_element_num(void);
 int get_num_of_addtion_to_share_tabulist(int tsp_size);
 int get_share_tabulist_2opt_index(void);
 void copy_to_share_tabulist(void);
+#ifdef SAMEGROUP_COMUNICATION_DEBUG
+void out_put_MPI_same_tabulist(FILE * fp);
+#endif
 #endif
 #ifdef DEBUG
 void tabu_matching_loging(int type);
@@ -275,8 +278,10 @@ void add_branch_to_MPI_same_group_tabulist(int target_city, int next_city)
     for(j = 0; j < 2; j++) {
         for(i = 1; i <= list_size; i++) {
             if(next_city == MPI_same_group_tabulistp[target_city].near_cities[i]) {
+                if(MPI_same_group_tabulistp[target_city].visited_cities[i] == 0) {
+                    MPI_same_group_tabulist_counter.added_city_num++;
+                }
                 MPI_same_group_tabulistp[target_city].visited_cities[i]++;
-                MPI_same_group_tabulist_counter.added_city_num++;
                 break;
             }
         }
@@ -357,6 +362,25 @@ double get_added_MPI_same_group_tabulist_per_all(void)
 
     return return_num;
 }
+#ifdef SAMEGROUP_COMUNICATION_DEBUG
+void out_put_MPI_same_tabulist(FILE * fp)
+{
+    int i, j;
+    int list_size = MPI_same_group_tabulistp[1].near_cities[0];
+    int tsp_size = get_tsp_size();
+
+    fprintf(fp,"+++ Same Group Tabu-List Debug-log +++\n\n");
+    fprintf(fp,"(near)<===============================\n");
+    for(i = 1; i <= tsp_size; i++) {
+        fprintf(fp,"str[%4d]'s ||", i);
+        for(j = 1; j <= list_size; j++) {
+            fprintf(fp,"%4d, ", MPI_same_group_tabulistp[i].visited_cities[j + 1]);
+        }
+        fprintf(fp,"\n");
+    }
+    fprintf(fp,"\n++++++++++++++++++++++++++++++++++++++\n");
+}
+#endif
 #endif
 
 int get_list_size(int tsp_size, int type)

@@ -39,6 +39,14 @@ void add_matched_num(void);
 void loging_tabu_matched(void);
 int * get_best_solution_path(void);
 int tabulist_counter(int field_type, int use_type);
+#endif
+#ifdef MPIMODE
+#ifdef SAMEGROUP_COMUNICATION_DEBUG
+void MPI_same_group_tabulist_output(char * logfilename);
+void out_put_MPI_same_tabulist(FILE * fp);
+#endif
+#endif
+#ifdef DEBUG
 
 #ifdef MPIMODE
 void figure_of_match_num(int matched_num);
@@ -147,6 +155,28 @@ void loging_tabu_matched(void)
     fprintf(debug_fp, "*** TABU-LIST matched debug END ***\n");
 }
 
+#endif
+#ifdef MPIMODE
+#ifdef SAMEGROUP_COMUNICATION_DEBUG
+void MPI_same_group_tabulist_output(char * baselogfilename)
+{
+    FILE * fp;
+    time_t timer;
+    struct tm * date;
+    char logfilename[256];
+
+    date = localtime(&timer);
+
+    sprintf(logfilename,"debug_log/%s",baselogfilename);
+    if((fp = fopen(logfilename, "w")) != NULL) {
+        out_put_MPI_same_tabulist(fp);
+        fclose(fp);
+    }
+
+}
+#endif
+#endif
+#ifdef DEBUG
 #ifdef MPIMODE
 #ifdef SEND_AMONGGROUP
 void loging_share_tabulist(void)
@@ -282,5 +312,4 @@ void close_loging_initial_path(void)
 {
     fclose(debug_fp);
 }
-
 #endif
