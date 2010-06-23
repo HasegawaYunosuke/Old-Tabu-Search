@@ -2,6 +2,7 @@
 #include "header.h"
 
 /* functions */
+int random_num(int maximum);
 int is_2opt_tabu(int * cities);
 void tabu_matching(int * cities);
 void add_2opt_tabulist(int * cities);
@@ -15,6 +16,14 @@ void free_tabu(void);
 int tabulist_counter(int field_type, int use_type);
 void set_tabu_clear_count(void);
 #ifdef MPIMODE
+int prev_city(int target, int maximum);
+int next_city(int target, int maximum);
+int get_smart_random_city(int maximum);
+int get_smart_city(int choiced_city);
+void set_L(void);
+int get_L(void);
+int get_y_by_i(int b, int a, int i);
+int get_MPI_group_data(void);
 int get_group_reader(void);
 int get_process_number(void);
 double get_added_MPI_same_group_tabulist_per_all(void);
@@ -74,11 +83,20 @@ pthread_mutex_t share_tabulist_lock;
 struct MPI_same_group_tabulist {
     int * near_cities;
     int * visited_cities;
+    int max_visited;
+    int max_index;
+    int smart_choice_num;
 };
 
 struct MPI_same_group_tabulist_counter {
     int all_list_num;
     int added_city_num;
+    int L;
+    /*DEL ST*/
+    int choice_nearest;
+    int choice_other;
+    int miss_num;
+    /*DEL EN*/
 };
 
 struct MPI_same_group_tabulist * MPI_same_group_tabulistp;
@@ -212,16 +230,29 @@ void create_same_group_tabulist(int tsp_size)
 
     /* initialize the data (city-number and visited-city to ZERO, both array's [0] is tabulist_num) */
     for(str_city = 0; str_city <= tsp_size; str_city++) {
+        MPI_same_group_tabulistp[str_city].max_visited = 0;
+        MPI_same_group_tabulistp[str_city].max_index = 0;
         MPI_same_group_tabulistp[str_city].near_cities[0] = tabulist_num;
         MPI_same_group_tabulistp[str_city].visited_cities[0] = tabulist_num;
         for(memb_city = 1; memb_city <= tabulist_num; memb_city++) {
             MPI_same_group_tabulistp[str_city].near_cities[memb_city] = 0;
             MPI_same_group_tabulistp[str_city].visited_cities[memb_city] = 0;
+            MPI_same_group_tabulistp[str_city].smart_choice_num = 0;
         }
     }
 
+    /* This parameter must be check! */
+    set_L();
+
     /* counter */
     MPI_same_group_tabulist_counter.all_list_num = tabulist_num * tsp_size;
+    MPI_same_group_tabulist_counter.added_city_num = 0;
+
+    /*DEL ST*/
+    MPI_same_group_tabulist_counter.choice_nearest = 0;
+    MPI_same_group_tabulist_counter.choice_other = 0;
+    MPI_same_group_tabulist_counter.miss_num = 0;
+    /*DEL EN*/
 }
 
 void free_same_group_tabulist(void)
@@ -271,7 +302,7 @@ void add_MPI_same_group_tabulist(int add_mode, int * add_data)
 
 void add_branch_to_MPI_same_group_tabulist(int target_city, int next_city)
 {
-    int list_size = MPI_same_group_tabulistp[target_city].near_cities[0];
+    int list_size = MPI_same_group_tabulistp[0].near_cities[0];
     int i, j, temp;
 
     /* find out whether "next_city" is exist or not (target --> next, next --> target ) */
@@ -282,6 +313,10 @@ void add_branch_to_MPI_same_group_tabulist(int target_city, int next_city)
                     MPI_same_group_tabulist_counter.added_city_num++;
                 }
                 MPI_same_group_tabulistp[target_city].visited_cities[i]++;
+                if(MPI_same_group_tabulistp[target_city].visited_cities[i] > MPI_same_group_tabulistp[target_city].max_visited) {
+                    MPI_same_group_tabulistp[target_city].max_visited = MPI_same_group_tabulistp[target_city].visited_cities[i];
+                    MPI_same_group_tabulistp[target_city].max_index = i;
+                }
                 break;
             }
         }
@@ -362,6 +397,87 @@ double get_added_MPI_same_group_tabulist_per_all(void)
 
     return return_num;
 }
+
+int get_smart_random_city(int maximum)
+{
+    int city;
+    int tsp_size = get_tsp_size();
+    int return_num = -1;
+
+    for(city = 1; city <= tsp_size; city++) {
+        if(MPI_same_group_tabulistp[city].max_index != 1) {
+            return_num = city;
+            break;
+        }
+    }
+
+    if(return_num < 0) {
+        return_num = random_num(maximum);
+    }
+
+    return return_num;
+}
+
+int get_smart_city(int choiced_city)
+{
+    int i, y, L = get_L();
+    int max = get_tsp_size();
+    int smart_next_city;
+
+    /*DEL ST*/
+    MPI_same_group_tabulistp[choiced_city].smart_choice_num++;
+    /*DEL EN*/
+
+    /* if the choiced city's nearest city haven't been visited */
+    if(MPI_same_group_tabulistp[choiced_city].max_index != 1) {
+        smart_next_city = MPI_same_group_tabulistp[choiced_city].near_cities[1];
+        if(smart_next_city != prev_city(choiced_city, max) && smart_next_city != next_city(choiced_city, max)) {
+            /*DEL ST*/
+            MPI_same_group_tabulist_counter.choice_nearest++;
+            /*DEL EN*/
+
+            return smart_next_city;
+        }
+    }
+
+    for(i = 2; i < L; i++) {
+        y = get_y_by_i(MPI_same_group_tabulistp[choiced_city].max_visited, L, i);
+        if(MPI_same_group_tabulistp[choiced_city].visited_cities[i] <= y) {
+            smart_next_city = MPI_same_group_tabulistp[choiced_city].near_cities[i];
+            if(smart_next_city != prev_city(choiced_city, max) && smart_next_city != next_city(choiced_city, max)) {
+                /*DEL ST*/
+                MPI_same_group_tabulist_counter.choice_other++;
+                /*DEL EN*/
+
+                return smart_next_city;
+            }
+        }
+    }
+
+    /*DEL ST*/
+    MPI_same_group_tabulist_counter.miss_num++;
+    /*DEL EN*/
+
+    return -1;
+}
+
+void set_L(void)
+{
+    double MPI_group = (double)get_MPI_group_data(); /* 0~ */
+    double list_size = (double)MPI_same_group_tabulistp[0].near_cities[0];
+
+    MPI_same_group_tabulist_counter.L = (int)(list_size * (MPI_group + 5) / 100);
+    if(MPI_same_group_tabulist_counter.L <= 2) {
+        MPI_same_group_tabulist_counter.L = 3;
+    }
+}
+
+/* 3~ */
+int get_L(void)
+{
+    return MPI_same_group_tabulist_counter.L;
+}
+
 #ifdef SAMEGROUP_COMUNICATION_DEBUG
 void out_put_MPI_same_tabulist(FILE * fp)
 {
@@ -370,11 +486,20 @@ void out_put_MPI_same_tabulist(FILE * fp)
     int tsp_size = get_tsp_size();
 
     fprintf(fp,"+++ Same Group Tabu-List Debug-log +++\n\n");
+    fprintf(fp,"(nearest:other) == (%d:%d), (near+oth:miss) == (%d:%d), L == %d\n",
+        MPI_same_group_tabulist_counter.choice_nearest, MPI_same_group_tabulist_counter.choice_other,
+        (MPI_same_group_tabulist_counter.choice_nearest + MPI_same_group_tabulist_counter.choice_other), MPI_same_group_tabulist_counter.miss_num,
+        get_L());
     fprintf(fp,"(near)<===============================\n");
     for(i = 1; i <= tsp_size; i++) {
-        fprintf(fp,"str[%4d]'s ||", i);
+        fprintf(fp,"str[%4d]'s ||max_visited%4d (index:%4d) || y == (%4d,%4d,%4d) || smart_choice == %4d|| ",
+            i, MPI_same_group_tabulistp[i].max_visited, MPI_same_group_tabulistp[i].max_index,
+            get_y_by_i(MPI_same_group_tabulistp[i].max_visited, get_L(), 1),
+            get_y_by_i(MPI_same_group_tabulistp[i].max_visited, get_L(), 2),
+            get_y_by_i(MPI_same_group_tabulistp[i].max_visited, get_L(), 3),
+            MPI_same_group_tabulistp[i].smart_choice_num);
         for(j = 1; j <= list_size; j++) {
-            fprintf(fp,"%4d, ", MPI_same_group_tabulistp[i].visited_cities[j + 1]);
+            fprintf(fp,"%4d, ", MPI_same_group_tabulistp[i].visited_cities[j]);
         }
         fprintf(fp,"\n");
     }

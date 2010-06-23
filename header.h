@@ -9,6 +9,8 @@
 #define SAMEGROUP_COMUNICATION
 #define SAMEGROUP_COMUNICATION_DEBUG
 
+#define DELDELDEL
+
 #define NONLEADER_NOT_USE_TWOOPTONLY        /* !Only one choice! NONLEADER_NOT_USE_TWOOPTONLY available in case of MPI*/
 //#define BOTH_NOT_USE_TWOOPTONLY             /* !Only one choice! BOTH_NOT_USE_TWOOPTONLY available in case of MPI*/
 //#define LEADER_NOT_USE_TWOOPTONLY           /* !Only one choice! LEADER_NOT_USE_TWOOPTONLY available in case of MPI*/
@@ -68,6 +70,7 @@
 #define GROUPCREATE 301
 #define MPI_SENDADD 302
 #define MPI_RECVADD 303
+#define SAMEGROUP_TABULIST_SMART_CHOICE 304
 
 /* macro parameter */
 #define TSPMAXSIZE 2000

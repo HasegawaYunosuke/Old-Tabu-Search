@@ -9,6 +9,7 @@ int get_num_of_addtion_to_local_tabulist(int tsp_size);
 //#ifdef SEND_AMONGGROUP
 int get_num_of_addtion_to_share_tabulist(int tsp_size);
 //#endif
+int get_y_by_i(int b, int a, int i);
 #endif
 
 double make_distance(int x1, int y1, int x2, int y2)
@@ -73,4 +74,19 @@ int get_num_of_addtion_to_share_tabulist(int tsp_size)
     return return_num;
 }
 //#endif
+int get_y_by_i(int b, int a, int i)
+{
+    double i2 = (double)(i*i);
+    double a2 = (double)(a*a);
+    int return_data;
+
+    return_data = (int)((double)b * sqrt(1.0 - i2/a2));
+
+    if(return_data <= 0) {
+        return 1;
+    }
+    else {
+        return return_data;
+    }
+}
 #endif
