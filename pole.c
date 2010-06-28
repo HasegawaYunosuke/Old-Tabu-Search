@@ -15,7 +15,6 @@ void order_to_path(int *, double *);
 double path_dinstance (int *, double *);
 double * get_graph_data(void);
 int * mallocer_ip(int size);
-int * create_graph_path(int * path, double * graph_data, int create_mode);
 int * graph_search(int * solution_path);
 int check_manneri(int type);
 void error_procedure(char * message);

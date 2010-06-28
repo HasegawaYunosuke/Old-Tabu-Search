@@ -20,6 +20,9 @@ int * mallocer_ip(int size);
 double * mallocer_dp(int size);
 
 #ifdef MPIMODE
+int get_smart_random_city(int maximum);
+int get_process_number(void);
+int get_group_reader(void);
 int decide_create_mode(void);
 int * get_merge_route(void);
 int * get_other_group_sol_path(void);
@@ -160,7 +163,16 @@ int * create_graph_path(int * return_data, double * graph_data, int create_mode)
             break;
     #endif
         case DEFAULT:
+#ifdef MPIMODE
+            if(get_group_reader() == get_process_number()) {
+                first_point = get_smart_random_city(tsp_size);
+            }
+            else {
+                first_point = random_num(tsp_size);
+            }
+#else
             first_point = random_num(tsp_size);
+#endif
             now_city = first_point;
             is_choiced[first_point] = YES;
             return_data[1] = first_point;

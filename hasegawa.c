@@ -145,7 +145,8 @@ int * two_opt_tabu(int * solution_path)
 #ifdef MPIMODE
                 if(get_group_reader() != get_process_number()) {
                     //if(turn_loop_times(READONLY) % 2 != 0) {
-                        choice_4indexs(SAMEGROUP_TABULIST_SMART_CHOICE, indexs, solution_path);
+                        //choice_4indexs(SAMEGROUP_TABULIST_SMART_CHOICE, indexs, solution_path);
+                        choice_4indexs(DEFAULT, indexs, solution_path);
                     /*}
                     else {
                         choice_4indexs(DEFAULT, indexs, solution_path);

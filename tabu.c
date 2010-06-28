@@ -405,7 +405,7 @@ int get_smart_random_city(int maximum)
     int return_num = -1;
 
     for(city = 1; city <= tsp_size; city++) {
-        if(MPI_same_group_tabulistp[city].max_index != 1) {
+        if(MPI_same_group_tabulistp[city].max_index != 1 || MPI_same_group_tabulistp[city].max_index == 0) {
             return_num = city;
             break;
         }

@@ -99,6 +99,7 @@ int * get_branchB(void);
 int * get_temp_path(void);
 int * get_matchedA(void);
 int * get_matchedB(void);
+void add_MPI_same_group_tabulist(int add_mode, int * add_data);
 #endif
 
 /* grobal variable */
