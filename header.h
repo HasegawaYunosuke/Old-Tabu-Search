@@ -71,6 +71,7 @@
 #define MPI_SENDADD 302
 #define MPI_RECVADD 303
 #define SAMEGROUP_TABULIST_SMART_CHOICE 304
+#define CHOICE_NEVER_CHOICED 305
 
 /* macro parameter */
 #define TSPMAXSIZE 2000

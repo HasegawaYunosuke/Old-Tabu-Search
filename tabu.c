@@ -20,6 +20,7 @@ int prev_city(int target, int maximum);
 int next_city(int target, int maximum);
 int get_smart_random_city(int maximum);
 int get_smart_city(int choiced_city);
+int get_never_visited_city(int choiced_city);
 void set_L(void);
 int get_L(void);
 int get_y_by_i(int b, int a, int i);
@@ -416,6 +417,13 @@ int get_smart_random_city(int maximum)
     }
 
     return return_num;
+}
+
+int get_never_visited_city(int choiced_city)
+{
+    int next_city = NO;
+
+    return next_city;
 }
 
 int get_smart_city(int choiced_city)

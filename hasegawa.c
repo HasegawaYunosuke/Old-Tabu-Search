@@ -47,7 +47,9 @@ int not_found_looping(int * cities, int * indexs, int type);
 void set_middle_mannneri(int on_or_off);
 #ifdef MPIMODE
 int get_smart_random_city(int maximum);
+int get_never_visited_city(int choiced_city);
 int get_smart_city(int choiced_city);
+int get_num_of_all_proc(void);
 int is_2opt_share_tabu(int * cities1);
 int get_group_reader(void);
 int get_process_number(void);
@@ -146,9 +148,9 @@ int * two_opt_tabu(int * solution_path)
                 if(get_group_reader() != get_process_number()) {
                     //if(turn_loop_times(READONLY) % 2 != 0) {
                         //choice_4indexs(SAMEGROUP_TABULIST_SMART_CHOICE, indexs, solution_path);
-                        choice_4indexs(DEFAULT, indexs, solution_path);
-                    /*}
-                    else {
+                        //choice_4indexs(DEFAULT, indexs, solution_path);
+                        choice_4indexs(CHOICE_NEVER_CHOICED, indexs, solution_path);
+                    /*else {
                         choice_4indexs(DEFAULT, indexs, solution_path);
                     }*/
                 }
@@ -253,6 +255,7 @@ void choice_4indexs(int type, int * return_data, int * solution_path)
     int a,b;
     int a_city, b_city;
     int max = solution_path[0];
+    int possibility;
 
     /* 'type-Default' means just-randomly choice */
     if(type == DEFAULT) {
@@ -271,6 +274,31 @@ void choice_4indexs(int type, int * return_data, int * solution_path)
             choice_4indexs(DEFAULT, return_data, solution_path);
         }
         else {
+            a = get_index_by_city(a_city, solution_path);
+            b = get_index_by_city(b_city, solution_path);
+            return_data[0] = a; return_data[1] = next_index(a, max);
+            return_data[2] = b; return_data[3] = next_index(b, max);
+        }
+    }
+    else if(type == CHOICE_NEVER_CHOICED) {
+        /* possibility is, if proc_num (1, 2, 3,...,N), N+1, N, N -1,..., 2) */
+        possibility = get_num_of_all_proc() - get_process_number() + 1;
+        /* It's DEFAULT */
+        if((random_num(max) % possibility) != 0) {
+            choice_4indexs(DEFAULT, return_data, solution_path);
+        }
+        /* It's the mode of "CHOICCE_NEVER_CHOICED" */
+        else {
+            do {
+                b_city = NO; a_city = random_num(max);
+                b_city = get_never_visited_city(a_city);
+
+            } while(b_city == NO);
+
+            /* DEL ST */
+            error_procedure("CHOICE_NEVER_CHOICED");
+            /* DEL EN */
+
             a = get_index_by_city(a_city, solution_path);
             b = get_index_by_city(b_city, solution_path);
             return_data[0] = a; return_data[1] = next_index(a, max);
