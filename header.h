@@ -6,8 +6,8 @@
 #define SEND_AMONGGROUP
 #define ORDER_GA            /* Better GA (Pole's examination) */
 //#define MERGE_GA
-//#define SAMEGROUP_COMUNICATION
-//#define SAMEGROUP_COMUNICATION_DEBUG
+#define SAMEGROUP_COMUNICATION
+#define SAMEGROUP_COMUNICATION_DEBUG
 
 #define DELDELDEL
 

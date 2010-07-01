@@ -197,8 +197,15 @@ int * two_opt_tabu(int * solution_path)
 int * two_opt_only(int * solution_path)
 {
     int indexs[4];
+    int cities[4];
 
     get_min_exchange_indexs(solution_path, indexs);
+    #ifdef MPIMODE
+        #ifdef SAMEGROUP_COMUNICATION
+        get_cities_by_indexs(cities, indexs, solution_path);
+        add_MPI_same_group_tabulist(FOUR_CITIES, cities);
+        #endif
+    #endif
     exchange_branch(solution_path, indexs);
 
     return solution_path;
