@@ -3,7 +3,7 @@
 #ln -s  /home/share/pole/tsp.repo machinefile
 if [ $1 == 1 ]
 then
-scrun -group=machinefile,network=sctp -nodes=8x2 ./mpi.exe -f tsp_data/rat575.tsp -l -m -p -t 300
+scrun -group=machinefile,network=sctp -nodes=4x2 ./nosamegroup.exe -f tsp_data/pr1002.tsp -l -m -p -t 30
 fi
 if [ $1 == 2 ]
 then

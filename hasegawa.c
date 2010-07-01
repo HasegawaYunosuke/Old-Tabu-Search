@@ -146,6 +146,7 @@ int * two_opt_tabu(int * solution_path)
         else {
             do {
 #ifdef MPIMODE
+    #ifdef SAMEGROUP_COMUNICATION
                 if(get_group_reader() != get_process_number()) {
 
                     /* if proc_num (1, 2, 3,...,N),possibility is (N+1, N, N -1,..., 2) */
@@ -164,6 +165,9 @@ int * two_opt_tabu(int * solution_path)
                 else {
                     choice_4indexs(DEFAULT, indexs, solution_path);
                 }
+    #else
+                choice_4indexs(DEFAULT, indexs, solution_path);
+    #endif
 #else
                 choice_4indexs(DEFAULT, indexs, solution_path);
 #endif

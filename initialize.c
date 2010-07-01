@@ -76,9 +76,9 @@ void initialize(int argc, char ** argv)
         recv_thread_num = get_all_MPI_group_data() - 1;
         MPI_recv_thread = (pthread_t *)malloc(recv_thread_num * sizeof(pthread_t));
         other_list = get_same_group_list();
-        #ifdef SAMEGROUP_COMUNICATION
+//        #ifdef SAMEGROUP_COMUNICATION
         MPI_same_group_tabulist_init(recv_thread_num);
-        #endif
+//        #endif
         for(i = 0; i < recv_thread_num; i++) {
             pthread_create(&MPI_recv_thread[i], NULL, (void *)best_MPI_recv, (void *)&other_list[i]);
         }
