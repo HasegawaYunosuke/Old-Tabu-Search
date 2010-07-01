@@ -82,7 +82,7 @@ int get_y_by_i(int b, int a, int i)
 
     return_data = (int)((double)b * sqrt(1.0 - i2/a2));
 
-    if(return_data <= 0) {
+    if(return_data < 1) {
         return 1;
     }
     else {

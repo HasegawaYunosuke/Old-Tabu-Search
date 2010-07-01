@@ -310,14 +310,23 @@ void add_branch_to_MPI_same_group_tabulist(int target_city, int next_city)
     for(j = 0; j < 2; j++) {
         for(i = 1; i <= list_size; i++) {
             if(next_city == MPI_same_group_tabulistp[target_city].near_cities[i]) {
+
+                /* Don't effect to Search. Just Count How Many Added the Cities. */
                 if(MPI_same_group_tabulistp[target_city].visited_cities[i] == 0) {
                     MPI_same_group_tabulist_counter.added_city_num++;
                 }
-                MPI_same_group_tabulistp[target_city].visited_cities[i]++;
+
+                /* Add count */
+                if(MPI_same_group_tabulistp[target_city].visited_cities[i] < INT_MAX) {
+                    MPI_same_group_tabulistp[target_city].visited_cities[i]++;
+                }
+
+                /* Renew the Most-Visited-City, and Index-of-Most-Visited */
                 if(MPI_same_group_tabulistp[target_city].visited_cities[i] > MPI_same_group_tabulistp[target_city].max_visited) {
                     MPI_same_group_tabulistp[target_city].max_visited = MPI_same_group_tabulistp[target_city].visited_cities[i];
                     MPI_same_group_tabulistp[target_city].max_index = i;
                 }
+
                 break;
             }
         }
@@ -422,6 +431,15 @@ int get_smart_random_city(int maximum)
 int get_never_visited_city(int choiced_city)
 {
     int next_city = NO;
+    int list_size = MPI_same_group_tabulistp[0].near_cities[0];
+    int i;
+
+    for(i = 1; i <= list_size; i++) {
+        if(MPI_same_group_tabulistp[choiced_city].visited_cities[i] <= MPI_same_group_tabulistp[choiced_city].max_visited) {
+            next_city = MPI_same_group_tabulistp[choiced_city].near_cities[i];
+            break;
+        }
+    }
 
     return next_city;
 }
@@ -429,6 +447,9 @@ int get_never_visited_city(int choiced_city)
 int get_smart_city(int choiced_city)
 {
     int i, y, L = get_L();
+    int y_minus_now_visited[L];
+    int random = 0;
+    int sum_of_y_minus_now_visited = 0;
     int max = get_tsp_size();
     int smart_next_city;
 
@@ -436,14 +457,58 @@ int get_smart_city(int choiced_city)
     MPI_same_group_tabulistp[choiced_city].smart_choice_num++;
     /*DEL EN*/
 
-    /* if the choiced city's nearest city haven't been visited */
+    /* Now Steragegy START */
     if(MPI_same_group_tabulistp[choiced_city].max_index != 1) {
         smart_next_city = MPI_same_group_tabulistp[choiced_city].near_cities[1];
         if(smart_next_city != prev_city(choiced_city, max) && smart_next_city != next_city(choiced_city, max)) {
-            /*DEL ST*/
             MPI_same_group_tabulist_counter.choice_nearest++;
-            /*DEL EN*/
+            return smart_next_city;
+        }
+        else {
+            return -1;
+        }
+    }
+    else {
+        for(i = 1; i < L; i++) {
+            y = get_y_by_i(MPI_same_group_tabulistp[choiced_city].max_visited, L, i);
+            if((y_minus_now_visited[i - 1] = y - MPI_same_group_tabulistp[choiced_city].visited_cities[i]) < 0) {
+                y_minus_now_visited[i - 1] = 0;
+            }
+            sum_of_y_minus_now_visited += y_minus_now_visited[i - 1];
+        }
 
+        if(sum_of_y_minus_now_visited <= L) {
+            return -1;
+        }
+
+        random = random_num(sum_of_y_minus_now_visited);
+
+        for(i = 1; i < L; i++) {
+            if(random < y_minus_now_visited[i - 1]) {
+                smart_next_city = MPI_same_group_tabulistp[choiced_city].near_cities[i];
+                if(smart_next_city != prev_city(choiced_city, max) && smart_next_city != next_city(choiced_city, max)) {
+                    MPI_same_group_tabulist_counter.choice_nearest++;
+                    return smart_next_city;
+                }
+                else {
+                    return -1;
+                }
+            }
+            else {
+                random -= y_minus_now_visited[i - 1];
+            }
+        }
+    }
+    /* Now Steragegy END */
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    /* Prev Steragegy START */
+    /* if the choiced city's nearest city haven't been visited */
+    /*if(MPI_same_group_tabulistp[choiced_city].max_index != 1) {
+        smart_next_city = MPI_same_group_tabulistp[choiced_city].near_cities[1];
+        if(smart_next_city != prev_city(choiced_city, max) && smart_next_city != next_city(choiced_city, max)) {
+            MPI_same_group_tabulist_counter.choice_nearest++;
             return smart_next_city;
         }
     }
@@ -453,18 +518,12 @@ int get_smart_city(int choiced_city)
         if(MPI_same_group_tabulistp[choiced_city].visited_cities[i] <= y) {
             smart_next_city = MPI_same_group_tabulistp[choiced_city].near_cities[i];
             if(smart_next_city != prev_city(choiced_city, max) && smart_next_city != next_city(choiced_city, max)) {
-                /*DEL ST*/
                 MPI_same_group_tabulist_counter.choice_other++;
-                /*DEL EN*/
-
                 return smart_next_city;
             }
         }
-    }
-
-    /*DEL ST*/
-    MPI_same_group_tabulist_counter.miss_num++;
-    /*DEL EN*/
+    }*/
+    /* Prev Steragegy END */
 
     return -1;
 }
@@ -506,6 +565,11 @@ void out_put_MPI_same_tabulist(FILE * fp)
             get_y_by_i(MPI_same_group_tabulistp[i].max_visited, get_L(), 2),
             get_y_by_i(MPI_same_group_tabulistp[i].max_visited, get_L(), 3),
             MPI_same_group_tabulistp[i].smart_choice_num);
+        fprintf(fp," y == ");
+        for(j = 1; j <= get_L(); j++) {
+            fprintf(fp,"%4d, ",get_y_by_i(MPI_same_group_tabulistp[i].max_visited, get_L(), j));
+        }
+        fprintf(fp," || ");
         for(j = 1; j <= list_size; j++) {
             fprintf(fp,"%4d, ", MPI_same_group_tabulistp[i].visited_cities[j]);
         }
