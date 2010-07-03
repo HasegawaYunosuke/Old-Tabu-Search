@@ -282,7 +282,7 @@ int decide_create_mode(void)
     #ifdef MPIMODE
         #ifdef SAMEGROUP_COMUNICATION
         if(modep->parallel_mode == ON) {
-            if(get_group_reader() != get_process_number()/* && random_num(2) == 1*/) {
+            if(get_group_reader() != get_process_number() && random_num(2) == 1) {
                 initialize_path_create_mode = SAMETABULIST;
             }
         }
@@ -377,21 +377,18 @@ void best_MPI_send(void)
     MPI_Request req;
 
     if(check_manneri(FIRST_MIDDLEMODED) == YES) {
-        /* DEL ST */
-        //check_send_data(my_best_sol, element_num);
-        /* DEL EN */
 
         if(before_send_process_index >= (get_all_MPI_group_data() - 2)) {
             before_send_process_index = 0;
         }
-        /* Send it-self best-solution-path to All other processes (High-Cost)
+        /* Send it-self best-solution-path to All other processes (High-Cost) */
         for(i = 0; i < get_all_MPI_group_data() - 1; i++) {
             MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[i], BEST_SOLUTION, MPI_COMM_WORLD);
-        }*/
+        }
 
         /* Send it-self best-solution-path to Only-One process that chose by turn (Low-Cost)*/
         /* Blocking Send */
-        MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[before_send_process_index], BEST_SOLUTION, MPI_COMM_WORLD);
+        //MPI_Send((void *)my_best_sol, element_num, MPI_INT, other_list[before_send_process_index], BEST_SOLUTION, MPI_COMM_WORLD);
 
         /* Non-Blocking Send () */
         //MPI_Isend((void *)my_best_sol, element_num, MPI_INT, other_list[before_send_process_index], BEST_SOLUTION, MPI_COMM_WORLD, &req);
