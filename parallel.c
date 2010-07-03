@@ -273,12 +273,21 @@ int decide_create_mode(void)
 {
     int initialize_path_create_mode = DEFAULT;
 
-    if(check_other_data_satisfactory() == YES) {
+    /*if(check_other_data_satisfactory() == YES) {
         initialize_path_create_mode = MERGECREATE;
-        /*if(check_other_group_data_satisfactory(SOL_PATH_SHARE) == YES) {
+        if(check_other_group_data_satisfactory(SOL_PATH_SHARE) == YES) {
             initialize_path_create_mode = GROUPCREATE;
-        }*/
-    }
+        }
+    }*/
+    #ifdef MPIMODE
+        #ifdef SAMEGROUP_COMUNICATION
+        if(modep->parallel_mode == ON) {
+            if(get_group_reader() != get_process_number()/* && random_num(2) == 1*/) {
+                initialize_path_create_mode = SAMETABULIST;
+            }
+        }
+        #endif
+    #endif
 
     return initialize_path_create_mode;
 }

@@ -75,6 +75,9 @@ void MPI_final_result_show(FILE * fp, int * recv_data, int send_data_num)
     int min_proc = recv_data[0];
 
     fprintf(fp, "*******************************************************\n");
+    #ifdef SAMEGROUP_COMUNICATION
+        fprintf(fp, "*** SAMEGROUP_COMUNICATION-MODE ***\n");
+    #endif
     fprintf(fp, "TSP Size:%5d\n",get_tsp_size());
     fprintf(fp, "All Proces Num:%2d\n",get_num_of_all_proc());
     fprintf(fp, "Running Time:%f\n",get_time());

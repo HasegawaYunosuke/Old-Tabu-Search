@@ -754,6 +754,11 @@ void set_solution_path(int * solution_path)
     set_all_cost();
     add_history();
     set_solution_data_flag();
+    #ifdef MPIMODE
+        #ifdef SAMEGROUP_COMUNICATION
+        add_MPI_same_group_tabulist(SOL_PATH, get_solution_path());
+        #endif
+    #endif
 }
 
 void set_ga_solution_path(int * solution_path)

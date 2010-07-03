@@ -158,6 +158,7 @@ int * two_opt_tabu(int * solution_path)
                     }
                     /* SAMEGROUP_TABULIST_SMART_CHOICE-mode */
                     else {
+                        //choice_4indexs(DEFAULT, indexs, solution_path);
                         choice_4indexs(SAMEGROUP_TABULIST_SMART_CHOICE, indexs, solution_path);
                         //choice_4indexs(CHOICE_NEVER_CHOICED, indexs, solution_path);
                     }
@@ -184,7 +185,7 @@ int * two_opt_tabu(int * solution_path)
             not_found_looping(cities, indexs, INIT);
             #ifdef MPIMODE
                 #ifdef SAMEGROUP_COMUNICATION
-                add_MPI_same_group_tabulist(FOUR_CITIES, cities);
+                //add_MPI_same_group_tabulist(FOUR_CITIES, cities);
                 #endif
             #endif
             exchange_branch(solution_path, indexs);

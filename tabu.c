@@ -18,6 +18,10 @@ void set_tabu_clear_count(void);
 #ifdef MPIMODE
 int prev_city(int target, int maximum);
 int next_city(int target, int maximum);
+void get_smart_init_path(int * return_data);
+int get_smart_init_city(int choiced_city, int * visited_cities);
+int check_visited(int next_city, int * visited_cities);
+int choice_non_visited(int * visited_cities);
 int get_smart_random_city(int maximum);
 int get_smart_city(int choiced_city);
 int get_never_visited_city(int choiced_city);
@@ -428,6 +432,96 @@ int get_smart_random_city(int maximum)
     return return_num;
 }
 
+/* return_data's format is followed.
+ * TSP-Size, city1, city2, ... ,cityN, parameter1, ..., parameterM
+ * 'N' means TSP-Size, 'M' is DEFAULT_SENDPARAMETERNUM - 1 (this '1' is First 'TSP-Size')
+ * All data length is TSP-Size + DEFAULT_SENDPARAMETERNUM */
+void get_smart_init_path(int * return_data)
+{
+    int i;
+    int tsp_size = get_tsp_size();
+    int next_city, now_city = random_num(tsp_size);
+    int * visited_cities;
+
+    /* Data Initialize */
+    visited_cities = mallocer_ip(tsp_size);
+    return_data[0] = tsp_size;
+
+    for(i = 0; i < tsp_size; i++) {
+        visited_cities[now_city - 1] = YES;
+        return_data[i + 1] = now_city;
+        next_city = get_smart_init_city(now_city, visited_cities);
+        now_city = next_city;
+    }
+
+    free(visited_cities);
+}
+
+int get_smart_init_city(int choiced_city, int * visited_cities)
+{
+    int next_city = -1;
+    int i, y, L = get_L();
+
+    if(MPI_same_group_tabulistp[choiced_city].max_index != 1) {
+        next_city = MPI_same_group_tabulistp[choiced_city].near_cities[1];
+        /* "NO" means that "next_city" havn't been visited. */
+        if(check_visited(next_city, visited_cities) == NO) {
+            return next_city;
+        }
+        /* Reset the next-city */
+        else {
+            next_city = -1;
+        }
+    }
+
+    for(i = 2; i < L; i++) {
+        y = get_y_by_i(MPI_same_group_tabulistp[choiced_city].max_visited, L, i);
+        if(MPI_same_group_tabulistp[choiced_city].visited_cities[i] <= y) {
+            next_city = MPI_same_group_tabulistp[choiced_city].near_cities[i];
+            if(check_visited(next_city, visited_cities) == NO) {
+                return next_city;
+            }
+            /* Reset the next-city */
+            else {
+                next_city = -1;
+            }
+        }
+    }
+
+    /* If not found */
+    if(next_city == -1) {
+        return choice_non_visited(visited_cities);
+    }
+    else {
+        error_procedure("get_smart_init_city()");
+    }
+}
+
+int choice_non_visited(int * visited_cities)
+{
+    int i, next_city = -1;
+    int tsp_size = get_tsp_size();
+
+    for(i = 0; i < tsp_size; i++) {
+        if(visited_cities[i] == NO) {
+            next_city = i + 1;
+            return next_city;
+        }
+    }
+
+    return next_city;
+}
+
+int check_visited(int next_city, int * visited_cities)
+{
+    if(visited_cities[next_city - 1] == NO) {
+        return NO;
+    }
+    else {
+        return YES;
+    }
+}
+
 int get_never_visited_city(int choiced_city)
 {
     int next_city = NO;
@@ -487,7 +581,7 @@ int get_smart_city(int choiced_city)
             if(random < y_minus_now_visited[i - 1]) {
                 smart_next_city = MPI_same_group_tabulistp[choiced_city].near_cities[i];
                 if(smart_next_city != prev_city(choiced_city, max) && smart_next_city != next_city(choiced_city, max)) {
-                    MPI_same_group_tabulist_counter.choice_nearest++;
+                    MPI_same_group_tabulist_counter.choice_other++;
                     return smart_next_city;
                 }
                 else {
