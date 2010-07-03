@@ -158,8 +158,8 @@ int * two_opt_tabu(int * solution_path)
                     }
                     /* SAMEGROUP_TABULIST_SMART_CHOICE-mode */
                     else {
-                        //choice_4indexs(DEFAULT, indexs, solution_path);
-                        choice_4indexs(SAMEGROUP_TABULIST_SMART_CHOICE, indexs, solution_path);
+                        choice_4indexs(DEFAULT, indexs, solution_path);
+                        //choice_4indexs(SAMEGROUP_TABULIST_SMART_CHOICE, indexs, solution_path);
                         //choice_4indexs(CHOICE_NEVER_CHOICED, indexs, solution_path);
                     }
                 }

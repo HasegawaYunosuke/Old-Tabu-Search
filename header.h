@@ -112,6 +112,3 @@ struct mode {
 struct mode * modep;
 pthread_mutex_t mutex;
 pthread_t visual_thread;
-/* DEL ST */
-double startiii, endiii;
-/* DEL EN */

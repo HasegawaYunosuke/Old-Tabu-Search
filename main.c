@@ -18,10 +18,10 @@
 
 /* functions */
 void initialize(int argc, char ** argv);
-int loop_terminate(void);
-int search_terminate(void);
 void initial_path(void);
 void search(void);
+int loop_terminate(void);
+int search_terminate(void);
 int num_counter(int field_type, int use_type);
 void finalize(void);
 
@@ -29,11 +29,6 @@ int main(int argc, char ** argv)
 {
     /* all in one initialize */
     initialize(argc, argv);
-
-    /* timer start */
-    timer(ON);
-
-    num_counter(INIT, INIT);
 
     /* whole-search loop */
     for(;;) {

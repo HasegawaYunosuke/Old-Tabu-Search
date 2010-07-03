@@ -6,7 +6,6 @@ void increase_test(void);
 
 /* functions */
 int num_counter(int field_type, int use_type);
-void turn_terminated_show(void);
 void final_result_show(FILE * fp);
 void show_mode(FILE *);
 void show_on_off(FILE *, int on_off, char * buffer);
@@ -28,15 +27,6 @@ void show_chart_of_all_proc_result(FILE * showfp, int * recv_data, int send_data
 #ifdef DEBUG
 int tabulist_counter(int field_type, int use_type);
 #endif
-
-void turn_terminated_show(void)
-{
-    /* DEL ST */
-    if(modep->parallel_mode != YES) {
-        //printf("Turn is terminated by turn_loop_times()\n");
-    }
-    /* DEL EN */
-}
 
 void final_result_show(FILE * fp)
 {

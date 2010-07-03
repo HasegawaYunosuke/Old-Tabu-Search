@@ -4,6 +4,9 @@
 /* functions */
 int num_counter(int field_type, int use_type);
 int tabulist_counter(int field_type, int use_type);
+void parameterp_initialize(int * main_base_data);
+void create_historys(void);
+void tabulist_initialize(void);
 void mannneri_initialize(void);
 int search_is_done(int type);
 void set_parameter_data(int num_of_all_proc, int process_number, int name_length, char * process_name);
@@ -35,7 +38,7 @@ void set_now_parcentage(double before, double after);
 void set_2opt_loop(void);
 void set_graph_data(double * graph_data);
 double * get_graph_data(void);
-void set_main_base_data(int * main_base_data);
+void make_graph(int * main_base_data);
 int * get_main_base_data(void);
 void set_solution_path(int * solution_path);
 void set_best_solution_path(int * best_solution_path);
@@ -45,7 +48,7 @@ void set_other_solution_path_data(int * solution_path);
 int * get_other_solution_path_data(void);
 int check_other_solution_path_data(int *other_sol_path);
 int * get_solution_path(void);
-void initial_parameter(int tsp_size);
+void initial_parameter(int * main_base_data);
 int turn_loop_times(int type);
 int search_loop_times(int type);
 int get_2opt_loop(void);
@@ -59,7 +62,6 @@ int check_parcentage(double bef_aft_distance);
 double bef_aft_distance(int * cities);
 double get_graph_cost(int a, int b);
 void set_all_cost(void);
-void create_historys(void);
 void add_history(void);
 void set_mode(void);
 void set_solution_data_flag(void);
@@ -157,14 +159,45 @@ struct parameter * get_parameterp(void);
 struct mode * get_modep(void);
 
 /* This function is All Parameter's initialization */
-void initial_parameter(int tsp_size)
+void initial_parameter(int * main_base_data)
 {
     /* allocate "pointer of struct" memory */
     if((parameterp = malloc(sizeof(struct parameter))) == NULL) {
         error_procedure("parameter malloc()");
     }
 
-    parameterp->tsp_size = tsp_size;
+    /* initialize parameterp-struct's members */
+    parameterp_initialize(main_base_data);
+
+    /* initialize manneri-functions */
+    mannneri_initialize();
+
+    /* initialize related history */
+    create_historys();
+
+    /* create tabu list for 2-opt (only first procedure) */
+    tabulist_initialize();
+
+    /* transform data-type (main-base-data --> graph-data) */
+    make_graph(main_base_data);
+}
+
+void tabulist_initialize(void)
+{
+    if(modep->tabu2opt_mode == ON) {
+        create_2opt_tabulist(get_tsp_size(), INIT);
+#ifdef MPIMODE
+        if(get_group_reader() == get_process_number()) {
+            initialize_share_tabulist();
+        }
+#endif
+    }
+}
+
+void parameterp_initialize(int * main_base_data)
+{
+    parameterp->main_base_data = main_base_data;
+    parameterp->tsp_size = main_base_data[0];
     parameterp->permit_worse = DEFAULT_PERMITWORSE;
     parameterp->base_permit_worse = DEFAULT_PERMITWORSE;
     parameterp->city_point = DEFAULT_CITYPOINT;
@@ -183,21 +216,6 @@ void initial_parameter(int tsp_size)
     parameterp->MPI_group = 0;
     parameterp->all_MPI_group = 0;
     set_2opt_loop();
-
-    /* initilize manneri-functions */
-    mannneri_initialize();
-
-    create_historys();
-
-    /* create tabu list for 2-opt (only first procedure) */
-    if(modep->tabu2opt_mode == ON) {
-        create_2opt_tabulist(get_tsp_size(), INIT);
-#ifdef MPIMODE
-        if(get_group_reader() == get_process_number()) {
-            initialize_share_tabulist();
-        }
-#endif
-    }
 }
 
 void free_parameterp(void)
@@ -741,11 +759,6 @@ void set_2opt_loop(void)
 void set_graph_data(double * graph_data)
 {
     parameterp->graph_data = graph_data;
-}
-
-void set_main_base_data(int * main_base_data)
-{
-    parameterp->main_base_data = main_base_data;
 }
 
 void set_solution_path(int * solution_path)

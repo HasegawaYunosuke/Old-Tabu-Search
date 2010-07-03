@@ -2,14 +2,21 @@
 #include "header.h"
 
 /* functions */
-double * make_graph(int * main_base_data);
+void option_checker(int argc, char ** argv);
+void initial_parameter(int * main_base_data);
+void visualize_procedure(void);
+void visualizer(int * visual_arg);
+void make_graph(int * main_base_data);
+void MPI_com_among_group(int argc, char ** argv);
+void MPI_com_among_reader(void);
+void debug_initialize(void);
+int timer(int sign);
+int num_counter(int field_type, int use_type);
 double * mallocer_dp(int size);
 double make_distance(int x1, int y1, int x2, int y2);
 void set_graph_data(double * graph_data);
 void initialize(int argc, char ** argv);
 void set_MPI_parameter(void);
-void option_checker(int argc, char ** argv);
-void visualizer(int * visual_arg);
 int * read_data(void);
 
 #ifdef MPIMODE
@@ -40,35 +47,47 @@ pthread_t * MPI_recv_thread;
 
 void initialize(int argc, char ** argv)
 {
-    int i;
-    int visual_arg;
-    int recv_thread_num;
-    int * main_base_data;
-    int * other_list;
-    double * graph_data;
-
     /* comand-line short option check */
     option_checker(argc, argv);
 
-    /* read TSPLIB's explain data */
-    main_base_data = read_data();
-
-    /* set parameter to 0 */
-    initial_parameter(main_base_data[0]);
-
-    /* set main_base_data to parameter.c */
-    set_main_base_data(main_base_data);
-
-    /* change data type ( Euclid -> Graph ) */
-    graph_data = make_graph(main_base_data);
+    /* set parameter */
+    initial_parameter(read_data());
 
     /* create thread for visual-mode */
+    visualize_procedure();
+
+    /* Communication among Group (all process do if use MPI) */
+    MPI_com_among_group(argc, argv);
+
+    /* Communication among Group-Readers (if use MPI) */
+    MPI_com_among_reader();
+
+    /* debug procedure (if DEBUG-MODE) */
+    debug_initialize();
+
+    /* timer start */
+    timer(ON);
+
+    /* initialize search/loop counter */
+    num_counter(INIT, INIT);
+}
+
+void visualize_procedure(void)
+{
+    int visual_arg;
+
     if(modep->visual_mode == ON) {
         pthread_mutex_init(&mutex, NULL);
         pthread_create(&visual_thread, NULL, (void *) visualizer, (void *) &visual_arg);
     }
+}
 
-    /* Communication among Group */
+
+void MPI_com_among_group(int argc, char ** argv)
+{
+    int i, recv_thread_num;
+    int * other_list;
+
     #ifdef MPIMODE
     if(modep->parallel_mode == ON) {
         MPI_Init(&argc, &argv);
@@ -76,15 +95,29 @@ void initialize(int argc, char ** argv)
         recv_thread_num = get_all_MPI_group_data() - 1;
         MPI_recv_thread = (pthread_t *)malloc(recv_thread_num * sizeof(pthread_t));
         other_list = get_same_group_list();
-//        #ifdef SAMEGROUP_COMUNICATION
         MPI_same_group_tabulist_init(recv_thread_num);
-//        #endif
         for(i = 0; i < recv_thread_num; i++) {
             pthread_create(&MPI_recv_thread[i], NULL, (void *)best_MPI_recv, (void *)&other_list[i]);
         }
     }
     #endif
+}
 
+void MPI_com_among_reader(void)
+{
+    #ifdef MPIMODE
+        #ifdef SEND_AMONGGROUP
+        if(modep->parallel_mode == ON) {
+            if(get_group_reader() == get_process_number()) {
+                group_reader_process();
+            }
+        }
+        #endif
+    #endif
+}
+
+void debug_initialize(void)
+{
     #ifdef DEBUG
     open_loging_initial_path();
     #endif
@@ -101,17 +134,6 @@ void initialize(int argc, char ** argv)
         open_loging_x_sol_path();
         #endif
     #endif
-
-    /* Communication among Group-Readers */
-    #ifdef MPIMODE
-        #ifdef SEND_AMONGGROUP
-        if(modep->parallel_mode == ON) {
-            if(get_group_reader() == get_process_number()) {
-                group_reader_process();
-            }
-        }
-        #endif
-    #endif
 }
 
 void free_MPI_recv_thread(void)
@@ -119,7 +141,7 @@ void free_MPI_recv_thread(void)
     free(MPI_recv_thread);
 }
 
-double * make_graph(int * main_base_data)
+void make_graph(int * main_base_data)
 {
     double * return_data;
     double len;
@@ -140,6 +162,4 @@ double * make_graph(int * main_base_data)
     }
 
     set_graph_data(return_data);
-
-    return return_data;
 }

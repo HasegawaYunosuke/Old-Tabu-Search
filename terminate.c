@@ -4,7 +4,6 @@
 /* functions */
 int search_is_done(int type);
 int loop_terminate(void);
-void turn_terminated_show(void);
 int search_terminate(void);
 int turn_loop_times(int type);
 int search_loop_times(int type);
@@ -23,7 +22,6 @@ int loop_terminate(void)
 
     if(turn_loop_times(CHECK) >= get_tsp_size() * 10 && get_tabu_mode() == YES && modep->pole_mode == OFF) {
         turn_loop_times(INIT);
-        turn_terminated_show();
         return_num = YES;
         set_tabu_mode(OFF);
         if(modep->hasegawa_mode == ON || modep->tozaki_mode == ON) {
