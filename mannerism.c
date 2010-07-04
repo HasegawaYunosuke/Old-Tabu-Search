@@ -4,10 +4,10 @@
 /* functions */
 void mannneri_initialize(void);
 void long_manneri_initialize(void);
-int long_manneri(int type)
+int long_manneri(int type);
 void mannneri_finalize(void);
-double how_long_search_now(void)
-int check_long_manneri(void)
+double how_long_search_now(void);
+int check_long_manneri(void);
 int check_manneri(int type);
 int check_fill(void);
 int check_historical_similar(void);
@@ -70,7 +70,7 @@ int check_manneri(int type)
             return_num = get_have_been_mid_mode();
             break;
         case LONGMODE:
-            return_num = check_long_manneri()
+            return_num = check_long_manneri();
             break;
     }
 
