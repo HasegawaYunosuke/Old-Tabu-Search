@@ -2,6 +2,8 @@
 #include "header.h"
 
 /* functions */
+int * hasegawa_search(int * solution_path);
+int next_index(int target, int maximum);
 int random_num(int maximum);
 int is_2opt_tabu(int * cities);
 void tabu_matching(int * cities);
@@ -16,6 +18,7 @@ void free_tabu(void);
 int tabulist_counter(int field_type, int use_type);
 void set_tabu_clear_count(void);
 #ifdef MPIMODE
+int * long_manneri_search(int * solution_path);
 int prev_city(int target, int maximum);
 int next_city(int target, int maximum);
 int * get_smart_init_path(int * return_data);
@@ -178,6 +181,106 @@ void tabu_matching(int * cities)
     }
 }
 
+#ifdef MPIMODE
+int * long_manneri_search(int * solution_path)
+{
+    int i, tsp_size = solution_path[0];
+    int half_size = (int)(tsp_size / DEFAULT_SAMEGROUP_TABULISTSIZE_DONOMINATOR);
+    int * copy_path;
+    int now_city, next_city;
+    int first_index, end_index, now_index;
+    int visited_cities[tsp_size + 1];
+    int not_found_loop = 0;
+
+    /* initialize data */
+    for(i = 0; i <= tsp_size; i++) {
+        visited_cities[i] = NO;
+    }
+
+    /* choice first and second-city */
+    do {
+        now_index = random_num(tsp_size); now_city = solution_path[now_index]; first_index = now_index;
+        next_city = get_never_visited_city(now_city);
+        not_found_loop++;
+    } while(next_city == NO && not_found_loop < 10);
+
+    if(next_city != NO) {
+
+        copy_path = copy_path_procedure(solution_path);
+        //visited_cities[now_city] = YES:
+
+        for(i = 0; i < half_size; i++) {
+            copy_path[next_index(now_index, tsp_size)] = next_city;
+            if(visited_cities[next_city] == YES) {
+                error_procedure("long_manneri_search()");
+            }
+            else {
+                visited_cities[next_city] = solution_path[next_index(now_index, tsp_size)];
+            }
+            add_branch_to_MPI_same_group_tabulist(now_city, next_city);
+            now_city = next_city;
+            if((next_city = get_never_visited_city(now_city)) == NO) {
+                end_index = next_index(now_index, tsp_size);
+                break;
+            }
+            else {
+                now_index = next_index(now_index, tsp_size);
+            }
+        }
+
+        /* check copy_path */
+        if(first_index < end_index) {
+            for(i = 1; i <= tsp_size; i++) {
+                if(i >= first_index && i <= end_index) {
+                    continue;
+                }
+                else {
+                    /* if Doubled */
+                    if(visited_cities[solution_path[i]] != NO) {
+                        copy_path[i] = visited_cities[solution_path[i]];
+                    }
+                }
+            }
+        }
+        else {
+            for(i = 1; i <= tsp_size; i++) {
+                if(i > end_index && i < start_index) {
+                    if(visited_cities[solution_path[i]] != NO) {
+                        copy_path[i] = visited_cities[solution_path[i]];
+                    }
+                }
+            }
+        }
+
+        /* copy to solution_path */
+        for(i = 1; i <= tsp_size; i++) {
+            solution_path[i] = copy_path[i];
+        }
+
+        free(copy_path);
+    }
+    /* if couldn't find out never-visited-city */
+    else {
+        solution_path = hasegawa_search(solution_path);
+    }
+
+    return solution_path;
+}
+
+int * copy_path_procedure(int * solution_path)
+{
+    int i;
+    int * returnp;
+
+    returnp = mallocer_ip(tsp_size + 1);
+    for(i = 0; i <= solution_path[0]; i++) {
+        returnp[i] = solution_path[i];
+    }
+
+    return returnp;
+}
+#endif
+
 void add_2opt_tabulist(int * cities)
 {
     int i;
@@ -302,6 +405,8 @@ void add_MPI_same_group_tabulist(int add_mode, int * add_data)
     else if(add_mode == FOUR_CITIES) {
         add_branch_to_MPI_same_group_tabulist(add_data[0], add_data[2]); /* A-B */
         add_branch_to_MPI_same_group_tabulist(add_data[1], add_data[3]); /* A'-B' */
+    }
+    else if(add_mode == TWO_CITIES) {
     }
 }
 
@@ -531,7 +636,8 @@ int get_never_visited_city(int choiced_city)
     int i;
 
     for(i = 1; i <= list_size; i++) {
-        if(MPI_same_group_tabulistp[choiced_city].visited_cities[i] <= MPI_same_group_tabulistp[choiced_city].max_visited) {
+        //if(MPI_same_group_tabulistp[choiced_city].visited_cities[i] <= MPI_same_group_tabulistp[choiced_city].max_visited) {
+        if(MPI_same_group_tabulistp[choiced_city].visited_cities[i] == 0) {
             next_city = MPI_same_group_tabulistp[choiced_city].near_cities[i];
             break;
         }
