@@ -5,6 +5,7 @@
 void set_time(int mode, int parametor);
 double get_time(void);
 void set_start_time(time_t start_time);
+double how_long_search_now(void);
 
 #ifdef MPIMODE
 int get_process_number(void);
@@ -80,4 +81,16 @@ int timer(int sign)
     }
 
     return ack;
+}
+
+/* return the running time */
+double how_long_search_now(void)
+{
+    struct timeval t;
+    double diff;
+
+    gettimeofday(&t, NULL);
+    diff = (double)t.tv_sec + (double)t.tv_usec * 1e-6 - start_time;
+
+    return diff;
 }
