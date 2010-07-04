@@ -289,6 +289,7 @@ void choice_4indexs(int type, int * return_data, int * solution_path)
         return_data[0] = a; return_data[1] = next_index(a, max);
         return_data[2] = b; return_data[3] = next_index(b, max);
     }
+#ifdef MPIMODE
     else if(type == SAMEGROUP_TABULIST_SMART_CHOICE) {
         //a_city = get_smart_random_city(max);
         a_city = random_num(max);
@@ -312,6 +313,7 @@ void choice_4indexs(int type, int * return_data, int * solution_path)
         return_data[0] = a; return_data[1] = next_index(a, max);
         return_data[2] = b; return_data[3] = next_index(b, max);
     }
+#endif
     else if(type == PERMITWORSE) {
         error_procedure("choice_4indexs()");
     }

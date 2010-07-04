@@ -83,10 +83,13 @@ void ga_procedure(int * solution_path, int * solution_path_b, int * solution_pat
         if(modep->parallel_mode == ON){
             transform_solution_path(get_other_solution_path_data(), solution_path_c);
             if(check_other_solution_path_data(solution_path_c) == YES) {
-                /*for(i = 0; i < tsp_size + 1; i++){
-                    solution_path_b[i] = solution_path_c[i];
-                }*/
+#ifdef MPIMODE
                 solution_path_b = get_smart_init_path(solution_path_b);
+#else
+                for(i = 0; i < tsp_size + 1; i++){
+                    solution_path_b[i] = solution_path_c[i];
+                }
+#endif
             }
         }
         if(get_ga_mode() == ON){

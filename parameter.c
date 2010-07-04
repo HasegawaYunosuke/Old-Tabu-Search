@@ -436,6 +436,7 @@ int get_MPI_group_data(void)
     return parameterp->MPI_group;
 }
 
+#ifdef MPIMODE
 void init_send_final_data(int * send_data, int send_data_num)
 {
     int i;
@@ -461,6 +462,7 @@ void init_send_final_data(int * send_data, int send_data_num)
         send_data[6] = (int)(get_added_MPI_same_group_tabulist_per_all() * 10);
     }
 }
+#endif
 
 int get_all_MPI_group_data(void)
 {

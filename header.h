@@ -6,14 +6,15 @@
 #define SEND_AMONGGROUP
 #define ORDER_GA            /* Better GA (Pole's examination) */
 //#define MERGE_GA
-#define SAMEGROUP_COMUNICATION
-#define SAMEGROUP_COMUNICATION_DEBUG
+#ifdef MPIMODE
+    #define SAMEGROUP_COMUNICATION
+    #define SAMEGROUP_COMUNICATION_DEBUG
+    #define NONLEADER_NOT_USE_TWOOPTONLY        /* !Only one choice! NONLEADER_NOT_USE_TWOOPTONLY available in case of MPI*/
+    //#define BOTH_NOT_USE_TWOOPTONLY             /* !Only one choice! BOTH_NOT_USE_TWOOPTONLY available in case of MPI*/
+    //#define LEADER_NOT_USE_TWOOPTONLY           /* !Only one choice! LEADER_NOT_USE_TWOOPTONLY available in case of MPI*/
+#endif
 
 #define DELDELDEL
-
-#define NONLEADER_NOT_USE_TWOOPTONLY        /* !Only one choice! NONLEADER_NOT_USE_TWOOPTONLY available in case of MPI*/
-//#define BOTH_NOT_USE_TWOOPTONLY             /* !Only one choice! BOTH_NOT_USE_TWOOPTONLY available in case of MPI*/
-//#define LEADER_NOT_USE_TWOOPTONLY           /* !Only one choice! LEADER_NOT_USE_TWOOPTONLY available in case of MPI*/
 
 /* include files */
 #include <stdio.h>
