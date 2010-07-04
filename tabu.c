@@ -628,8 +628,8 @@ void set_L(void)
     double list_size = (double)MPI_same_group_tabulistp[0].near_cities[0];
 
     MPI_same_group_tabulist_counter.L = (int)(list_size * (MPI_group + 5) / 100);
-    if(MPI_same_group_tabulist_counter.L <= 2) {
-        MPI_same_group_tabulist_counter.L = 3;
+    if(MPI_same_group_tabulist_counter.L <= 4) {
+        MPI_same_group_tabulist_counter.L = 5;
     }
 }
 
