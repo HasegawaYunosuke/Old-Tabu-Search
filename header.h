@@ -1,5 +1,5 @@
 /* #define MPIMODE */
-#define LINUXUSER
+//#define LINUXUSER
 //#define DEBUG
 //#define POLEDEBUG
 //#define CROSSOVER_BEF_AFT
@@ -95,7 +95,7 @@
 #define GA_CROSS_POINT 10
 #define GA_COUNTER 100
 #define TABU_CLEAR_COUNT 5
-#define LONGMANNERI_INTERBAL 60
+#define LONGMANNERI_INTERBAL 30
 
 /* grobal variable */
 struct mode {

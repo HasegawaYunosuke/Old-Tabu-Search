@@ -137,11 +137,6 @@ int check_long_manneri(void)
     minutes = running_time / LONGMANNERI_INTERBAL;
 
     if(next_check_time < minutes) {
-
-        /*DEL*/
-        printf("LONG MANNERI TEST\n");
-        /*DEL*/
-
         long_manneri_parameter.before_time++;
         long_manneri_parameter.best_distance = get_best_cost();
         if(long_manneri_parameter.prev_distance != long_manneri_parameter.best_distance) {

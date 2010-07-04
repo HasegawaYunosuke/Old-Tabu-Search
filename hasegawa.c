@@ -74,9 +74,6 @@ int * graph_search(int * solution_path)
         set_middle_mannneri(ON);
     }
 
-    /*DEL*/
-    check_manneri(LONGMODE);
-    /*DEL*/
 
     mode = mode_select(mode, solution_path);
 
