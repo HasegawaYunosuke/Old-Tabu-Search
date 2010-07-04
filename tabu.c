@@ -19,6 +19,7 @@ int tabulist_counter(int field_type, int use_type);
 void set_tabu_clear_count(void);
 #ifdef MPIMODE
 int * long_manneri_search(int * solution_path);
+int * copy_path_procedure(int * solution_path);
 int prev_city(int target, int maximum);
 int next_city(int target, int maximum);
 int * get_smart_init_path(int * return_data);
@@ -244,7 +245,7 @@ int * long_manneri_search(int * solution_path)
         }
         else {
             for(i = 1; i <= tsp_size; i++) {
-                if(i > end_index && i < start_index) {
+                if(i > end_index && i < first_index) {
                     if(visited_cities[solution_path[i]] != NO) {
                         copy_path[i] = visited_cities[solution_path[i]];
                     }
@@ -272,7 +273,7 @@ int * copy_path_procedure(int * solution_path)
     int i;
     int * returnp;
 
-    returnp = mallocer_ip(tsp_size + 1);
+    returnp = mallocer_ip(solution_path[0] + 1);
     for(i = 0; i <= solution_path[0]; i++) {
         returnp[i] = solution_path[i];
     }
@@ -405,8 +406,6 @@ void add_MPI_same_group_tabulist(int add_mode, int * add_data)
     else if(add_mode == FOUR_CITIES) {
         add_branch_to_MPI_same_group_tabulist(add_data[0], add_data[2]); /* A-B */
         add_branch_to_MPI_same_group_tabulist(add_data[1], add_data[3]); /* A'-B' */
-    }
-    else if(add_mode == TWO_CITIES) {
     }
 }
 
