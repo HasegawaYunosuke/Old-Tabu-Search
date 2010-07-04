@@ -18,7 +18,7 @@ void set_tabu_clear_count(void);
 #ifdef MPIMODE
 int prev_city(int target, int maximum);
 int next_city(int target, int maximum);
-void get_smart_init_path(int * return_data);
+int * get_smart_init_path(int * return_data);
 int get_smart_init_city(int choiced_city, int * visited_cities);
 int check_visited(int next_city, int * visited_cities);
 int choice_non_visited(int * visited_cities);
@@ -436,7 +436,7 @@ int get_smart_random_city(int maximum)
  * TSP-Size, city1, city2, ... ,cityN, parameter1, ..., parameterM
  * 'N' means TSP-Size, 'M' is DEFAULT_SENDPARAMETERNUM - 1 (this '1' is First 'TSP-Size')
  * All data length is TSP-Size + DEFAULT_SENDPARAMETERNUM */
-void get_smart_init_path(int * return_data)
+int * get_smart_init_path(int * return_data)
 {
     int i;
     int tsp_size = get_tsp_size();
@@ -455,6 +455,8 @@ void get_smart_init_path(int * return_data)
     }
 
     free(visited_cities);
+
+    return return_data;
 }
 
 int get_smart_init_city(int choiced_city, int * visited_cities)

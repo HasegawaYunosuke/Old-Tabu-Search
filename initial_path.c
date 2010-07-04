@@ -25,7 +25,7 @@ int get_process_number(void);
 int get_group_reader(void);
 int decide_create_mode(void);
 int * get_merge_route(void);
-void get_smart_init_path(int * return_data);
+int * get_smart_init_path(int * return_data);
 int * get_other_group_sol_path(void);
 void adjust_group_sol_to_return(int * all_path, int * return_data, int choice_index);
 void add_MPI_same_group_tabulist(int add_mode, int * add_data);
@@ -141,12 +141,10 @@ int * create_graph_path(int * return_data, double * graph_data, int create_mode)
     double distance = DBL_MAX;
     double min_distance = DBL_MAX;
 
-    //create_mode = DEFAULT;
-
     switch (create_mode) {
     #ifdef MPIMODE
         case SAMETABULIST:
-            get_smart_init_path(return_data);
+            return_data = get_smart_init_path(return_data);
             break;
         case GROUPCREATE:
             buff = get_other_group_sol_path();
