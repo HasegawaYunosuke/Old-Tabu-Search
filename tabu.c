@@ -191,6 +191,7 @@ void check_fuck_data(int * solution_path, int first_index, int end_index, int * 
     int used_cities[tsp_size];
     int city, i, wrong_count = 0;
     FILE * fp;
+    char logname[128];
 
     for(i = 0; i < tsp_size; i++) {
         used_cities[i] = 0;
@@ -207,30 +208,17 @@ void check_fuck_data(int * solution_path, int first_index, int end_index, int * 
         }
     }
     if(wrong_count == 1) {
-        if(get_process_number() == 2) {
-            fp = fopen("process2.log","w");
-            fprintf(fp,"(first:end)==(%d:%d) || solution_path[%d] == %d\n",first_index, end_index, i + 1, solution_path[i + 1]);
-            for(i = 0; i < tsp_size; i++) {
-                fprintf(fp,"sol[%4d] == %d\n", i + 1, solution_path[i + 1]);
-            }
-            fprintf(fp,"+++used_cities+++\n");
-            for(i = 0; i < tsp_size; i++) {
-                fprintf(fp,"use[%4d] == %d\n", i + 1, used_cities[i + 1]);
-            }
-            fclose(fp);
+        sprintf(logname, "process.%d.log", get_process_number());
+        fp = fopen(logname ,"w");
+        fprintf(fp,"(first:end)==(%d:%d) || solution_path[%d] == %d\n",first_index, end_index, i + 1, solution_path[i + 1]);
+        for(i = 0; i < tsp_size; i++) {
+            fprintf(fp,"sol[%4d] == %d\n", i + 1, solution_path[i + 1]);
         }
-        else if(get_process_number() == 3) {
-            fp = fopen("process3.log","w");
-            fprintf(fp,"(first:end)==(%d:%d) || solution_path[%d] == %d\n",first_index, end_index, i + 1, solution_path[i + 1]);
-            for(i = 0; i < tsp_size; i++) {
-                fprintf(fp,"sol[%4d] == %d\n", i + 1, solution_path[i + 1]);
-            }
-            fprintf(fp,"+++used_cities+++\n");
-            for(i = 0; i < tsp_size; i++) {
-                fprintf(fp,"use[%4d] == %d\n", i + 1, used_cities[i + 1]);
-            }
-            fclose(fp);
+        fprintf(fp,"+++used_cities+++\n");
+        for(i = 0; i < tsp_size; i++) {
+            fprintf(fp,"use[%4d] == %d\n", i + 1, used_cities[i + 1]);
         }
+        fclose(fp);
         error_procedure("check_fuck_data():wrong_data");
     }
 }
@@ -271,6 +259,7 @@ int * long_manneri_search(int * solution_path)
     int * copy_path;
     int now_city, next_city;
     int first_index, end_index, now_index;
+    int first_city;
     int visited_cities[tsp_size + 1];
     int both_doubled_cities[half_size];
     int new_doubled_cities[half_size];
@@ -287,13 +276,13 @@ int * long_manneri_search(int * solution_path)
 
     /* choice first and second-city */
     do {
-        now_index = random_num(tsp_size); now_city = solution_path[now_index]; first_index = now_index;
+        now_index = random_num(tsp_size); now_city = solution_path[now_index]; first_index = now_index; first_city = now_city;
         next_city = get_never_visited_city(now_city);
         not_found_loop++;
     } while(next_city == NO && not_found_loop < 10);
 
     if(next_city != NO) {
-        //visited_cities[now_city] = YES;
+        visited_cities[now_city] = YES;
         copy_path = copy_path_procedure(solution_path);
 
         for(i = 0; i < half_size; i++) {
@@ -328,7 +317,7 @@ int * long_manneri_search(int * solution_path)
                 }
             }
             for(i = 1; i <= tsp_size; i++) {
-                if(visited_cities[solution_path[i]] == YES) {
+                if(visited_cities[solution_path[i]] == YES && solution_path[i] != first_city) {
                     new_doubled_cities[new_i] = solution_path[i];
                     new_i++;
                 }
@@ -354,7 +343,7 @@ int * long_manneri_search(int * solution_path)
                 }
             }
             for(i = 1; i <= tsp_size; i++) {
-                if(visited_cities[solution_path[i]] == YES) {
+                if(visited_cities[solution_path[i]] == YES && solution_path[i] != first_city) {
                     new_doubled_cities[new_i] = solution_path[i];
                     new_i++;
                 }
