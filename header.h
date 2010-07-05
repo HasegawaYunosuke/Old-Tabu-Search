@@ -95,7 +95,7 @@
 #define GA_CROSS_POINT 10
 #define GA_COUNTER 100
 #define TABU_CLEAR_COUNT 5
-#define LONGMANNERI_INTERBAL 30
+#define LONGMANNERI_INTERBAL 10
 
 /* grobal variable */
 struct mode {

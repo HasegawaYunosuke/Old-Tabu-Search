@@ -29,6 +29,7 @@ int choice_non_visited(int * visited_cities);
 int get_smart_random_city(int maximum);
 int get_smart_city(int choiced_city);
 int get_never_visited_city(int choiced_city);
+int get_never_visited_city_exept_exist(int choiced_city, int * visited_cities);
 void set_L(void);
 int get_L(void);
 int get_y_by_i(int b, int a, int i);
@@ -183,6 +184,86 @@ void tabu_matching(int * cities)
 }
 
 #ifdef MPIMODE
+/* DEL */
+void check_fuck_data(int * solution_path, int first_index, int end_index, int * visited_cities)
+{
+    int tsp_size = get_tsp_size();
+    int used_cities[tsp_size];
+    int city, i, wrong_count = 0;
+    FILE * fp;
+
+    for(i = 0; i < tsp_size; i++) {
+        used_cities[i] = 0;
+    }
+
+    for(i = 0; i < tsp_size; i++) {
+        city = solution_path[i + 1];
+        used_cities[city - 1]++;
+    }
+    for(i = 0; i < tsp_size; i++) {
+        if(used_cities[i] != 1) {
+            wrong_count = 1;
+            break;
+        }
+    }
+    if(wrong_count == 1) {
+        if(get_process_number() == 2) {
+            fp = fopen("process2.log","w");
+            fprintf(fp,"(first:end)==(%d:%d) || solution_path[%d] == %d\n",first_index, end_index, i + 1, solution_path[i + 1]);
+            for(i = 0; i < tsp_size; i++) {
+                fprintf(fp,"sol[%4d] == %d\n", i + 1, solution_path[i + 1]);
+            }
+            fprintf(fp,"+++used_cities+++\n");
+            for(i = 0; i < tsp_size; i++) {
+                fprintf(fp,"use[%4d] == %d\n", i + 1, used_cities[i + 1]);
+            }
+            fclose(fp);
+        }
+        else if(get_process_number() == 3) {
+            fp = fopen("process3.log","w");
+            fprintf(fp,"(first:end)==(%d:%d) || solution_path[%d] == %d\n",first_index, end_index, i + 1, solution_path[i + 1]);
+            for(i = 0; i < tsp_size; i++) {
+                fprintf(fp,"sol[%4d] == %d\n", i + 1, solution_path[i + 1]);
+            }
+            fprintf(fp,"+++used_cities+++\n");
+            for(i = 0; i < tsp_size; i++) {
+                fprintf(fp,"use[%4d] == %d\n", i + 1, used_cities[i + 1]);
+            }
+            fclose(fp);
+        }
+        error_procedure("check_fuck_data():wrong_data");
+    }
+}
+/* DEL */
+int deleted_city_or_not(int city, int * double_cities_list, int list_size)
+{
+    int i, return_num = YES;
+
+    for(i = 0; i < list_size; i++) {
+        if(city == double_cities_list[i]) {
+            return_num = NO;
+            break;
+        }
+    }
+
+    return return_num;
+}
+
+int doubled_city_choice(int * new_doubled_cities, int limit, int city)
+{
+    int i;
+    int return_num = NO;
+
+    for(i = 0; i < limit; i++) {
+        if(city == new_doubled_cities[i]) {
+            return_num = YES;
+            break;
+        }
+    }
+
+    return return_num;
+}
+
 int * long_manneri_search(int * solution_path)
 {
     int i, tsp_size = solution_path[0];
@@ -191,6 +272,12 @@ int * long_manneri_search(int * solution_path)
     int now_city, next_city;
     int first_index, end_index, now_index;
     int visited_cities[tsp_size + 1];
+    int both_doubled_cities[half_size];
+    int new_doubled_cities[half_size];
+    int pre_deleted_cities[half_size];
+    int new_i = 0;
+    int pre_i = 0;
+    int both_i = 0;
     int not_found_loop = 0;
 
     /* initialize data */
@@ -206,22 +293,22 @@ int * long_manneri_search(int * solution_path)
     } while(next_city == NO && not_found_loop < 10);
 
     if(next_city != NO) {
-
+        //visited_cities[now_city] = YES;
         copy_path = copy_path_procedure(solution_path);
-        //visited_cities[now_city] = YES:
 
         for(i = 0; i < half_size; i++) {
             copy_path[next_index(now_index, tsp_size)] = next_city;
-            if(visited_cities[next_city] == YES) {
+            if(visited_cities[next_city] != NO) {
                 error_procedure("long_manneri_search()");
             }
             else {
-                visited_cities[next_city] = solution_path[next_index(now_index, tsp_size)];
+                visited_cities[next_city] = YES;
             }
-            add_branch_to_MPI_same_group_tabulist(now_city, next_city);
+//            add_branch_to_MPI_same_group_tabulist(now_city, next_city);
             now_city = next_city;
-            if((next_city = get_never_visited_city(now_city)) == NO) {
-                end_index = next_index(now_index, tsp_size);
+            end_index = next_index(now_index, tsp_size);
+            next_city = get_never_visited_city_exept_exist(now_city, visited_cities);
+            if(next_city == NO) {
                 break;
             }
             else {
@@ -232,11 +319,95 @@ int * long_manneri_search(int * solution_path)
         /* check copy_path */
         if(first_index < end_index) {
             for(i = 1; i <= tsp_size; i++) {
-                if(i >= first_index && i <= end_index) {
-                    continue;
+                /* In the Zone */
+                if(i > first_index && i <= end_index) {
+                    if(visited_cities[solution_path[i]] == YES) {
+                        visited_cities[solution_path[i]] = NO;
+                        both_doubled_cities[both_i] = solution_path[i]; both_i++;
+                    }
                 }
-                else {
-                    /* if Doubled */
+            }
+            for(i = 1; i <= tsp_size; i++) {
+                if(visited_cities[solution_path[i]] == YES) {
+                    new_doubled_cities[new_i] = solution_path[i];
+                    new_i++;
+                }
+            }
+            //////////////////////////////////////////////////////////
+            for(i = 1; i <= tsp_size; i++) {
+                if(i > first_index && i <= end_index) {
+                    if((deleted_city_or_not(solution_path[i], both_doubled_cities, both_i)) == YES) {
+                        pre_deleted_cities[pre_i] = solution_path[i];
+                        pre_i++;
+                    }
+                }
+            }
+            //////////////////////////////////////////////////////////
+        }
+        else {
+            for(i = 1; i <= tsp_size; i++) {
+                if(i <= end_index || i > first_index) {
+                    if(visited_cities[solution_path[i]] == YES) {
+                        visited_cities[solution_path[i]] = NO;
+                        both_doubled_cities[both_i] = solution_path[i]; both_i++;
+                    }
+                }
+            }
+            for(i = 1; i <= tsp_size; i++) {
+                if(visited_cities[solution_path[i]] == YES) {
+                    new_doubled_cities[new_i] = solution_path[i];
+                    new_i++;
+                }
+            }
+            //////////////////////////////////////////////////////////
+            for(i = 1; i <= tsp_size; i++) {
+                if(i <= end_index || i > first_index) {
+                    if((deleted_city_or_not(solution_path[i], both_doubled_cities, both_i)) == YES) {
+                        pre_deleted_cities[pre_i] = solution_path[i];
+                        pre_i++;
+                    }
+                }
+            }
+            //////////////////////////////////////////////////////////
+        }
+        if(new_i != pre_i) {
+            fprintf(stderr, "(n|p|b)==(%d|%d|%d)\n", new_i ,pre_i, both_i);
+            error_procedure("long_manneri_search();index");
+        }
+
+        if(first_index < end_index) {
+            for(i = 1; i <= tsp_size; i++) {
+                if(i < first_index || i > end_index) {
+//                    if(visited_cities[copy_path[i]] == YES) {
+                    if(doubled_city_choice(new_doubled_cities, new_i, copy_path[i]) == YES) {
+                        pre_i--;
+                        copy_path[i] = pre_deleted_cities[pre_i];
+                        if(pre_i < 0) {
+                            error_procedure("long_manneri_search();pre_i < 0");
+                        }
+                    }
+                }
+            }
+        }
+        else {
+            for(i = 1; i <= tsp_size; i++) {
+                if(i > end_index && i < first_index) {
+//                    if(visited_cities[copy_path[i]] == YES) {
+                    if(doubled_city_choice(new_doubled_cities, new_i, copy_path[i]) == YES) {
+                        pre_i--;
+                        copy_path[i] = pre_deleted_cities[pre_i];
+                        if(pre_i < 0) {
+                            error_procedure("long_manneri_search();pre_i < 0");
+                        }
+                    }
+                }
+            }
+        }
+
+        /* check copy_path */
+        /*if(first_index < end_index) {
+            for(i = 1; i <= tsp_size; i++) {
+                if(i < first_index || i > end_index) {
                     if(visited_cities[solution_path[i]] != NO) {
                         copy_path[i] = visited_cities[solution_path[i]];
                     }
@@ -251,7 +422,7 @@ int * long_manneri_search(int * solution_path)
                     }
                 }
             }
-        }
+        }*/
 
         /* copy to solution_path */
         for(i = 1; i <= tsp_size; i++) {
@@ -264,6 +435,10 @@ int * long_manneri_search(int * solution_path)
     else {
         solution_path = hasegawa_search(solution_path);
     }
+
+    /* DEL */
+    check_fuck_data(solution_path, first_index, end_index, visited_cities);
+    /* DEL */
 
     return solution_path;
 }
@@ -639,6 +814,29 @@ int get_never_visited_city(int choiced_city)
         if(MPI_same_group_tabulistp[choiced_city].visited_cities[i] == 0) {
             next_city = MPI_same_group_tabulistp[choiced_city].near_cities[i];
             break;
+        }
+    }
+
+    return next_city;
+}
+
+int get_never_visited_city_exept_exist(int choiced_city, int * visited_cities)
+{
+    int tsp_size = get_tsp_size();
+    int next_city = NO;
+    int list_size = MPI_same_group_tabulistp[0].near_cities[0];
+    int i, j;
+
+    for(i = 1; i <= list_size; i++) {
+        //if(MPI_same_group_tabulistp[choiced_city].visited_cities[i] <= MPI_same_group_tabulistp[choiced_city].max_visited) {
+        if(MPI_same_group_tabulistp[choiced_city].visited_cities[i] == 0) {
+            next_city = MPI_same_group_tabulistp[choiced_city].near_cities[i];
+            if(visited_cities[next_city] == NO) {
+                break;
+            }
+            else {
+                next_city = NO;
+            }
         }
     }
 
