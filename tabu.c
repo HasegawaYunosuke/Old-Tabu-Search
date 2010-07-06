@@ -255,7 +255,8 @@ int doubled_city_choice(int * new_doubled_cities, int limit, int city)
 int * long_manneri_search(int * solution_path)
 {
     int i, tsp_size = solution_path[0];
-    int half_size = (int)(tsp_size / DEFAULT_SAMEGROUP_TABULISTSIZE_DONOMINATOR);
+    //int half_size = (int)(tsp_size / DEFAULT_SAMEGROUP_TABULISTSIZE_DONOMINATOR);
+    int half_size = get_process_number() * 5;
     int * copy_path;
     int now_city, next_city;
     int first_index, end_index, now_index;
