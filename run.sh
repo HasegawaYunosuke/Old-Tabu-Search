@@ -3,15 +3,15 @@
 #ln -s  /home/share/pole/tsp.repo machinefile
 if [ $1 == 1 ]
 then
-scrun -group=machinefile,network=sctp -nodes=8x2 ./mpi.exe -f tsp_data/rat575.tsp -l -m -p -t 300
+scrun -group=machinefile,network=sctp -nodes=8x1 ./mpi.exe -f tsp_data/rat575.tsp -l -m -p -t 300
 fi
 if [ $1 == 2 ]
 then
-scrun -group=machinefile,network=sctp -nodes=8x2 ./mpi.exe -f tsp_data/rat575.tsp -l -m -p -t 10
+scrun -group=machinefile,network=sctp -nodes=8x1 ./nompi.exe -f tsp_data/rat575.tsp -z -t 30 -b
 fi
 if [ $1 == 3 ]
 then
-scrun -group=machinefile2,network=sctp -nodes=4x2 ./mpi.exe -f tsp_data/rat575.tsp -b -m -t 1800
+scrun -group=machinefile,network=sctp -nodes=8x1 ./nompi.exe -f tsp_data/rat575.tsp -t 30 -b
 fi
 if [ $1 == 4 ]
 then

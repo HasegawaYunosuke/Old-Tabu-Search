@@ -9,7 +9,7 @@
 #ifdef LINUXUSER
 #include <linux/unistd.h>
 #endif
-#define THREAD_NUM 2
+#define THREAD_NUM 4
 #define TOTAL_SOLUTION_NUM 4
 #define CPU_ZERO
 #define CPU_SET
@@ -214,13 +214,13 @@ void thread_two_opt_tabu(int * solution_path)
     do {
         copy_choice_4indexs(DEFAULT, indexs, solution_path);
         copy_get_cities_by_indexs(cities, indexs, solution_path);
-        
+
         if(not_found_looping(cities, indexs, COUNT) == YES) {
             not_found_looping(cities, indexs, READONLY);
             break;
         }
     } while(copy_permit_worse(bef_aft_cost = copy_bef_aft_distance(cities, &worse), &worse) == NO || is_2opt_tabu(cities) == YES);
-    
+
     not_found_looping(cities, indexs, INIT);
 
     if(get_tabu_mode() == ON) {
@@ -410,7 +410,7 @@ void copy_exchange_branch(int * solution_path, int * indexs)
     int tsp_size = solution_path[0];
     int * copy;
     int cities[4];
-   
+
     copy = mallocer_ip(tsp_size + 1);
 
     for(i = 0; i <= tsp_size; i++) {
