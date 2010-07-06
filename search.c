@@ -48,13 +48,13 @@ void search(void)
             error_procedure("Un-define-search()-mode is choiced");
         }
     }
-#ifdef MPIMODE
+/*#ifdef MPIMODE
     #ifdef SAMEGROUP_COMUNICATION
     else {
         solution_path = long_manneri_search(solution_path);
     }
     #endif
-#endif
+#endif*/
 
     set_solution_path(solution_path);
 }

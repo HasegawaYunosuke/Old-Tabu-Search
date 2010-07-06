@@ -1012,6 +1012,32 @@ void free_tabu(void)
 }
 
 #ifdef MPIMODE
+#ifdef SAMEGROUP_COMUNICATION
+int is_samegroup_added(int target_city, int next_city)
+{
+    int i, y;
+    int list_num = MPI_same_group_tabulistp[target_city].near_cities[0];
+
+    for(i = 1; i <= list_num; i++) {
+        if(MPI_same_group_tabulistp[target_city].near_cities[i] == next_city) {
+            if((y = get_y_by_i(MPI_same_group_tabulistp[target_city].max_visited, get_L(), i)) > 1) {
+                if(MPI_same_group_tabulistp[target_city].visited_cities[i] >= y) {
+                    return YES;
+                }
+                else {
+                    return NO;
+                }
+            }
+            else {
+                return YES;
+            }
+        }
+    }
+
+    return NO;
+}
+#endif
+
 int is_2opt_share_tabu(int * cities1)
 {
     int i;
@@ -1036,6 +1062,16 @@ int is_2opt_share_tabu(int * cities1)
             pthread_join(matching_thread[i], NULL);
         }
     }
+    #ifdef SAMEGROUP_COMUNICATION
+    else {
+        if(is_samegroup_added(cities1[0], cities1[2]) == NO && is_samegroup_added(cities1[1], cities1[3]) == NO) {
+            return NO;
+        }
+        else {
+            return YES;
+        }
+    }
+    #endif
 
     return find_out_share_flag;
 }
